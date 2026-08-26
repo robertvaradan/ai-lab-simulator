@@ -1,0 +1,338 @@
+class_name SimulationContext
+extends RefCounted
+
+const CASH_LEDGER_PATH: StringName = &"state.cash_ledger.transactions"
+
+var _candidate_state: GameState
+var _state_path_registry: SimulationStatePathRegistry
+var _event_registry: SimulationEventRegistry
+var _trace: SimulationTrace
+var _random: RandomNumberGenerator
+var _current_rule: SimulationRule
+var _declared_reads: Dictionary[StringName, bool] = {}
+var _declared_writes: Dictionary[StringName, bool] = {}
+var _declared_events: Dictionary[StringName, bool] = {}
+var _declared_conditions: Dictionary[StringName, bool] = {}
+var _diagnostics: Array[SimulationDiagnostic] = []
+
+
+func _init(
+		candidate_state: GameState,
+		state_path_registry: SimulationStatePathRegistry,
+		event_registry: SimulationEventRegistry,
+		trace: SimulationTrace,
+		random_seed: int
+	) -> void:
+	_candidate_state = candidate_state
+	_state_path_registry = state_path_registry
+	_event_registry = event_registry
+	_trace = trace
+	_random = RandomNumberGenerator.new()
+	_random.seed = random_seed
+
+
+func _begin_rule(rule: SimulationRule) -> RuleEvaluationTraceRecord:
+	_current_rule = rule
+	_declared_reads.clear()
+	_declared_writes.clear()
+	_declared_events.clear()
+	_declared_conditions.clear()
+	for path_id: StringName in rule.read_state_paths:
+		_declared_reads[path_id] = true
+	for path_id: StringName in rule.write_state_paths:
+		_declared_writes[path_id] = true
+	for event_id: StringName in rule.emitted_event_ids:
+		_declared_events[event_id] = true
+	for condition_id: StringName in rule.condition_ids:
+		_declared_conditions[condition_id] = true
+	return _trace._begin_rule(rule.stable_id)
+
+
+func _end_rule() -> void:
+	_current_rule = null
+	_declared_reads.clear()
+	_declared_writes.clear()
+	_declared_events.clear()
+	_declared_conditions.clear()
+
+
+func read_integer(state_path: StringName) -> SimulationIntegerResult:
+	var rule_id: StringName = _current_rule_id()
+	if not _require_current_rule(state_path):
+		_trace._append_read(rule_id, state_path, false)
+		return SimulationIntegerResult.failure(_diagnostics[_diagnostics.size() - 1])
+	if not _declared_reads.has(state_path):
+		var undeclared_diagnostic: SimulationDiagnostic = _fault(
+			&"context.undeclared_read",
+			"Rule %s read undeclared state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return SimulationIntegerResult.failure(undeclared_diagnostic)
+	var path: SimulationStatePath = _state_path_registry.get_path(state_path)
+	if path == null:
+		var unknown_diagnostic: SimulationDiagnostic = _fault(
+			&"context.unknown_read_path",
+			"Rule %s read unknown state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return SimulationIntegerResult.failure(unknown_diagnostic)
+	if path.value_type != SimulationStatePath.ValueType.INTEGER:
+		var type_diagnostic: SimulationDiagnostic = _fault(
+			&"context.read_type_mismatch",
+			"Rule %s used integer access for state path %s with a different type."
+			% [rule_id, state_path],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return SimulationIntegerResult.failure(type_diagnostic)
+	var result: SimulationIntegerResult = path.read_integer(_candidate_state)
+	if not result.has_value:
+		var access_diagnostic: SimulationDiagnostic = _fault(
+			&"context.read_failed",
+			"Rule %s could not read state path %s. %s"
+			% [rule_id, state_path, result.diagnostic.message],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return SimulationIntegerResult.failure(access_diagnostic)
+	_trace._append_read(rule_id, state_path, true, true, result.value)
+	return result
+
+
+func write_integer(state_path: StringName, value: int) -> bool:
+	var rule_id: StringName = _current_rule_id()
+	if not _require_current_rule(state_path):
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	if not _declared_writes.has(state_path):
+		_fault(
+			&"context.undeclared_write",
+			"Rule %s wrote undeclared state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	var path: SimulationStatePath = _state_path_registry.get_path(state_path)
+	if path == null:
+		_fault(
+			&"context.unknown_write_path",
+			"Rule %s wrote unknown state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	if path.value_type != SimulationStatePath.ValueType.INTEGER:
+		_fault(
+			&"context.write_type_mismatch",
+			"Rule %s used integer access for state path %s with a different type."
+			% [rule_id, state_path],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	var before_result: SimulationIntegerResult = path.read_integer(_candidate_state)
+	if not before_result.has_value:
+		_fault(
+			&"context.write_read_before_failed",
+			"Rule %s could not read state path %s before its write."
+			% [rule_id, state_path],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	var write_diagnostic: SimulationDiagnostic = path.write_integer(_candidate_state, value)
+	if write_diagnostic != null:
+		_fault(
+			&"context.write_failed",
+			"Rule %s could not write state path %s. %s"
+			% [rule_id, state_path, write_diagnostic.message],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false, true, before_result.value)
+		return false
+	_trace._append_write(rule_id, state_path, true, true, before_result.value, true, value)
+	return true
+
+
+func record_condition(condition_id: StringName, result: bool) -> bool:
+	if not _require_current_rule():
+		return false
+	var rule_id: StringName = _current_rule_id()
+	if not _declared_conditions.has(condition_id):
+		_fault(
+			&"context.undeclared_condition",
+			"Rule %s evaluated undeclared condition %s." % [rule_id, condition_id]
+		)
+		return false
+	_trace._append_condition(rule_id, condition_id, result)
+	return true
+
+
+func emit_event(event_id: StringName, payload: Dictionary[StringName, Variant]) -> bool:
+	var rule_id: StringName = _current_rule_id()
+	if not _require_current_rule():
+		_trace._append_event(rule_id, event_id, false, payload)
+		return false
+	if not _declared_events.has(event_id):
+		_fault(
+			&"context.undeclared_event",
+			"Rule %s emitted undeclared event %s." % [rule_id, event_id]
+		)
+		_trace._append_event(rule_id, event_id, false, payload)
+		return false
+	if not _event_registry.has_event(event_id):
+		_fault(
+			&"context.unknown_event",
+			"Rule %s emitted unknown event %s." % [rule_id, event_id]
+		)
+		_trace._append_event(rule_id, event_id, false, payload)
+		return false
+	_trace._append_event(rule_id, event_id, true, payload)
+	return true
+
+
+func append_ledger_transaction(transaction: LedgerTransactionState) -> bool:
+	var rule_id: StringName = _current_rule_id()
+	if not _require_current_rule(CASH_LEDGER_PATH):
+		_trace._append_write(rule_id, CASH_LEDGER_PATH, false)
+		return false
+	if not _declared_writes.has(CASH_LEDGER_PATH):
+		_fault(
+			&"context.undeclared_write",
+			"Rule %s wrote undeclared state path %s." % [rule_id, CASH_LEDGER_PATH],
+			CASH_LEDGER_PATH
+		)
+		_trace._append_write(rule_id, CASH_LEDGER_PATH, false)
+		return false
+	if transaction == null:
+		_fault(&"context.missing_ledger_transaction", "Rule %s provided a missing ledger transaction." % rule_id)
+		_trace._append_write(rule_id, CASH_LEDGER_PATH, false)
+		return false
+	if transaction.source_rule_id != rule_id:
+		_fault(
+			&"context.ledger_source_rule_mismatch",
+			"Ledger transaction %s identifies source Rule %s instead of active Rule %s."
+			% [transaction.stable_id, transaction.source_rule_id, rule_id]
+		)
+		_trace._append_write(rule_id, CASH_LEDGER_PATH, false)
+		return false
+	var path: SimulationStatePath = _state_path_registry.get_path(CASH_LEDGER_PATH)
+	if path == null or path.value_type != SimulationStatePath.ValueType.CASH_LEDGER:
+		_fault(
+			&"context.ledger_path_contract",
+			"Cash Ledger state path %s is not registered with the Cash Ledger type." % CASH_LEDGER_PATH,
+			CASH_LEDGER_PATH
+		)
+		_trace._append_write(rule_id, CASH_LEDGER_PATH, false)
+		return false
+	var source_ledger: CashLedgerState = path.read_cash_ledger(_candidate_state)
+	if source_ledger == null:
+		_fault(&"context.missing_cash_ledger", "The candidate Game State Cash Ledger is missing.")
+		_trace._append_write(rule_id, CASH_LEDGER_PATH, false)
+		return false
+	var balance_before: int = source_ledger.calculate_balance_musd()
+	var append_result: CashLedgerAppendResult = source_ledger.append_transaction(transaction)
+	if not append_result.succeeded():
+		_fault(
+			&"context.ledger_append_failed",
+			"Rule %s could not append ledger transaction %s. %s"
+			% [rule_id, transaction.stable_id, append_result.format_errors()],
+			CASH_LEDGER_PATH
+		)
+		_trace._append_write(
+			rule_id, CASH_LEDGER_PATH, false, true, source_ledger.transactions.size()
+		)
+		return false
+	var write_diagnostic: SimulationDiagnostic = path.write_cash_ledger(_candidate_state, append_result.ledger)
+	if write_diagnostic != null:
+		_fault(&"context.ledger_write_failed", write_diagnostic.message, CASH_LEDGER_PATH)
+		_trace._append_write(
+			rule_id, CASH_LEDGER_PATH, false, true, source_ledger.transactions.size()
+		)
+		return false
+	var balance_after: int = append_result.ledger.calculate_balance_musd()
+	_trace._append_write(
+		rule_id,
+		CASH_LEDGER_PATH,
+		true,
+		true,
+		source_ledger.transactions.size(),
+		true,
+		append_result.ledger.transactions.size()
+	)
+	_trace._append_ledger(
+		rule_id,
+		transaction.stable_id,
+		transaction.amount_musd,
+		balance_before,
+		balance_after
+	)
+	return true
+
+
+func draw_integer(draw_id: StringName, minimum: int, maximum: int) -> SimulationIntegerResult:
+	if not _require_current_rule():
+		return SimulationIntegerResult.failure(_diagnostics[_diagnostics.size() - 1])
+	var rule_id: StringName = _current_rule_id()
+	if not StableIdentifier.is_valid(draw_id):
+		return SimulationIntegerResult.failure(
+			_fault(
+				&"context.invalid_random_draw_id",
+				"Rule %s used invalid random draw identifier %s." % [rule_id, draw_id]
+			)
+		)
+	if minimum > maximum:
+		return SimulationIntegerResult.failure(
+			_fault(
+				&"context.invalid_random_range",
+				"Rule %s used random range %d through %d." % [rule_id, minimum, maximum]
+			)
+		)
+	var value: int = _random.randi_range(minimum, maximum)
+	_trace._append_random_draw(rule_id, draw_id, minimum, maximum, value)
+	return SimulationIntegerResult.success(value)
+
+
+func has_fault() -> bool:
+	return not _diagnostics.is_empty()
+
+
+func get_diagnostics() -> Array[SimulationDiagnostic]:
+	var diagnostics: Array[SimulationDiagnostic] = []
+	diagnostics.assign(_diagnostics)
+	return diagnostics
+
+
+func _require_current_rule(state_path: StringName = &"") -> bool:
+	if _current_rule != null:
+		return true
+	_diagnostics.append(
+		SimulationDiagnostic.new(
+			SimulationDiagnostic.Severity.ERROR,
+			&"context.no_active_rule",
+			"The Simulation Context does not have an active Rule.",
+			&"",
+			state_path
+		)
+	)
+	return false
+
+
+func _current_rule_id() -> StringName:
+	if _current_rule == null:
+		return &""
+	return _current_rule.stable_id
+
+
+func _fault(code: StringName, message: String, state_path: StringName = &"") -> SimulationDiagnostic:
+	var diagnostic: SimulationDiagnostic = SimulationDiagnostic.new(
+		SimulationDiagnostic.Severity.ERROR,
+		code,
+		message,
+		_current_rule_id(),
+		state_path
+	)
+	_diagnostics.append(diagnostic)
+	return diagnostic

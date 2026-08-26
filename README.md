@@ -1,0 +1,74 @@
+# AI Lab Simulator
+
+This repository contains the canonical product specifications and an early compute-SDF render proof.
+
+The [canonical specification index](docs/README.md) defines the game loop, domain model, progression, deterministic simulation, Rule Graph, Simulation Laboratory, and Marketing Slice.
+
+The current runtime implementation still answers one narrow production question: can a solo-friendly, fixed-camera AI-campus management game use a lightweight signed-distance-field renderer to create a distinctive, geometry-first look inside Godot?
+
+The working answer is **yes, at prototype scale**. The main scene now bypasses Godot's normal 3D scene renderer for the campus image. A GLSL compute shader ray-marches an analytic SDF campus into a GPU texture, `Texture2DRD` exposes that texture to Godot, and a separate harness presents it with a minimal HUD and deterministic capture.
+
+This is intentionally not a reimplementation of a complete dynamic sparse-SDF engine. The first proof includes:
+
+- analytic CSG buildings and campus infrastructure;
+- fixed orthographic isometric camera;
+- palette materials, derived normals, soft shadows, ambient occlusion, and fog;
+- geometry-changing `growth`, `overload`, and `scrutiny` states;
+- render-on-change compute dispatch at 640×360, scaled to a 1280×720 presentation;
+- strict errors when compute, shader, state, dimensions, or GPU resources violate the contract.
+
+Sparse brick caches, geometry clipmaps, incremental dirty-region updates, arbitrary sculpting, physics mesh extraction, and full-resolution continuous animation are explicitly deferred until this look and interaction model earn that complexity.
+
+## Verified toolchain
+
+- Godot standard/non-.NET `4.7.2.stable.official.ed1daf0bf`
+- D3D12 Forward+ compute on an NVIDIA GeForce RTX 5080
+- PowerShell 7 or Windows PowerShell 5.1
+
+The canonical Windows executables are `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe` and `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64_console.exe`. Each automation script resolves this location from the repository root. The scripts reject other versions and Mono/.NET builds. The SDF proof does not require Blender at runtime or during its render test. The existing Blender-generated GLB remains in the repository as a legacy visual comparison, not as a fallback.
+
+Install the standard Godot build without administrator access:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\install-godot-standard.ps1
+```
+
+## One-command full render test
+
+From the repository root:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\render-test.ps1
+```
+
+The command verifies Godot 4.7, imports the compute shader, launches the real D3D12 Forward+ renderer, dispatches all three states, captures 1280×720 PNGs under `game/evidence/sdf`, validates the outputs, and exits nonzero on a broken contract.
+
+Open `game/project.godot` and press Run for the interactive proof. Keys `1`, `2`, and `3` switch the three renderer states. The renderer dispatches only when state or camera input changes.
+
+## Simulation State test
+
+The Marketing Scenario has a typed Game State foundation.
+
+The Scenario is authored in `game/simulation/content/marketing_scenario.tres`.
+
+The snapshot loader uses `CACHE_MODE_IGNORE_DEEP`.
+
+The loader validates the schema version, content version, required state, stable identifiers, and content references before it returns a Game State.
+
+Run the state and snapshot test from the repository root:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\simulation-test.ps1
+```
+
+The command must use the canonical standard Godot 4.7.2 automation executable.
+
+## Code ownership
+
+- `game/renderer/sdf/campus_sdf.glsl`: distance functions, ray marching, lighting, and state geometry.
+- `game/renderer/sdf/sdf_renderer.gd`: lightweight GPU resource and compute-dispatch adapter.
+- `game/scripts/sdf_render_harness.gd`: HUD, input, deterministic state capture, and test exit behavior.
+- `scripts/render-test.ps1`: exact end-to-end verification command.
+- `model-pipeline`: earlier Blender/GLB comparison pipeline; not used by the SDF main scene.
+
+The renderer has no gameplay rules, HUD logic, asset generator, or mesh fallback. That boundary is deliberate so the visual experiment can be replaced or expanded without entangling the simulation.

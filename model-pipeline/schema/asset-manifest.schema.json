@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-lab-simulator.local/schema/asset-manifest.schema.json",
+  "title": "AI Lab Simulator asset manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "asset_id",
+    "family",
+    "footprint",
+    "location_role",
+    "state_layers",
+    "lod_policy",
+    "collision_type",
+    "material_budget",
+    "source_file",
+    "export_file",
+    "generator",
+    "required_blender"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": 1 },
+    "asset_id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+    "family": {
+      "type": "array",
+      "minItems": 3,
+      "uniqueItems": true,
+      "items": { "enum": ["lab_core", "compute", "research_talent", "civic_regulatory", "commercial_customer", "dressing"] }
+    },
+    "footprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width_m", "depth_m", "height_m"],
+      "properties": {
+        "width_m": { "type": "number", "exclusiveMinimum": 0 },
+        "depth_m": { "type": "number", "exclusiveMinimum": 0 },
+        "height_m": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "location_role": { "const": "campus_primary_surface" },
+    "state_layers": {
+      "type": "array",
+      "prefixItems": [
+        { "const": "growth" },
+        { "const": "overload" },
+        { "const": "scrutiny" }
+      ],
+      "items": false
+    },
+    "lod_policy": {
+      "type": "object",
+      "required": ["prototype", "next_gate"],
+      "properties": {
+        "prototype": { "const": "lod0_only" },
+        "next_gate": { "type": "string", "minLength": 1 }
+      }
+    },
+    "collision_type": { "const": "none_render_proof" },
+    "material_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_materials", "painted_textures"],
+      "properties": {
+        "max_materials": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "painted_textures": { "const": 0 }
+      }
+    },
+    "source_file": { "const": "source/campus_modular_kit.blend" },
+    "export_file": { "const": "game/assets/generated/campus_modular_kit.glb" },
+    "generator": { "const": "model-pipeline/scripts/generate_assets.py" },
+    "required_blender": { "const": "5.1" }
+  }
+}
+

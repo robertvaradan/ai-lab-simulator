@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/asset-manifest.schema.json",
+  "schema_version": 1,
+  "asset_id": "campus_modular_kit_v001",
+  "family": [
+    "lab_core",
+    "compute",
+    "research_talent"
+  ],
+  "footprint": {
+    "width_m": 30.0,
+    "depth_m": 11.0,
+    "height_m": 8.0
+  },
+  "location_role": "campus_primary_surface",
+  "state_layers": [
+    "growth",
+    "overload",
+    "scrutiny"
+  ],
+  "lod_policy": {
+    "prototype": "lod0_only",
+    "next_gate": "author_lod1_after_gameplay_scale_validation"
+  },
+  "collision_type": "none_render_proof",
+  "material_budget": {
+    "max_materials": 10,
+    "painted_textures": 0
+  },
+  "source_file": "source/campus_modular_kit.blend",
+  "export_file": "game/assets/generated/campus_modular_kit.glb",
+  "generator": "model-pipeline/scripts/generate_assets.py",
+  "required_blender": "5.1"
+}
+

@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://ctvkchk6n6uci"
+path="res://.godot/imported/campus_sdf.glsl-3663cb5939a13fd1e59ba8fa06e6ba60.res"
+
+[deps]
+
+source_file="res://renderer/sdf/campus_sdf.glsl"
+dest_files=["res://.godot/imported/campus_sdf.glsl-3663cb5939a13fd1e59ba8fa06e6ba60.res"]
+
+[params]
+
