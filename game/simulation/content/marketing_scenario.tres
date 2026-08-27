@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MarketingScenarioDefinition" load_steps=33 format=3]
+[gd_resource type="Resource" script_class="MarketingScenarioDefinition" load_steps=31 format=3]
 
 [ext_resource type="Script" path="res://simulation/content/marketing_scenario_definition.gd" id="1_scenario"]
 [ext_resource type="Script" path="res://simulation/state/game_state.gd" id="2_game"]
@@ -13,7 +13,6 @@
 [ext_resource type="Script" path="res://simulation/state/competitor_state.gd" id="11_competitor"]
 [ext_resource type="Script" path="res://simulation/state/market_state.gd" id="12_market"]
 [ext_resource type="Script" path="res://simulation/state/cash_ledger_state.gd" id="13_ledger"]
-[ext_resource type="Script" path="res://simulation/state/active_plan_state.gd" id="14_plan"]
 [ext_resource type="Script" path="res://simulation/state/runtime_id_counters_state.gd" id="15_counters"]
 
 [sub_resource type="Resource" id="Resource_player_evaluations"]
@@ -124,16 +123,12 @@ stable_id = &"ledger.cash.company"
 opening_balance_musd = 150
 transactions = []
 
-[sub_resource type="Resource" id="Resource_active_plan"]
-script = ExtResource("14_plan")
-stable_id = &"plan.player.active"
-commands = []
-
 [sub_resource type="Resource" id="Resource_runtime_id_counters"]
 script = ExtResource("15_counters")
 next_sequence_by_entity_type = {
 &"application": 1,
 &"command": 1,
+&"command_batch": 1,
 &"contract": 1,
 &"event": 1,
 &"ledger_transaction": 1,
@@ -144,7 +139,7 @@ next_sequence_by_entity_type = {
 
 [sub_resource type="Resource" id="Resource_starting_game_state"]
 script = ExtResource("2_game")
-schema_version = 1
+schema_version = 2
 content_version = 1
 rule_graph_id = &"rule_graph.marketing.first_quarter"
 rule_graph_version = 1
@@ -153,7 +148,6 @@ calendar = SubResource("Resource_calendar")
 company = SubResource("Resource_company")
 world = SubResource("Resource_world")
 cash_ledger = SubResource("Resource_cash_ledger")
-active_plan = SubResource("Resource_active_plan")
 pending_command_batch = null
 attention_events = []
 notifications = []
@@ -162,7 +156,7 @@ runtime_id_counters = SubResource("Resource_runtime_id_counters")
 
 [resource]
 script = ExtResource("1_scenario")
-schema_version = 1
+schema_version = 2
 content_version = 1
 rule_graph_id = &"rule_graph.marketing.first_quarter"
 rule_graph_version = 1
@@ -171,4 +165,5 @@ difficulty_profile_id = &"difficulty.standard"
 specification_reference = "docs/marketing/marketing-scenario.md"
 starting_game_state = SubResource("Resource_starting_game_state")
 available_project_ids = Array[StringName]([&"project.research.frontier_model", &"project.scale.burst_compute", &"project.application.coding_agent"])
+command_type_ids = Array[StringName]([&"command.project.start"])
 content_reference_ids = Array[StringName]([&"difficulty.standard", &"calendar_state.planning", &"contract.compute.standard", &"contract_state.active", &"model_release_state.released", &"release_strategy.commercial_api", &"site_plot_state.compact_lab", &"site_plot_state.no_link", &"site_plot_state.product_studio", &"competitor_stage.northstar.announced", &"command.project.start", &"project.research.frontier_model", &"project.scale.burst_compute", &"project.application.coding_agent"])

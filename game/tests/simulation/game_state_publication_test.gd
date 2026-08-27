@@ -118,7 +118,7 @@ func _run_test() -> void:
 	_expect(listener.notification_count == 0, "A failed operation result notified a listener.")
 
 	var invalid_result: GameStateLoadResult = MarketingScenarioFactory.create_state(definition)
-	invalid_result.state.schema_version = 2
+	invalid_result.state.schema_version = GameStateValidator.CURRENT_SCHEMA_VERSION + 1
 	var invalid_publication: GameStateValidationResult = service.publish_operation_result(
 		_new_success_operation_result(
 			SimulationOperationOutcome.Type.COMPLETED,
@@ -194,7 +194,7 @@ func _verify_snapshot_publication(
 	) -> void:
 	var notification_count_before: int = listener.notification_count
 	var invalid_result: GameStateLoadResult = MarketingScenarioFactory.create_state(definition)
-	invalid_result.state.schema_version = 2
+	invalid_result.state.schema_version = GameStateValidator.CURRENT_SCHEMA_VERSION + 1
 	var raw_save_error: Error = ResourceSaver.save(invalid_result.state, INVALID_SNAPSHOT_PATH)
 	_expect(raw_save_error == OK, "The invalid publication fixture could not be saved.")
 	if raw_save_error == OK:

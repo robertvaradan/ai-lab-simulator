@@ -48,7 +48,10 @@ func _initialize() -> void:
 
 
 func _verify_definition(definition: MarketingScenarioDefinition) -> void:
-	_expect(definition.schema_version == 1, "The Scenario schema version is not 1.")
+	_expect(
+		definition.schema_version == GameStateValidator.CURRENT_SCHEMA_VERSION,
+		"The Scenario schema version is not %d." % GameStateValidator.CURRENT_SCHEMA_VERSION
+	)
 	_expect(definition.content_version == 1, "The Scenario content version is not 1.")
 	_expect(
 		definition.stable_id == &"scenario.marketing.first_quarter",
@@ -65,6 +68,8 @@ func _verify_definition(definition: MarketingScenarioDefinition) -> void:
 		&"project.application.coding_agent",
 	]
 	_expect(definition.available_project_ids == expected_project_ids, "The available Project identifiers are incorrect.")
+	var expected_command_type_ids: Array[StringName] = [&"command.project.start"]
+	_expect(definition.command_type_ids == expected_command_type_ids, "The Command type identifiers are incorrect.")
 	var validation: GameStateValidationResult = MarketingScenarioValidator.validate(definition)
 	_expect(validation.is_valid(), "The Marketing Scenario definition is invalid:\n%s" % validation.format_errors())
 
@@ -81,7 +86,10 @@ func _verify_deep_copy(state: GameState, authored_state: GameState) -> void:
 
 
 func _verify_starting_state(state: GameState) -> void:
-	_expect(state.schema_version == 1, "The Game State schema version is incorrect.")
+	_expect(
+		state.schema_version == GameStateValidator.CURRENT_SCHEMA_VERSION,
+		"The Game State schema version is incorrect."
+	)
 	_expect(state.content_version == 1, "The Game State content version is incorrect.")
 	_expect(
 		state.rule_graph_id == &"rule_graph.marketing.first_quarter",
@@ -170,8 +178,6 @@ func _verify_starting_state(state: GameState) -> void:
 	_expect(state.cash_ledger.stable_id == &"ledger.cash.company", "The Cash Ledger identifier is incorrect.")
 	_expect(state.cash_ledger.opening_balance_musd == 150, "The Cash opening balance is incorrect.")
 	_expect(state.cash_ledger.transactions.is_empty(), "The starting Cash Ledger has a transaction.")
-	_expect(state.active_plan.stable_id == &"plan.player.active", "The active Plan identifier is incorrect.")
-	_expect(state.active_plan.commands.is_empty(), "The staged Plan is not empty.")
 	_expect(state.pending_command_batch == null, "The starting state has a Pending Command Batch.")
 	_expect(state.attention_events.is_empty(), "The starting state has an Attention Event.")
 	_expect(state.notifications.is_empty(), "The starting state has a Notification.")
@@ -180,6 +186,7 @@ func _verify_starting_state(state: GameState) -> void:
 	var expected_counters: Dictionary[StringName, int] = {
 		&"application": 1,
 		&"command": 1,
+		&"command_batch": 1,
 		&"contract": 1,
 		&"event": 1,
 		&"ledger_transaction": 1,
@@ -218,6 +225,7 @@ func _verify_snapshot_text() -> void:
 	_expect(not snapshot_text.is_empty(), "The saved Game State snapshot is empty.")
 	_expect(not snapshot_text.contains("GameStateEcho"), "The snapshot contains GameStateEcho.")
 	_expect(not snapshot_text.contains("listener"), "The snapshot contains a listener reference.")
+	_expect(not snapshot_text.contains("active_plan"), "The snapshot contains a draft Plan.")
 	_expect(
 		not snapshot_text.contains("MarketingScenarioDefinition"),
 		"The snapshot contains authored Scenario definitions."
@@ -272,7 +280,7 @@ func _verify_invalid_snapshot_rejection(
 	if not invalid_resource is GameState:
 		return
 	var invalid_state: GameState = invalid_resource
-	invalid_state.schema_version = 2
+	invalid_state.schema_version = GameStateValidator.CURRENT_SCHEMA_VERSION + 1
 	var invalid_save_result: GameStateSaveResult = GameStateSnapshotStore.save_snapshot(
 		invalid_state,
 		INVALID_SNAPSHOT_PATH,
@@ -298,7 +306,7 @@ func _verify_invalid_snapshot_rejection(
 		_expect(not invalid_load_result.succeeded(), "The snapshot loader accepted an incompatible schema version.")
 		_expect(invalid_load_result.state == null, "An invalid snapshot exposed a Game State instance.")
 
-	invalid_state.schema_version = 1
+	invalid_state.schema_version = GameStateValidator.CURRENT_SCHEMA_VERSION
 	invalid_state.company.models[&"model.player.starting"].release_strategy_id = &"release_strategy.missing"
 	raw_save_error = ResourceSaver.save(invalid_state, INVALID_SNAPSHOT_PATH)
 	_expect(raw_save_error == OK, "The missing-reference test fixture could not be saved.")

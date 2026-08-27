@@ -2,24 +2,16 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'lib\godot-standard.ps1')
+
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $gameRoot = Join-Path $repoRoot 'game'
-$godotBin = Join-Path $repoRoot '.tools\godot\4.7.2\Godot_v4.7.2-stable_win64_console.exe'
-$testScript = Join-Path $gameRoot 'tests\services\services_test.gd'
+$godotBin = Get-CanonicalGodotAutomationExecutable -RepoRoot $repoRoot
+$testScript = Join-Path (Join-Path (Join-Path $gameRoot 'tests') 'services') 'services_test.gd'
 
-if (-not (Test-Path -LiteralPath $godotBin -PathType Leaf)) {
-    throw "Required canonical Godot executable is missing: $godotBin. Run scripts\install-godot-standard.ps1."
-}
+$godotVersion = Assert-CanonicalGodotExecutable -GodotPath $godotBin
 if (-not (Test-Path -LiteralPath $testScript -PathType Leaf)) {
     throw "Required service test script is missing: $testScript"
-}
-
-$godotVersion = (& $godotBin --version | Select-Object -First 1).Trim()
-if (-not $godotVersion.StartsWith('4.7.2.stable')) {
-    throw "Godot 4.7.2 stable is required; executable reported '$godotVersion'."
-}
-if ($godotVersion -match '(?i)(mono|\.net)') {
-    throw "The standard non-.NET Godot runtime is required; executable reported '$godotVersion'."
 }
 
 Write-Output '[1/3] Importing the Godot 4.7 project'

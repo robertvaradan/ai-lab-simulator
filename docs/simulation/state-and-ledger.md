@@ -22,11 +22,13 @@ The Game State must contain World State.
 
 The Game State must contain the Cash Ledger.
 
-The Game State must contain the active Plan state.
+The Game State must not contain a draft Plan.
 
-The active Plan state must contain committed simulation facts only.
+The Game State can contain one Pending Command Batch.
 
-The Game State must not contain an uncommitted draft Plan.
+A Pending Command Batch must contain the Commands from the last committed Plan.
+
+A Pending Command Batch must not execute more than once.
 
 The Game State must contain Attention Events and Notifications.
 

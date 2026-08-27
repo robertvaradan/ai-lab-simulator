@@ -13,9 +13,10 @@
 - This project uses the standard, non-.NET Godot runtime because its runtime code is GDScript and GLSL.
 - The canonical Windows editor is `<repository-root>\.tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe`.
 - The canonical Windows automation executable is `<repository-root>\.tools\godot\4.7.2\Godot_v4.7.2-stable_win64_console.exe`.
-- Do not use `Godot_mono.exe`, `Godot_mono_console.exe`, a Downloads-folder copy, a Program Files copy, or an executable discovered through `PATH` for project automation.
-- Each checked-in automation script must resolve the canonical executable from the repository root.
-- Each checked-in automation script must fail if the canonical executable reports a Mono/.NET build or a version other than Godot 4.7.2 stable.
+- The canonical macOS editor and automation executable is `<repository-root>/.tools/godot/4.7.2/Godot.app/Contents/MacOS/Godot`.
+- Do not use `Godot_mono.exe`, `Godot_mono_console.exe`, a Downloads-folder copy, a Program Files copy, `/Applications/Godot.app`, or an executable discovered through `PATH` for project automation.
+- Each checked-in automation script must resolve the canonical executable for the current host from the repository root.
+- Each checked-in automation script must fail if the canonical executable is missing, reports a Mono/.NET build, or reports a version other than Godot 4.7.2 stable.
 - Do not add a runtime fallback lookup path or an executable override parameter.
 - If the project deliberately adopts C# later, change this contract, the checked-in scripts, export templates, and verification together.
 

@@ -1,5 +1,10 @@
-; AI Lab Simulator render/pipeline foundation.
-; Edit through Godot when possible; keep automated capture contracts in sync with README.md.
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
 
@@ -11,27 +16,25 @@ config/features=PackedStringArray("4.7", "Forward Plus")
 
 [debug]
 
-gdscript/warnings/enable=true
-gdscript/warnings/enum_variable_without_default=2
 gdscript/warnings/incompatible_ternary=2
-gdscript/warnings/inference_on_variant=2
+gdscript/warnings/untyped_declaration=2
+gdscript/warnings/unsafe_property_access=2
+gdscript/warnings/unsafe_method_access=2
+gdscript/warnings/unsafe_cast=2
+gdscript/warnings/unsafe_call_argument=2
+gdscript/warnings/unsafe_void_return=2
 gdscript/warnings/int_as_enum_without_cast=2
 gdscript/warnings/int_as_enum_without_match=2
-gdscript/warnings/unsafe_call_argument=2
-gdscript/warnings/unsafe_cast=2
-gdscript/warnings/unsafe_method_access=2
-gdscript/warnings/unsafe_property_access=2
-gdscript/warnings/unsafe_void_return=2
-gdscript/warnings/untyped_declaration=2
+gdscript/warnings/enum_variable_without_default=2
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
-window/size/window_width_override=1280
-window/size/window_height_override=720
 window/size/resizable=false
 window/size/no_focus=true
+window/size/window_width_override=1280
+window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 
 [filesystem]
@@ -41,5 +44,4 @@ import/blender/enabled=false
 [rendering]
 
 rendering_device/driver.windows="d3d12"
-textures/default_filters/use_nearest_mipmap_filter=false
 environment/defaults/default_clear_color=Color(0.045, 0.071, 0.09, 1)

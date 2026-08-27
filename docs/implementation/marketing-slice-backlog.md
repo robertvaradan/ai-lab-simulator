@@ -147,7 +147,7 @@ Verification:
 
 ### MS1-04: Implement Plan validation and commitment
 
-Status: `OPEN`
+Status: `DONE`
 
 Dependencies: `MS1-01`, `MS1-02`, and `MS1-03`.
 
@@ -177,7 +177,7 @@ Verification:
 
 ### MS1-05: Implement Month Step and Quarter Boundary
 
-Status: `BLOCKED`
+Status: `OPEN`
 
 Dependencies: `MS1-03` and `MS1-04`.
 

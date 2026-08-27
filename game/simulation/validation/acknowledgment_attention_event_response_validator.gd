@@ -18,8 +18,8 @@ func validate_response(
 			SimulationDiagnostic.new(
 				SimulationDiagnostic.Severity.ERROR,
 				&"attention_response.event_type_mismatch",
-				"Attention Event %s has type %s, but validator %s owns type %s."
-				% [event.stable_id, event.event_type_id, event_type_id, event_type_id]
+				"Attention Event %s has type %s, but this validator owns type %s."
+				% [event.stable_id, event.event_type_id, event_type_id]
 			)
 		)
 		return diagnostics

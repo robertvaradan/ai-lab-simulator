@@ -12,7 +12,7 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 
 ## Runtime and project shape
 
-- Use the standard, non-.NET Godot 4.7.2 build at `<repository-root>\.tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe` and keep `project.godot` directly in this folder. The repository-root `AGENTS.md` owns the executable contract.
+- Use the standard, non-.NET Godot 4.7.2 build from the repository-root `AGENTS.md` contract and keep `project.godot` directly in this folder.
 - `scenes/sdf_render_harness.tscn` is the normal runnable main scene and the automated capture harness.
 - The primary render proof is a compute-shader SDF pipeline. Forward+ and the main `RenderingDevice` are required; missing compute support is fatal.
 - Keep renderer implementation under `renderer/sdf`. Keep HUD, input, capture orchestration, and gameplay state outside that directory.
@@ -63,13 +63,19 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 
 ## Verification
 
-From the repository root, run:
+From the repository root on Windows, run:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\render-test.ps1
 ```
 
-Success requires the standard non-.NET Godot runtime, a clean Godot import, a real D3D12 Forward+ device, `SDF_RENDERER_INITIALIZED`, three `SDF_DISPATCH_SUBMITTED` records, `SDF_RENDER_TEST_SUCCESS`, and non-empty 1280×720 images under `game/evidence/sdf`. Inspect every PNG after any visual, camera, material, shader, dispatch, texture, or presentation change.
+From the repository root on macOS, run:
+
+```bash
+./scripts/render-test.sh
+```
+
+Success requires the standard non-.NET Godot runtime, a clean Godot import, a real Forward+ RenderingDevice, `SDF_RENDERER_INITIALIZED`, three `SDF_DISPATCH_SUBMITTED` records, `SDF_RENDER_TEST_SUCCESS`, and non-empty 1280×720 images under `game/evidence/sdf`. Windows must use D3D12. macOS must use Metal. Inspect every PNG after any visual, camera, material, shader, dispatch, texture, or presentation change.
 
 Gameplay verification must also follow `../docs/simulation/invariants.md` after Simulation Core implementation starts.
 

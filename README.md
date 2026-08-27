@@ -22,28 +22,58 @@ Sparse brick caches, geometry clipmaps, incremental dirty-region updates, arbitr
 ## Verified toolchain
 
 - Godot standard/non-.NET `4.7.2.stable.official.ed1daf0bf`
-- D3D12 Forward+ compute on an NVIDIA GeForce RTX 5080
-- PowerShell 7 or Windows PowerShell 5.1
+- Windows: D3D12 Forward+ compute
+- macOS: Metal Forward+ compute
+- PowerShell 7 or Windows PowerShell 5.1 on Windows
+- bash on macOS
 
-The canonical Windows executables are `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe` and `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64_console.exe`. Each automation script resolves this location from the repository root. The scripts reject other versions and Mono/.NET builds. The SDF proof does not require Blender at runtime or during its render test. The existing Blender-generated GLB remains in the repository as a legacy visual comparison, not as a fallback.
+The canonical Windows executables are `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe` and `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64_console.exe`. The canonical macOS executable is `.tools/godot/4.7.2/Godot.app/Contents/MacOS/Godot`. Each automation script resolves this location from the repository root for the current host. The scripts reject a missing binary, other versions, and Mono/.NET builds. The scripts do not search `PATH`, Downloads, Program Files, or `/Applications`. The SDF proof does not require Blender at runtime or during its render test. The existing Blender-generated GLB remains in the repository as a legacy visual comparison, not as a fallback.
 
-Install the standard Godot build without administrator access:
+Install the standard Godot build without administrator access.
+
+Windows:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\install-godot-standard.ps1
 ```
 
+macOS:
+
+```bash
+./scripts/install-godot-standard.sh
+```
+
 ## One-command full render test
 
-From the repository root:
+From the repository root on Windows:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\render-test.ps1
 ```
 
-The command verifies Godot 4.7, imports the compute shader, launches the real D3D12 Forward+ renderer, dispatches all three states, captures 1280×720 PNGs under `game/evidence/sdf`, validates the outputs, and exits nonzero on a broken contract.
+From the repository root on macOS:
 
-Open `game/project.godot` and press Run for the interactive proof. Keys `1`, `2`, and `3` switch the three renderer states. The renderer dispatches only when state or camera input changes.
+```bash
+./scripts/render-test.sh
+```
+
+The command verifies Godot 4.7, imports the compute shader, launches the real Forward+ renderer, dispatches all three states, captures 1280×720 PNGs under `game/evidence/sdf`, validates the outputs, and exits nonzero on a broken contract.
+
+Open the editor with the canonical executable.
+
+Windows:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\open-editor.ps1
+```
+
+macOS:
+
+```bash
+./scripts/open-editor.sh
+```
+
+`game/project.godot` is the Godot project. Press Run for the interactive proof. Keys `1`, `2`, and `3` switch the three renderer states. The renderer dispatches only when state or camera input changes.
 
 ## Simulation State test
 
@@ -55,10 +85,18 @@ The snapshot loader uses `CACHE_MODE_IGNORE_DEEP`.
 
 The loader validates the schema version, content version, required state, stable identifiers, and content references before it returns a Game State.
 
-Run the state and snapshot test from the repository root:
+Run the state and snapshot test from the repository root.
+
+Windows:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\simulation-test.ps1
+```
+
+macOS:
+
+```bash
+./scripts/simulation-test.sh
 ```
 
 The command must use the canonical standard Godot 4.7.2 automation executable.

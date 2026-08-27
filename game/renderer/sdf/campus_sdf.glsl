@@ -204,6 +204,8 @@ void main() {
 	}
 
 	vec2 uv = (vec2(pixel) + 0.5) / vec2(resolution);
+	// Compute invocation (0,0) is the top-left texel. Flip Y so +uv.y is camera-up.
+	uv.y = 1.0 - uv.y;
 	uv = uv * 2.0 - 1.0;
 	uv.x *= float(resolution.x) / float(resolution.y);
 

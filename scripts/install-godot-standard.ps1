@@ -3,13 +3,19 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
+. (Join-Path $PSScriptRoot 'lib\godot-standard.ps1')
+
+if ((Get-GodotHostPlatform) -ne 'windows') {
+    throw 'Use scripts/install-godot-standard.sh on macOS.'
+}
+
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $version = '4.7.2'
 $releaseName = "Godot_v$version-stable_win64"
-$installDirectory = Join-Path $repoRoot '.tools\godot\4.7.2'
+$installDirectory = Get-CanonicalGodotInstallDirectory -RepoRoot $repoRoot
 $archivePath = Join-Path $installDirectory "$releaseName.exe.zip"
-$editorPath = Join-Path $installDirectory "$releaseName.exe"
-$consolePath = Join-Path $installDirectory "${releaseName}_console.exe"
+$editorPath = Get-CanonicalGodotEditorExecutable -RepoRoot $repoRoot
+$consolePath = Get-CanonicalGodotAutomationExecutable -RepoRoot $repoRoot
 $downloadUrl = "https://downloads.godotengine.org/?flavor=stable&platform=windows.64&slug=win64.exe.zip&version=$version"
 
 New-Item -ItemType Directory -Path $installDirectory -Force | Out-Null

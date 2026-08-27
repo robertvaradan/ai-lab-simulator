@@ -306,12 +306,11 @@ func commit_plan(state: GameState, plan: Plan) -> SimulationOperationResult:
 		)
 	candidate_state.pending_command_batch = batch
 	candidate_state.attention_events.clear()
-	candidate_state.runtime_id_counters.next_sequence_by_entity_type[&"command_batch"] = (
-		next_batch_sequence + 1
-	)
-	candidate_state.runtime_id_counters.next_sequence_by_entity_type[&"command"] += (
-		plan.commands.size()
-	)
+	var next_counters: Dictionary[StringName, int] = {}
+	next_counters.assign(candidate_state.runtime_id_counters.next_sequence_by_entity_type)
+	next_counters[&"command_batch"] = next_batch_sequence + 1
+	next_counters[&"command"] = next_counters[&"command"] + plan.commands.size()
+	candidate_state.runtime_id_counters.next_sequence_by_entity_type = next_counters
 
 	var candidate_validation: GameStateValidationResult = _validate_state(candidate_state)
 	if not candidate_validation.is_valid():
