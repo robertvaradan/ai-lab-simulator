@@ -51,6 +51,12 @@ The mesh must contain four axis-aligned bars:
 
 The four bars must not overlap.
 
+Each bar must include a top face and a bottom face.
+
+Face winding must match Godot `PrimitiveMesh` front faces.
+
+Stored normals must point outward.
+
 The Y size is the bar height.
 
 The Y size must not inset.

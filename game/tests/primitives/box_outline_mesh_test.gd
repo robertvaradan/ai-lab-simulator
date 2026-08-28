@@ -14,6 +14,7 @@ func _initialize() -> void:
 	_verify_size_fits_thickness()
 	_verify_segments_do_not_overlap()
 	_verify_mesh_stays_inside_outer_size()
+	_verify_top_and_bottom_faces()
 	_verify_face_winding()
 	_finish()
 
@@ -110,6 +111,42 @@ func _verify_mesh_stays_inside_outer_size() -> void:
 	_expect(saw_inner_x, "The mesh has no inset inner X face.")
 
 
+func _verify_top_and_bottom_faces() -> void:
+	var mesh: BoxOutlineMesh = BoxOutlineMesh.new()
+	mesh.size = Vector3(1.8, 0.8, 1.2)
+	mesh.thickness = 0.2
+	var arrays: Array = mesh.get_mesh_arrays()
+	var vertex_value: Variant = arrays[Mesh.ARRAY_VERTEX]
+	var index_value: Variant = arrays[Mesh.ARRAY_INDEX]
+	var normal_value: Variant = arrays[Mesh.ARRAY_NORMAL]
+	_expect(vertex_value is PackedVector3Array, "The mesh vertex array is missing.")
+	_expect(index_value is PackedInt32Array, "The mesh index array is missing.")
+	_expect(normal_value is PackedVector3Array, "The mesh normal array is missing.")
+	if not vertex_value is PackedVector3Array:
+		return
+	if not index_value is PackedInt32Array:
+		return
+	if not normal_value is PackedVector3Array:
+		return
+	var vertices: PackedVector3Array = vertex_value
+	var indices: PackedInt32Array = index_value
+	var normals: PackedVector3Array = normal_value
+	var top_count: int = 0
+	var bottom_count: int = 0
+	var triangle_count: int = indices.size() / 3
+	for triangle_index: int in triangle_count:
+		var i0: int = indices[triangle_index * 3]
+		var stored_normal: Vector3 = normals[i0]
+		if stored_normal.dot(Vector3.UP) > 0.9:
+			top_count += 1
+			_expect(is_equal_approx(vertices[i0].y, mesh.size.y * 0.5), "A top face is not on the outer top.")
+		if stored_normal.dot(Vector3.DOWN) > 0.9:
+			bottom_count += 1
+			_expect(is_equal_approx(vertices[i0].y, -mesh.size.y * 0.5), "A bottom face is not on the outer bottom.")
+	_expect(top_count == 8, "The outline does not have eight top triangles.")
+	_expect(bottom_count == 8, "The outline does not have eight bottom triangles.")
+
+
 func _verify_face_winding() -> void:
 	var mesh: BoxOutlineMesh = BoxOutlineMesh.new()
 	var arrays: Array = mesh.get_mesh_arrays()
@@ -131,11 +168,19 @@ func _verify_face_winding() -> void:
 	_expect(indices.size() >= 3, "The mesh has no triangles.")
 	if indices.size() < 3:
 		return
-	var v0: Vector3 = vertices[indices[0]]
-	var v1: Vector3 = vertices[indices[1]]
-	var v2: Vector3 = vertices[indices[2]]
-	var winding_normal: Vector3 = (v1 - v0).cross(v2 - v0).normalized()
-	_expect(winding_normal.dot(normals[indices[0]]) > 0.0, "Triangle winding does not match the stored normal.")
+	var triangle_count: int = indices.size() / 3
+	for triangle_index: int in triangle_count:
+		var i0: int = indices[triangle_index * 3]
+		var i1: int = indices[triangle_index * 3 + 1]
+		var i2: int = indices[triangle_index * 3 + 2]
+		var v0: Vector3 = vertices[i0]
+		var v1: Vector3 = vertices[i1]
+		var v2: Vector3 = vertices[i2]
+		var winding_normal: Vector3 = (v1 - v0).cross(v2 - v0)
+		_expect(
+			winding_normal.dot(normals[i0]) < 0.0,
+			"Triangle winding does not match Godot PrimitiveMesh front faces."
+		)
 
 
 func _vertices_of(mesh: BoxOutlineMesh) -> PackedVector3Array:
@@ -167,7 +212,7 @@ func _finish() -> void:
 		printerr("BOX_OUTLINE_MESH_TEST_FAILURE count=%d" % _failure_count)
 		quit(1)
 		return
-	print("%s cases=8" % TEST_SUCCESS)
+	print("%s cases=9" % TEST_SUCCESS)
 	quit(0)
 
 
