@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ "$(uname -s)" != "Darwin" ]]; then
-	echo "Use scripts/render-campus-blockout.ps1 on Windows." >&2
-	exit 1
-fi
+case "$(uname -s)" in
+	Darwin|Linux)
+		;;
+	*)
+		echo "Use scripts/render-campus-blockout.ps1 on Windows." >&2
+		exit 1
+		;;
+esac
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/godot-standard.sh
@@ -54,7 +58,7 @@ report_if_script_error "$IMPORT_OUTPUT" 'Godot import'
 echo '[2/2] Rendering the fixed 1920x1080 campus blockout'
 set +e
 RENDER_OUTPUT="$(
-	"$GODOT_BIN" \
+	godot_standard_run_windowed "$GODOT_BIN" \
 		--path "$GAME_ROOT" \
 		--resolution 1920x1080 \
 		--quit-after 900 \

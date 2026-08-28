@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ "$(uname -s)" != "Darwin" ]]; then
-	echo "Use scripts/services-test.ps1 on Windows." >&2
-	exit 1
-fi
+case "$(uname -s)" in
+	Darwin|Linux)
+		;;
+	*)
+		echo "Use scripts/services-test.ps1 on Windows." >&2
+		exit 1
+		;;
+esac
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/godot-standard.sh

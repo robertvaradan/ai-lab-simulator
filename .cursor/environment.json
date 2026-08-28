@@ -1,0 +1,4 @@
+{
+  "name": "AI Lab Simulator",
+  "install": "bash scripts/cloud-agent-setup.sh"
+}
