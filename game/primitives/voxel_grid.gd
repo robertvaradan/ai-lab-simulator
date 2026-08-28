@@ -43,3 +43,32 @@ static func fit_size(size: Vector3, thickness: float) -> Vector3:
 	if fitted.z < minimum_length:
 		fitted.z = minimum_length
 	return fitted
+
+
+static func max_cylinder_thickness(radius: float) -> float:
+	var limit: float = radius - CELL_SIZE
+	if limit < CELL_SIZE:
+		return CELL_SIZE
+	return limit
+
+
+static func snap_cylinder_thickness(value: float, radius: float) -> float:
+	var snapped: float = snap_length(value)
+	var limit: float = max_cylinder_thickness(radius)
+	if snapped > limit:
+		return limit
+	return snapped
+
+
+static func fit_radius(radius: float, thickness: float) -> float:
+	var fitted: float = snap_length(radius)
+	var minimum_radius: float = snap_length(thickness) + CELL_SIZE
+	if fitted < minimum_radius:
+		return minimum_radius
+	return fitted
+
+
+static func snap_radial_segments(value: int) -> int:
+	if value < 3:
+		return 3
+	return value

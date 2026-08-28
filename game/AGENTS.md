@@ -25,6 +25,7 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - The campus blockout must use a 0.2 m voxel grid for `PrimitiveMesh` sizes and mesh node origins.
 - A box, cylinder, or sphere extent must land on the 0.2 m grid. Do not keep off-grid sizes or origins for visual tuning.
 - A rectangular frame must use `BoxOutlineMesh`. Do not author four box nodes for one outline.
+- A cylindrical frame must use `CylinderOutlineMesh`. Do not author a stack of cylinder nodes for one outline.
 - Follow `../docs/tools/editor-primitives.md` for editor primitive meshes and handles.
 - `scenes/campus_blockout.tscn` must serialize its geometry, materials, lights, environment, and camera.
 - The `CampusBlockout` root must not have a script.
@@ -129,6 +130,8 @@ Run the editor primitive tests on macOS:
 ```
 
 Success requires `BOX_OUTLINE_MESH_TEST_SUCCESS`.
+
+Success requires `CYLINDER_OUTLINE_MESH_TEST_SUCCESS`.
 
 Gameplay verification must also follow `../docs/simulation/invariants.md` after Simulation Core implementation starts.
 
