@@ -16,6 +16,7 @@ func _initialize() -> void:
 	_verify_mesh_stays_inside_outer_size()
 	_verify_top_and_bottom_faces()
 	_verify_face_winding()
+	_verify_box_outline_node()
 	_finish()
 
 
@@ -183,6 +184,13 @@ func _verify_face_winding() -> void:
 		)
 
 
+func _verify_box_outline_node() -> void:
+	var outline: BoxOutline = BoxOutline.new()
+	root.add_child(outline)
+	_expect(outline.mesh is BoxOutlineMesh, "The BoxOutline node did not create a BoxOutlineMesh.")
+	outline.free()
+
+
 func _vertices_of(mesh: BoxOutlineMesh) -> PackedVector3Array:
 	var arrays: Array = mesh.get_mesh_arrays()
 	var vertex_value: Variant = arrays[Mesh.ARRAY_VERTEX]
@@ -212,7 +220,7 @@ func _finish() -> void:
 		printerr("BOX_OUTLINE_MESH_TEST_FAILURE count=%d" % _failure_count)
 		quit(1)
 		return
-	print("%s cases=9" % TEST_SUCCESS)
+	print("%s cases=10" % TEST_SUCCESS)
 	quit(0)
 
 

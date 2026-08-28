@@ -13,6 +13,7 @@ const HANDLE_THICKNESS_Z_POS: int = 8
 const HANDLE_THICKNESS_Z_NEG: int = 9
 const SIZE_HANDLE_COUNT: int = 6
 const AXIS_LENGTH: float = 4096.0
+const MESH_SCRIPT: GDScript = preload("res://primitives/box_outline_mesh.gd")
 
 var _initial_size: Vector3 = Vector3.ZERO
 var _initial_transform: Transform3D = Transform3D.IDENTITY
@@ -20,19 +21,27 @@ var _initial_transform: Transform3D = Transform3D.IDENTITY
 
 func _init() -> void:
 	create_material("lines", Color(0.23, 0.78, 0.82), false, true, false)
-	create_handle_material("handles")
-	create_handle_material("thickness_handles")
+	create_handle_material("handles", true)
+	create_handle_material("thickness_handles", true)
 
 
 func _get_gizmo_name() -> String:
-	return "BoxOutlineMesh"
+	return "BoxOutline"
+
+
+func _get_priority() -> int:
+	return 50
 
 
 func _has_gizmo(for_node_3d: Node3D) -> bool:
+	if for_node_3d is BoxOutline:
+		return true
 	var mesh_instance: MeshInstance3D = for_node_3d as MeshInstance3D
 	if mesh_instance == null:
 		return false
-	return mesh_instance.mesh is BoxOutlineMesh
+	if mesh_instance.mesh is BoxOutlineMesh:
+		return true
+	return mesh_instance.mesh != null and mesh_instance.mesh.get_script() == MESH_SCRIPT
 
 
 func _redraw(gizmo: EditorNode3DGizmo) -> void:
@@ -40,17 +49,19 @@ func _redraw(gizmo: EditorNode3DGizmo) -> void:
 	var mesh: BoxOutlineMesh = _mesh_of(gizmo)
 	if mesh == null:
 		return
-	gizmo.add_lines(_wire_lines(mesh.size, mesh.get_inner_size()), get_material("lines", gizmo), false)
+	var lines: PackedVector3Array = _wire_lines(mesh.size, mesh.get_inner_size())
+	gizmo.add_lines(lines, get_material("lines", gizmo), false)
+	gizmo.add_collision_segments(lines)
 	var size_handles: PackedVector3Array = _size_handle_points(mesh.size)
 	var size_ids: PackedInt32Array = PackedInt32Array(
 		[HANDLE_SIZE_X_POS, HANDLE_SIZE_X_NEG, HANDLE_SIZE_Y_POS, HANDLE_SIZE_Y_NEG, HANDLE_SIZE_Z_POS, HANDLE_SIZE_Z_NEG]
 	)
-	gizmo.add_handles(size_handles, get_material("handles", gizmo), size_ids)
+	gizmo.add_handles(size_handles, get_material("handles"), size_ids)
 	var thickness_handles: PackedVector3Array = _thickness_handle_points(mesh.size, mesh.thickness)
 	var thickness_ids: PackedInt32Array = PackedInt32Array(
 		[HANDLE_THICKNESS_X_POS, HANDLE_THICKNESS_X_NEG, HANDLE_THICKNESS_Z_POS, HANDLE_THICKNESS_Z_NEG]
 	)
-	gizmo.add_handles(thickness_handles, get_material("thickness_handles", gizmo), thickness_ids)
+	gizmo.add_handles(thickness_handles, get_material("thickness_handles"), thickness_ids)
 
 
 func _get_handle_name(_gizmo: EditorNode3DGizmo, handle_id: int, _secondary: bool) -> String:
@@ -102,8 +113,9 @@ func _set_handle(
 	var segment: PackedVector3Array = _local_drag_segment(camera, screen_pos)
 	if handle_id < SIZE_HANDLE_COUNT:
 		_set_size_handle(mesh, node, handle_id, segment)
-		return
-	_set_thickness_handle(mesh, handle_id, segment)
+	else:
+		_set_thickness_handle(mesh, handle_id, segment)
+	node.update_gizmos()
 
 
 func _commit_handle(

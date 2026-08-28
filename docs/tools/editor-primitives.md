@@ -63,7 +63,9 @@ The Y size must not inset.
 
 ## Editor handles
 
-The Godot editor must show handles on a `MeshInstance3D` that uses `BoxOutlineMesh`.
+The Godot editor must show handles on a selected `BoxOutline` node.
+
+The Godot editor must show handles on a selected `MeshInstance3D` that uses `BoxOutlineMesh`.
 
 Size handles must edit the outer size.
 
@@ -82,6 +84,8 @@ A thickness handle must keep the mesh origin fixed.
 Handle edits must snap to the voxel grid.
 
 ## Scene contract
+
+A designer can add a `BoxOutline` node.
 
 A scene can store a `BoxOutlineMesh` on a `MeshInstance3D`.
 
