@@ -30,6 +30,7 @@ This directory contains the canonical project specifications.
 
 ## Presentation specifications
 
+- [Isometric camera](presentation/isometric-camera.md) owns the orthographic gameplay camera.
 - [Color palette](visual/color-palette.md) owns named world color roles and site-palette rules.
 
 ## Simulation specifications

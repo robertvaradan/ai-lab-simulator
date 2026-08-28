@@ -28,7 +28,17 @@ These descriptions must not lock later choices.
 
 ## Product form
 
-The primary world view must use a fixed isometric or three-quarter camera.
+The primary world view must use an orthographic isometric camera.
+
+The camera must not rotate.
+
+The player can pan the camera.
+
+The player can zoom the camera.
+
+Pan and zoom must use smoothing.
+
+The isometric camera must follow `docs/presentation/isometric-camera.md`.
 
 The Company Campus must use predetermined Site Plots.
 

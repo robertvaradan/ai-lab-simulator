@@ -11,7 +11,7 @@ The working answer is **yes, at prototype scale**. The main scene now bypasses G
 This is intentionally not a reimplementation of a complete dynamic sparse-SDF engine. The first proof includes:
 
 - analytic CSG buildings and campus infrastructure;
-- fixed orthographic isometric camera;
+- a fixed orthographic isometric camera in the SDF proof;
 - palette materials, derived normals, soft shadows, ambient occlusion, and fog;
 - geometry-changing `growth`, `overload`, and `scrutiny` states;
 - render-on-change compute dispatch at 640×360, scaled to a 1920×1080 presentation;

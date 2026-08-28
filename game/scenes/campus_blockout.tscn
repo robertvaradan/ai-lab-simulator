@@ -62,6 +62,8 @@
 
 [ext_resource type="Material" path="res://materials/warm.tres" id="warm"]
 
+[ext_resource type="Script" uid="uid://cisocam8k2n4p" path="res://camera/isometric_camera.gd" id="7_iso_cam"]
+
 [sub_resource type="Environment" id="Environment_8rkxl"]
 background_mode = 1
 background_color = Color(0.050980393, 0.1254902, 0.15294118, 1)
@@ -2595,9 +2597,17 @@ omni_range = 7.8
 
 [node name="GameplayCamera" type="Camera3D" parent="." unique_id=1318193501]
 transform = Transform3D(0.7176851, -0.44383132, 0.5366021, 0, 0.77057284, 0.63735193, -0.69636774, -0.457418, 0.55302864, 46.4, 61, 50)
+script = ExtResource("7_iso_cam")
 attributes = SubResource("CameraAttributesPractical_ymsru")
 projection = 1
 current = true
 size = 50.0
 near = 0.5
 far = 140.0
+min_size = 16.0
+max_size = 80.0
+pan_speed = 28.0
+zoom_step = 5.0
+pan_smoothing = 10.0
+zoom_smoothing = 12.0
+pan_bounds = Rect2(-32, -32, 64, 64)

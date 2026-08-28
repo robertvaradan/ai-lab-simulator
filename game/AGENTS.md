@@ -16,6 +16,7 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - `scenes/sdf_render_harness.tscn` is the normal runnable main scene and the automated capture harness.
 - The primary render proof is a compute-shader SDF pipeline. Forward+ and the main `RenderingDevice` are required; missing compute support is fatal.
 - Keep renderer implementation under `renderer/sdf`. Keep HUD, input, capture orchestration, and gameplay state outside that directory.
+- Keep the gameplay isometric camera under `camera`.
 - The former mesh/GLB harness remains only as a comparison artifact. Do not silently invoke it when the SDF pipeline fails.
 - `scenes/campus_blockout.tscn` is the native Godot blockout for the first Company Campus composition.
 - The campus blockout must use `PrimitiveMesh` geometry. It must not load a Blender or GLB campus asset.
@@ -69,7 +70,9 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 ## Visual contract
 
 - Frame at exactly 1920×1080 (16:9). The SDF proof renders internally at 640×360 and scales once through a `Texture2DRD`; changing either resolution requires updating the shader, harness, script, documentation, and inspected evidence together.
-- Keep a fixed orthographic isometric/three-quarter gameplay camera. Camera changes require regenerating and inspecting all evidence images.
+- Keep an orthographic isometric gameplay camera. The camera must not rotate. The player can pan and zoom. Follow `../docs/presentation/isometric-camera.md`.
+- Keep camera implementation under `camera`. Automated campus capture must disable camera input and snap to the authored pose.
+- Keep the SDF proof camera fixed. A pose, material, shader, dispatch, texture, or presentation change requires regenerating and inspecting all evidence images.
 - Preserve the palette-lit architectural-diorama direction: strong silhouettes, simplified/faceted masses, window rhythms, roof profiles, cooling shapes, fences, and controlled emissive/status accents.
 - The world/map is the primary visual surface. UI in the harness is limited to title, renderer contract, state, description, and controls.
 - Keep the HUD on `CanvasLayer` layer 100 so world/UI ordering is explicit. World SDF geometry must never be changed or hidden to repair HUD layout.
@@ -145,6 +148,20 @@ Run the editor primitive tests on macOS:
 Success requires `BOX_OUTLINE_MESH_TEST_SUCCESS`.
 
 Success requires `CYLINDER_OUTLINE_MESH_TEST_SUCCESS`.
+
+Run the isometric camera tests on Windows:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\isometric-camera-test.ps1
+```
+
+Run the isometric camera tests on macOS:
+
+```bash
+./scripts/isometric-camera-test.sh
+```
+
+Success requires `ISOMETRIC_CAMERA_TEST_SUCCESS`.
 
 Gameplay verification must also follow `../docs/simulation/invariants.md` after Simulation Core implementation starts.
 
