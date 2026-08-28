@@ -48,3 +48,18 @@ static func create_state(definition: MarketingScenarioDefinition) -> GameStateLo
 		return result
 	result.state = duplicated_state
 	return result
+
+
+static func create_core(
+		definition: MarketingScenarioDefinition,
+		state: GameState
+	) -> SimulationCoreConstructionResult:
+	return SimulationCore.create(
+		TimeModelRuleFactory.create_registry(),
+		definition.build_content_registry(),
+		CanonicalSimulationStatePaths.create_registry(),
+		TimeModelEventFactory.create_registry(),
+		definition.rule_graph_id,
+		definition.rule_graph_version,
+		state
+	)

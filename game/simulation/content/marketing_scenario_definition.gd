@@ -31,4 +31,9 @@ func build_content_registry() -> SimulationContentRegistry:
 		registry.register_content(identifier)
 	for command_type_id: StringName in command_type_ids:
 		registry.register_command_type(command_type_id)
+	registry.register_attention_event_response_validator(
+		AcknowledgmentAttentionEventResponseValidator.new(
+			CreateQuarterBoundaryAttentionRule.EVENT_TYPE_ID
+		)
+	)
 	return registry

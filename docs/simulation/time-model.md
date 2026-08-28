@@ -6,7 +6,11 @@ The simulation calendar must use whole months.
 
 The first month of a campaign must have index 1.
 
+Month index 0 must mean that no Month Step has resolved.
+
 A Quarter must contain three resolved Month Steps.
+
+After a resolved Month Step N, `current_quarter_index` must equal the ceiling of N divided by 3.
 
 The calendar must not use day-level game rules in the first implementation.
 
@@ -58,21 +62,30 @@ A Month Step must use the canonical Rule phases.
 
 The canonical Rule phases are:
 
-1. Consume the Pending Command Batch.
-2. Post committed costs and reservations.
-3. Advance active Projects.
-4. Resolve Project completions.
-5. Advance Competitors.
-6. Resolve Market changes.
-7. Resolve contracts, Revenue, and operating costs.
-8. Resolve trust and government effects.
-9. Evaluate loss conditions.
-10. Create Attention Events and Notifications.
-11. Close the Month Step.
+1. Open the Month Step.
+2. Consume the Pending Command Batch.
+3. Post committed costs and reservations.
+4. Advance active Projects.
+5. Resolve Project completions.
+6. Advance Competitors.
+7. Resolve Market changes.
+8. Resolve contracts, Revenue, and operating costs.
+9. Resolve trust and government effects.
+10. Evaluate loss conditions.
+11. Create Attention Events and Notifications.
+12. Close the Month Step.
+
+The Open Month Step phase must increase `current_month_step_index` by one before later phases run.
+
+The Open Month Step phase must set `current_quarter_index` from the new month index.
+
+Close the Month Step must not change the month index.
 
 Each Rule must execute in one declared phase.
 
 The Rule registry must define the order inside each phase.
+
+A Rule Graph compiler must order Rules by canonical phase, then by order inside the phase.
 
 All events in one Month Step must resolve before the Month Step closes.
 
@@ -83,6 +96,14 @@ Later Month Steps in the same Advance Operation must not consume that batch agai
 ## Quarter Boundary
 
 A Quarter Boundary must occur after each third Month Step.
+
+A Quarter Boundary must create a blocking Attention Event.
+
+The first marketing slice must create the Quarter Boundary Attention Event before it creates the Quarterly Report.
+
+Until the Quarterly Report exists, the publishable Quarter Boundary Game State must contain the Attention Event.
+
+Until the Quarterly Report exists, the publishable Quarter Boundary Game State must not contain a Quarterly Report.
 
 A Quarter Boundary must create a Quarterly Report.
 

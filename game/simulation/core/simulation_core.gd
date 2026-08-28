@@ -3,6 +3,10 @@ extends RefCounted
 
 const INTERNAL_OPERATION_ID: StringName = &"operation.internal.compiled_rule_pipeline"
 const COMMIT_PLAN_OPERATION_ID: StringName = &"operation.plan.commit"
+const STEP_MONTH_OPERATION_ID: StringName = &"operation.time.step_month"
+const ADVANCE_UNTIL_ATTENTION_REQUIRED_OPERATION_ID: StringName = (
+	&"operation.time.advance_until_attention_required"
+)
 
 var _rule_registry: SimulationRuleRegistry
 var _content_registry: SimulationContentRegistry
@@ -123,111 +127,61 @@ static func create(
 # This is the canonical internal Rule pipeline seam. Public Simulation Host operations must wrap it.
 func _execute_compiled_rules(input_state: GameState, random_seed: int) -> SimulationOperationResult:
 	var trace: SimulationTrace = SimulationTrace.new(INTERNAL_OPERATION_ID, random_seed)
-	var diagnostics: Array[SimulationDiagnostic] = []
-	var input_validation: GameStateValidationResult = _validate_state(input_state)
-	if not input_validation.is_valid():
-		for validation_error: String in input_validation.errors:
-			diagnostics.append(
-				SimulationDiagnostic.new(
-					SimulationDiagnostic.Severity.ERROR,
-					&"simulation_core.invalid_input_state",
-					validation_error
-				)
-			)
-		return SimulationOperationResult.new(
-			SimulationOperationOutcome.Type.FAULTED,
-			null,
-			trace,
-			diagnostics
-		)
-	var duplicated_resource: Resource = input_state.duplicate_deep(Resource.DEEP_DUPLICATE_ALL)
-	if not duplicated_resource is GameState:
-		diagnostics.append(
-			SimulationDiagnostic.new(
-				SimulationDiagnostic.Severity.ERROR,
-				&"simulation_core.state_copy_failed",
-				"The input Game State did not create a Game State deep copy."
-			)
-		)
-		return SimulationOperationResult.new(
-			SimulationOperationOutcome.Type.FAULTED,
-			null,
-			trace,
-			diagnostics
-		)
-	var candidate_state: GameState = duplicated_resource
-	var context: SimulationContext = SimulationContext.new(
+	var input_diagnostics: Array[SimulationDiagnostic] = _input_state_diagnostics(input_state)
+	if not input_diagnostics.is_empty():
+		return _faulted_result(trace, input_diagnostics)
+	var candidate_state: GameState = _copy_state(input_state)
+	if candidate_state == null:
+		return _faulted_result(trace, [_state_copy_failed_diagnostic()])
+	var rule_diagnostics: Array[SimulationDiagnostic] = _evaluate_compiled_rules(
 		candidate_state,
-		_state_path_registry,
-		_event_registry,
 		trace,
 		random_seed
 	)
-	for rule: SimulationRule in _compiled_graph.ordered_rules:
-		var rule_record: RuleEvaluationTraceRecord = context._begin_rule(rule)
-		var evaluation: SimulationRuleEvaluation = rule.evaluate(context)
-		if evaluation == null:
-			diagnostics.append(
-				SimulationDiagnostic.new(
-					SimulationDiagnostic.Severity.ERROR,
-					&"simulation_core.missing_rule_evaluation",
-					"Rule %s returned a missing evaluation." % rule.stable_id,
-					rule.stable_id
-				)
-			)
-			rule_record._set_status(SimulationRuleEvaluation.Status.FAILED)
-			context._end_rule()
-			return SimulationOperationResult.new(
-				SimulationOperationOutcome.Type.FAULTED,
-				null,
-				trace,
-				diagnostics
-			)
-		rule_record._set_status(evaluation.status)
-		if evaluation.status == SimulationRuleEvaluation.Status.FAILED and evaluation.diagnostic != null:
-			diagnostics.append(evaluation.diagnostic)
-		if context.has_fault():
-			rule_record._set_status(SimulationRuleEvaluation.Status.FAILED)
-			diagnostics.append_array(context.get_diagnostics())
-		context._end_rule()
-		if rule_record.status == SimulationRuleEvaluation.Status.FAILED:
-			if diagnostics.is_empty():
-				diagnostics.append(
-					SimulationDiagnostic.new(
-						SimulationDiagnostic.Severity.ERROR,
-						&"simulation_core.rule_failed_without_diagnostic",
-						"Rule %s failed without a diagnostic." % rule.stable_id,
-						rule.stable_id
-					)
-				)
-			return SimulationOperationResult.new(
-				SimulationOperationOutcome.Type.FAULTED,
-				null,
-				trace,
-				diagnostics
-			)
-	var candidate_validation: GameStateValidationResult = _validate_state(candidate_state)
-	if not candidate_validation.is_valid():
-		for validation_error: String in candidate_validation.errors:
-			diagnostics.append(
-				SimulationDiagnostic.new(
-					SimulationDiagnostic.Severity.ERROR,
-					&"simulation_core.invalid_candidate_state",
-					validation_error
-				)
-			)
-		return SimulationOperationResult.new(
-			SimulationOperationOutcome.Type.FAULTED,
-			null,
-			trace,
-			diagnostics
-		)
+	if not rule_diagnostics.is_empty():
+		return _faulted_result(trace, rule_diagnostics)
+	var candidate_diagnostics: Array[SimulationDiagnostic] = _candidate_state_diagnostics(candidate_state)
+	if not candidate_diagnostics.is_empty():
+		return _faulted_result(trace, candidate_diagnostics)
 	return SimulationOperationResult.new(
 		SimulationOperationOutcome.Type.COMPLETED,
 		candidate_state,
 		trace,
-		diagnostics
+		[]
 	)
+
+
+func step_month(state: GameState) -> SimulationOperationResult:
+	var trace: SimulationTrace = SimulationTrace.new(STEP_MONTH_OPERATION_ID, 0)
+	var input_diagnostics: Array[SimulationDiagnostic] = _input_state_diagnostics(state)
+	if not input_diagnostics.is_empty():
+		return _faulted_result(trace, input_diagnostics)
+	if _has_unresolved_attention(state):
+		return _rejected_unresolved_attention(trace)
+	var candidate_state: GameState = _copy_state(state)
+	if candidate_state == null:
+		return _faulted_result(trace, [_state_copy_failed_diagnostic()])
+	var month_diagnostics: Array[SimulationDiagnostic] = _apply_month_step(candidate_state, trace, 0)
+	if not month_diagnostics.is_empty():
+		return _faulted_result(trace, month_diagnostics)
+	return _month_step_success_result(candidate_state, trace)
+
+
+func advance_until_attention_required(state: GameState) -> SimulationOperationResult:
+	var trace: SimulationTrace = SimulationTrace.new(ADVANCE_UNTIL_ATTENTION_REQUIRED_OPERATION_ID, 0)
+	var input_diagnostics: Array[SimulationDiagnostic] = _input_state_diagnostics(state)
+	if not input_diagnostics.is_empty():
+		return _faulted_result(trace, input_diagnostics)
+	if _has_unresolved_attention(state):
+		return _rejected_unresolved_attention(trace)
+	var candidate_state: GameState = _copy_state(state)
+	if candidate_state == null:
+		return _faulted_result(trace, [_state_copy_failed_diagnostic()])
+	while not _has_unresolved_attention(candidate_state):
+		var month_diagnostics: Array[SimulationDiagnostic] = _apply_month_step(candidate_state, trace, 0)
+		if not month_diagnostics.is_empty():
+			return _faulted_result(trace, month_diagnostics)
+	return _month_step_success_result(candidate_state, trace)
 
 
 func get_compiled_graph() -> CompiledRuleGraph:
@@ -354,6 +308,172 @@ func _validate_state(state: GameState) -> GameStateValidationResult:
 		_pinned_graph_id,
 		_pinned_graph_version,
 		_pinned_content_catalog
+	)
+
+
+func _evaluate_compiled_rules(
+		candidate_state: GameState,
+		trace: SimulationTrace,
+		random_seed: int
+	) -> Array[SimulationDiagnostic]:
+	var diagnostics: Array[SimulationDiagnostic] = []
+	var context: SimulationContext = SimulationContext.new(
+		candidate_state,
+		_state_path_registry,
+		_event_registry,
+		trace,
+		random_seed
+	)
+	for rule: SimulationRule in _compiled_graph.ordered_rules:
+		var rule_record: RuleEvaluationTraceRecord = context._begin_rule(rule)
+		var evaluation: SimulationRuleEvaluation = rule.evaluate(context)
+		if evaluation == null:
+			diagnostics.append(
+				SimulationDiagnostic.new(
+					SimulationDiagnostic.Severity.ERROR,
+					&"simulation_core.missing_rule_evaluation",
+					"Rule %s returned a missing evaluation." % rule.stable_id,
+					rule.stable_id
+				)
+			)
+			rule_record._set_status(SimulationRuleEvaluation.Status.FAILED)
+			context._end_rule()
+			return diagnostics
+		rule_record._set_status(evaluation.status)
+		if evaluation.status == SimulationRuleEvaluation.Status.FAILED and evaluation.diagnostic != null:
+			diagnostics.append(evaluation.diagnostic)
+		if context.has_fault():
+			rule_record._set_status(SimulationRuleEvaluation.Status.FAILED)
+			diagnostics.append_array(context.get_diagnostics())
+		context._end_rule()
+		if rule_record.status == SimulationRuleEvaluation.Status.FAILED:
+			if diagnostics.is_empty():
+				diagnostics.append(
+					SimulationDiagnostic.new(
+						SimulationDiagnostic.Severity.ERROR,
+						&"simulation_core.rule_failed_without_diagnostic",
+						"Rule %s failed without a diagnostic." % rule.stable_id,
+						rule.stable_id
+					)
+				)
+			return diagnostics
+	return diagnostics
+
+
+func _apply_month_step(
+		candidate_state: GameState,
+		trace: SimulationTrace,
+		random_seed: int
+	) -> Array[SimulationDiagnostic]:
+	var before_month_index: int = candidate_state.calendar.current_month_step_index
+	var rule_diagnostics: Array[SimulationDiagnostic] = _evaluate_compiled_rules(
+		candidate_state,
+		trace,
+		random_seed
+	)
+	if not rule_diagnostics.is_empty():
+		return rule_diagnostics
+	var candidate_diagnostics: Array[SimulationDiagnostic] = _candidate_state_diagnostics(candidate_state)
+	if not candidate_diagnostics.is_empty():
+		return candidate_diagnostics
+	var after_month_index: int = candidate_state.calendar.current_month_step_index
+	if after_month_index != before_month_index + 1:
+		return [
+			SimulationDiagnostic.new(
+				SimulationDiagnostic.Severity.ERROR,
+				&"simulation_core.month_step_index_not_incremented",
+				"Month Step index changed from %d to %d." % [before_month_index, after_month_index]
+			),
+		]
+	if after_month_index % 3 == 0 and candidate_state.attention_events.is_empty():
+		return [
+			SimulationDiagnostic.new(
+				SimulationDiagnostic.Severity.ERROR,
+				&"simulation_core.quarter_boundary_attention_missing",
+				"Month Step %d did not create a Quarter Boundary Attention Event." % after_month_index
+			),
+		]
+	return []
+
+
+func _month_step_success_result(
+		candidate_state: GameState,
+		trace: SimulationTrace
+	) -> SimulationOperationResult:
+	var outcome: SimulationOperationOutcome.Type = (
+		SimulationOperationOutcome.Type.DECISION_REQUIRED
+		if _has_unresolved_attention(candidate_state)
+		else SimulationOperationOutcome.Type.COMPLETED
+	)
+	return SimulationOperationResult.new(outcome, candidate_state, trace, [])
+
+
+func _has_unresolved_attention(state: GameState) -> bool:
+	return not state.attention_events.is_empty()
+
+
+func _rejected_unresolved_attention(trace: SimulationTrace) -> SimulationOperationResult:
+	var diagnostics: Array[SimulationDiagnostic] = [
+		SimulationDiagnostic.new(
+			SimulationDiagnostic.Severity.ERROR,
+			&"simulation_core.unresolved_attention_events",
+			"Time progression cannot start while required input is unresolved."
+		),
+	]
+	return SimulationOperationResult.new(
+		SimulationOperationOutcome.Type.REJECTED,
+		null,
+		trace,
+		diagnostics
+	)
+
+
+func _input_state_diagnostics(state: GameState) -> Array[SimulationDiagnostic]:
+	return _validation_diagnostics(_validate_state(state), &"simulation_core.invalid_input_state")
+
+
+func _candidate_state_diagnostics(state: GameState) -> Array[SimulationDiagnostic]:
+	return _validation_diagnostics(_validate_state(state), &"simulation_core.invalid_candidate_state")
+
+
+func _validation_diagnostics(
+		validation: GameStateValidationResult,
+		code: StringName
+	) -> Array[SimulationDiagnostic]:
+	var diagnostics: Array[SimulationDiagnostic] = []
+	if validation.is_valid():
+		return diagnostics
+	for validation_error: String in validation.errors:
+		diagnostics.append(
+			SimulationDiagnostic.new(SimulationDiagnostic.Severity.ERROR, code, validation_error)
+		)
+	return diagnostics
+
+
+func _copy_state(state: GameState) -> GameState:
+	var duplicated_resource: Resource = state.duplicate_deep(Resource.DEEP_DUPLICATE_ALL)
+	if duplicated_resource is GameState:
+		return duplicated_resource
+	return null
+
+
+func _state_copy_failed_diagnostic() -> SimulationDiagnostic:
+	return SimulationDiagnostic.new(
+		SimulationDiagnostic.Severity.ERROR,
+		&"simulation_core.state_copy_failed",
+		"The input Game State did not create a Game State deep copy."
+	)
+
+
+func _faulted_result(
+		trace: SimulationTrace,
+		diagnostics: Array[SimulationDiagnostic]
+	) -> SimulationOperationResult:
+	return SimulationOperationResult.new(
+		SimulationOperationOutcome.Type.FAULTED,
+		null,
+		trace,
+		diagnostics
 	)
 
 

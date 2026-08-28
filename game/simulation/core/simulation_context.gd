@@ -156,6 +156,158 @@ func write_integer(state_path: StringName, value: int) -> bool:
 	return true
 
 
+func read_pending_command_batch() -> PendingCommandBatchState:
+	var rule_id: StringName = _current_rule_id()
+	var state_path: StringName = CanonicalSimulationStatePaths.PENDING_COMMAND_BATCH
+	if not _require_current_rule(state_path):
+		_trace._append_read(rule_id, state_path, false)
+		return null
+	if not _declared_reads.has(state_path):
+		_fault(
+			&"context.undeclared_read",
+			"Rule %s read undeclared state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return null
+	var path: SimulationStatePath = _state_path_registry.get_path(state_path)
+	if path == null or path.value_type != SimulationStatePath.ValueType.PENDING_COMMAND_BATCH:
+		_fault(
+			&"context.unknown_read_path",
+			"Rule %s read unknown state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return null
+	var batch: PendingCommandBatchState = path.read_pending_command_batch(_candidate_state)
+	_trace._append_read(rule_id, state_path, true, true, 0 if batch == null else 1)
+	return batch
+
+
+func write_pending_command_batch(batch: PendingCommandBatchState) -> bool:
+	var rule_id: StringName = _current_rule_id()
+	var state_path: StringName = CanonicalSimulationStatePaths.PENDING_COMMAND_BATCH
+	if not _require_current_rule(state_path):
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	if not _declared_writes.has(state_path):
+		_fault(
+			&"context.undeclared_write",
+			"Rule %s wrote undeclared state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	var path: SimulationStatePath = _state_path_registry.get_path(state_path)
+	if path == null or path.value_type != SimulationStatePath.ValueType.PENDING_COMMAND_BATCH:
+		_fault(
+			&"context.unknown_write_path",
+			"Rule %s wrote unknown state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	var before_batch: PendingCommandBatchState = path.read_pending_command_batch(_candidate_state)
+	var write_diagnostic: SimulationDiagnostic = path.write_pending_command_batch(
+		_candidate_state,
+		batch
+	)
+	if write_diagnostic != null:
+		_fault(
+			&"context.write_failed",
+			"Rule %s could not write state path %s. %s"
+			% [rule_id, state_path, write_diagnostic.message],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false, true, 0 if before_batch == null else 1)
+		return false
+	_trace._append_write(
+		rule_id,
+		state_path,
+		true,
+		true,
+		0 if before_batch == null else 1,
+		true,
+		0 if batch == null else 1
+	)
+	return true
+
+
+func read_attention_events() -> Array[AttentionEventState]:
+	var rule_id: StringName = _current_rule_id()
+	var state_path: StringName = CanonicalSimulationStatePaths.ATTENTION_EVENTS
+	var events: Array[AttentionEventState] = []
+	if not _require_current_rule(state_path):
+		_trace._append_read(rule_id, state_path, false)
+		return events
+	if not _declared_reads.has(state_path):
+		_fault(
+			&"context.undeclared_read",
+			"Rule %s read undeclared state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return events
+	var path: SimulationStatePath = _state_path_registry.get_path(state_path)
+	if path == null or path.value_type != SimulationStatePath.ValueType.ATTENTION_EVENTS:
+		_fault(
+			&"context.unknown_read_path",
+			"Rule %s read unknown state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return events
+	events = path.read_attention_events(_candidate_state)
+	_trace._append_read(rule_id, state_path, true, true, events.size())
+	return events
+
+
+func write_attention_events(events: Array[AttentionEventState]) -> bool:
+	var rule_id: StringName = _current_rule_id()
+	var state_path: StringName = CanonicalSimulationStatePaths.ATTENTION_EVENTS
+	if not _require_current_rule(state_path):
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	if not _declared_writes.has(state_path):
+		_fault(
+			&"context.undeclared_write",
+			"Rule %s wrote undeclared state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	var path: SimulationStatePath = _state_path_registry.get_path(state_path)
+	if path == null or path.value_type != SimulationStatePath.ValueType.ATTENTION_EVENTS:
+		_fault(
+			&"context.unknown_write_path",
+			"Rule %s wrote unknown state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	var before_events: Array[AttentionEventState] = path.read_attention_events(_candidate_state)
+	var write_diagnostic: SimulationDiagnostic = path.write_attention_events(_candidate_state, events)
+	if write_diagnostic != null:
+		_fault(
+			&"context.write_failed",
+			"Rule %s could not write state path %s. %s"
+			% [rule_id, state_path, write_diagnostic.message],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false, true, before_events.size())
+		return false
+	_trace._append_write(
+		rule_id,
+		state_path,
+		true,
+		true,
+		before_events.size(),
+		true,
+		events.size()
+	)
+	return true
+
+
 func record_condition(condition_id: StringName, result: bool) -> bool:
 	if not _require_current_rule():
 		return false

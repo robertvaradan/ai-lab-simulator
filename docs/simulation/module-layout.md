@@ -22,6 +22,8 @@
 
 `game/simulation/host` must own `GameStateService`.
 
+`game/simulation/host` must own the production Advance action.
+
 Runtime simulation modules must be included in production exports.
 
 ## Developer modules

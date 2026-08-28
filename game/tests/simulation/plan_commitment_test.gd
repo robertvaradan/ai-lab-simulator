@@ -15,7 +15,7 @@ class NoOpRule extends SimulationRule:
 	func _init() -> void:
 		stable_id = &"rule.test.plan_commitment_noop"
 		display_name = "Plan commitment test Rule"
-		phase_id = &"rule_phase.test"
+		phase_id = SimulationRulePhase.CLOSE_MONTH_STEP
 		execution_order = 10
 		graph_group_id = &"rule_group.test"
 		specification_references = ["docs/simulation/README.md"]

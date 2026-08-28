@@ -17,7 +17,7 @@ class HappyRule extends SimulationRule:
 	func _init() -> void:
 		stable_id = &"rule.test.trust_update"
 		display_name = "Test trust update"
-		phase_id = &"rule_phase.test"
+		phase_id = SimulationRulePhase.CLOSE_MONTH_STEP
 		execution_order = 10
 		read_state_paths = [&"state.company.public_trust_points"]
 		write_state_paths = [
@@ -76,7 +76,7 @@ class NoOpRule extends SimulationRule:
 	func _init(rule_id: StringName, order: int = 10) -> void:
 		stable_id = rule_id
 		display_name = "No-op test Rule"
-		phase_id = &"rule_phase.test"
+		phase_id = SimulationRulePhase.CLOSE_MONTH_STEP
 		execution_order = order
 		graph_group_id = &"rule_group.test"
 		specification_references = ["docs/simulation/rule-contract.md"]
@@ -246,6 +246,50 @@ func _verify_graph_contracts(
 		if ordered_rules.size() == 2:
 			_expect(ordered_rules[0] == earlier_rule, "The compiled graph did not use stable execution order.")
 			_expect(ordered_rules[1] == later_rule, "The compiled graph changed Rule object identity.")
+
+	var phase_order_registry: SimulationRuleRegistry = SimulationRuleRegistry.new()
+	var close_phase_rule: NoOpRule = NoOpRule.new(&"rule.test.phase_close", 1)
+	close_phase_rule.phase_id = SimulationRulePhase.CLOSE_MONTH_STEP
+	var open_phase_rule: NoOpRule = NoOpRule.new(&"rule.test.phase_open", 50)
+	open_phase_rule.phase_id = SimulationRulePhase.OPEN_MONTH_STEP
+	phase_order_registry.register_rule(close_phase_rule)
+	phase_order_registry.register_rule(open_phase_rule)
+	var phase_order_result: SimulationCoreConstructionResult = _construct_core(
+		definition,
+		state,
+		phase_order_registry
+	)
+	_expect(phase_order_result.succeeded(), "A valid phase-ordered graph did not compile.")
+	if phase_order_result.succeeded():
+		var phase_ordered_rules: Array[SimulationRule] = (
+			phase_order_result.core.get_compiled_graph().ordered_rules
+		)
+		_expect(phase_ordered_rules.size() == 2, "The phase-ordered graph has the wrong Rule count.")
+		if phase_ordered_rules.size() == 2:
+			_expect(
+				phase_ordered_rules[0] == open_phase_rule,
+				"The compiled graph did not order Rules by canonical phase."
+			)
+			_expect(
+				phase_ordered_rules[1] == close_phase_rule,
+				"The compiled graph changed phase-ordered Rule object identity."
+			)
+
+	var unknown_phase_rule: NoOpRule = NoOpRule.new(&"rule.test.unknown_phase")
+	unknown_phase_rule.phase_id = &"rule_phase.test"
+	_expect_invalid_graph(definition, state, [unknown_phase_rule], &"rule_graph.unknown_phase_id")
+
+	var early_phase_rule: NoOpRule = NoOpRule.new(&"rule.test.phase_early", 10)
+	early_phase_rule.phase_id = SimulationRulePhase.OPEN_MONTH_STEP
+	var late_phase_rule: NoOpRule = NoOpRule.new(&"rule.test.phase_late", 10)
+	late_phase_rule.phase_id = SimulationRulePhase.CLOSE_MONTH_STEP
+	early_phase_rule.order_after_rule_ids = [late_phase_rule.stable_id]
+	_expect_invalid_graph(
+		definition,
+		state,
+		[early_phase_rule, late_phase_rule],
+		&"rule_graph.phase_order_violation"
+	)
 
 	var missing_path_rule: NoOpRule = NoOpRule.new(&"rule.test.missing_path")
 	missing_path_rule.read_state_paths = [&"state.company.unknown"]

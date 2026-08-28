@@ -177,7 +177,7 @@ Verification:
 
 ### MS1-05: Implement Month Step and Quarter Boundary
 
-Status: `OPEN`
+Status: `DONE`
 
 Dependencies: `MS1-03` and `MS1-04`.
 
@@ -206,7 +206,7 @@ Verification:
 
 ### MS1-06: Implement the three Marketing Scenario Projects
 
-Status: `BLOCKED`
+Status: `OPEN`
 
 Dependencies: `MS1-05`.
 

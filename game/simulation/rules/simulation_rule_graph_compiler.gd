@@ -46,10 +46,11 @@ static func compile_rule_graph(
 	for rule: SimulationRule in rules:
 		_validate_rule(rule, rule_registry, state_path_registry, event_registry, result)
 	_validate_ambiguous_writes(rules, rule_registry, result)
+	_validate_phase_order_dependencies(rules, rule_registry, result)
 	if not result.diagnostics.is_empty():
 		return result
 
-	var ordered_rules: Array[SimulationRule] = _stable_topological_order(rules, rule_registry, result)
+	var ordered_rules: Array[SimulationRule] = _phase_ordered_rules(rules, rule_registry, result)
 	if not result.diagnostics.is_empty():
 		return result
 	result.graph = CompiledRuleGraph.new(graph_id, graph_version, content_version, ordered_rules)
@@ -72,6 +73,13 @@ static func _validate_rule(
 		_add_rule_error(result, &"rule_graph.missing_display_name", rule, "The Rule display name is missing.")
 	if not StableIdentifier.is_valid(rule.phase_id):
 		_add_rule_error(result, &"rule_graph.invalid_phase_id", rule, "The Rule phase identifier is invalid.")
+	elif not SimulationRulePhase.is_canonical(rule.phase_id):
+		_add_rule_error(
+			result,
+			&"rule_graph.unknown_phase_id",
+			rule,
+			"Rule phase identifier %s is not a canonical Rule phase." % rule.phase_id
+		)
 	if rule.execution_order < 0 and rule.order_after_rule_ids.is_empty():
 		_add_rule_error(
 			result,
@@ -190,8 +198,16 @@ static func _validate_ambiguous_writes(
 					shared_paths.append(path_id)
 			if shared_paths.is_empty():
 				continue
+			var first_phase_index: int = SimulationRulePhase.index_of(first_rule.phase_id)
+			var second_phase_index: int = SimulationRulePhase.index_of(second_rule.phase_id)
+			var ordered_by_phase: bool = (
+				first_phase_index >= 0
+				and second_phase_index >= 0
+				and first_phase_index != second_phase_index
+			)
 			var explicitly_ordered: bool = (
-				(first_rule.execution_order >= 0
+				ordered_by_phase
+				or (first_rule.execution_order >= 0
 					and second_rule.execution_order >= 0
 					and first_rule.execution_order != second_rule.execution_order)
 				or _depends_on(first_rule, second_rule.stable_id, rule_registry, {})
@@ -228,9 +244,56 @@ static func _depends_on(
 	return false
 
 
+static func _validate_phase_order_dependencies(
+		rules: Array[SimulationRule],
+		rule_registry: SimulationRuleRegistry,
+		result: RuleGraphCompilationResult
+	) -> void:
+	for rule: SimulationRule in rules:
+		var phase_index: int = SimulationRulePhase.index_of(rule.phase_id)
+		if phase_index < 0:
+			continue
+		for dependency_id: StringName in rule.order_after_rule_ids:
+			var dependency: SimulationRule = rule_registry.get_rule(dependency_id)
+			if dependency == null:
+				continue
+			var dependency_phase_index: int = SimulationRulePhase.index_of(dependency.phase_id)
+			if dependency_phase_index < 0:
+				continue
+			if dependency_phase_index > phase_index:
+				_add_rule_error(
+					result,
+					&"rule_graph.phase_order_violation",
+					rule,
+					"Order dependency %s belongs to a later canonical Rule phase." % dependency_id
+				)
+
+
+static func _phase_ordered_rules(
+		rules: Array[SimulationRule],
+		rule_registry: SimulationRuleRegistry,
+		result: RuleGraphCompilationResult
+	) -> Array[SimulationRule]:
+	var ordered: Array[SimulationRule] = []
+	for phase_id: StringName in SimulationRulePhase.canonical_phase_ids():
+		var bucket: Array[SimulationRule] = []
+		for rule: SimulationRule in rules:
+			if rule.phase_id == phase_id:
+				bucket.append(rule)
+		var phase_ordered: Array[SimulationRule] = _stable_topological_order(
+			bucket,
+			rule_registry,
+			result
+		)
+		if not result.diagnostics.is_empty():
+			return []
+		ordered.append_array(phase_ordered)
+	return ordered
+
+
 static func _stable_topological_order(
 		rules: Array[SimulationRule],
-		_rule_registry: SimulationRuleRegistry,
+		rule_registry: SimulationRuleRegistry,
 		result: RuleGraphCompilationResult
 	) -> Array[SimulationRule]:
 	var ordered: Array[SimulationRule] = []
@@ -242,6 +305,12 @@ static func _stable_topological_order(
 			var candidate: SimulationRule = remaining[index]
 			var dependencies_complete: bool = true
 			for dependency_id: StringName in candidate.order_after_rule_ids:
+				var dependency: SimulationRule = rule_registry.get_rule(dependency_id)
+				if dependency == null:
+					dependencies_complete = false
+					break
+				if dependency.phase_id != candidate.phase_id:
+					continue
 				if not _contains_rule(ordered, dependency_id):
 					dependencies_complete = false
 					break
