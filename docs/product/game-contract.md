@@ -48,6 +48,12 @@ The blockout must place PrimitiveMesh sizes and node origins on a 0.2 m voxel gr
 
 A box extent must land on the 0.2 m grid.
 
+A box outline must use `BoxOutlineMesh`.
+
+A box outline must use one outer size and one inset thickness.
+
+A box outline thickness must grow inward from the outer size.
+
 A cylinder radius, cylinder height, sphere radius, and sphere height must land on the 0.2 m grid.
 
 A mesh node origin must keep each world-axis extent on the 0.2 m grid.

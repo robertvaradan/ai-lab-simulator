@@ -1,0 +1,10 @@
+# Editor primitive test contract
+
+This directory owns editor primitive tests.
+
+- Follow `../../../docs/tools/editor-primitives.md`.
+- Verify voxel-grid snapping for outer size and inset thickness.
+- Verify that thickness grows inward.
+- Verify that the four bars do not overlap.
+- Test invalid sizes as rejected or snapped contract values.
+- Do not use a presentation scene as the only primitive test.

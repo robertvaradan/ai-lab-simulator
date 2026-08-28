@@ -21,6 +21,8 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - The campus blockout must use `PrimitiveMesh` geometry. It must not load a Blender or GLB campus asset.
 - The campus blockout must use a 0.2 m voxel grid for `PrimitiveMesh` sizes and mesh node origins.
 - A box, cylinder, or sphere extent must land on the 0.2 m grid. Do not keep off-grid sizes or origins for visual tuning.
+- A rectangular frame must use `BoxOutlineMesh`. Do not author four box nodes for one outline.
+- Follow `../docs/tools/editor-primitives.md` for editor primitive meshes and handles.
 - `scenes/campus_blockout.tscn` must serialize its geometry, materials, lights, environment, and camera.
 - The `CampusBlockout` root must not have a script.
 - A designer must be able to select and edit each campus node in the Godot scene editor.
@@ -29,6 +31,7 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - `tools/campus_blockout_bake_source.gd` is an unreferenced archive. It must not run in the editor scene or at runtime.
 - The campus blockout is independent of the SDF render proof. A failure in one proof must not invoke the other proof.
 - Keep automated capture deterministic: fixed state names, fixed viewport, fixed camera, fixed palette, bounded frame warm-up, explicit PNG paths, and a process exit code.
+- Keep editor primitive meshes under `primitives`. Keep editor handles under `addons/editor_primitives`.
 
 ## GDScript typing
 
@@ -109,6 +112,20 @@ Success requires `CAMPUS_BLOCKOUT_SCENE_LOADED`, `CAMPUS_BLOCKOUT_CAPTURE_SUCCES
 Success requires a non-empty 1920×1080 image at `game/evidence/blockout/main_lab.png`.
 
 Success requires a non-empty side-by-side comparison at `game/evidence/blockout/main_lab_comparison.png`.
+
+Run the editor primitive tests on Windows:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\editor-primitives-test.ps1
+```
+
+Run the editor primitive tests on macOS:
+
+```bash
+./scripts/editor-primitives-test.sh
+```
+
+Success requires `BOX_OUTLINE_MESH_TEST_SUCCESS`.
 
 Gameplay verification must also follow `../docs/simulation/invariants.md` after Simulation Core implementation starts.
 

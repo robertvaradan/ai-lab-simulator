@@ -26,6 +26,7 @@ This directory contains the canonical project specifications.
 ## Architecture specifications
 
 - [Services and dependency injection](architecture/services-and-dependency-injection.md) owns the service lifetime, provider, and injection contracts.
+- [Editor primitives](tools/editor-primitives.md) owns voxel-grid PrimitiveMesh types for scene authoring.
 
 ## Simulation specifications
 
