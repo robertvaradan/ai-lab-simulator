@@ -44,7 +44,7 @@ The Company Campus must use predetermined Site Plots.
 
 The player must be able to customize and upgrade the Company Campus.
 
-The first Company Campus blockout must match the composition in `docs/concept-art/main-lab-site-context-v1.png`.
+The first Company Campus blockout must follow `docs/presentation/campus-authoring.md`.
 
 The blockout must use native Godot primitive geometry.
 
@@ -52,7 +52,13 @@ Repeated round-crown trees must instance one shared scene.
 
 Repeated fir trees must instance one shared scene.
 
-The blockout must not depend on a Blender or GLB campus asset.
+The blockout must not load a GLB file.
+
+The laboratory must use authored PackedScene stages.
+
+The campus blockout must instance one laboratory stage scene.
+
+The campus blockout must not embed laboratory mesh nodes inline.
 
 The blockout scene must store its geometry as editable Godot scene nodes.
 

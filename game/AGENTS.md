@@ -17,9 +17,12 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - The primary render proof is a compute-shader SDF pipeline. Forward+ and the main `RenderingDevice` are required; missing compute support is fatal.
 - Keep renderer implementation under `renderer/sdf`. Keep HUD, input, capture orchestration, and gameplay state outside that directory.
 - Keep the gameplay isometric camera under `camera`.
-- The former mesh/GLB harness remains only as a comparison artifact. Do not silently invoke it when the SDF pipeline fails.
+- Do not load a GLB campus asset. Do not add a Blender export pipeline.
 - `scenes/campus_blockout.tscn` is the native Godot blockout for the first Company Campus composition.
-- The campus blockout must use `PrimitiveMesh` geometry. It must not load a Blender or GLB campus asset.
+- Follow `../docs/presentation/campus-authoring.md` for campus and laboratory scene authoring.
+- The campus blockout must use `PrimitiveMesh` geometry.
+- The campus blockout must instance one laboratory stage scene. Do not embed laboratory mesh nodes inline.
+- `scenes/lab_stage_1.tscn` owns the starting laboratory. `scenes/lab_stage_2.tscn` owns the developed laboratory.
 - Repeated round-crown trees must instance `scenes/round_tree.tscn`.
 - Repeated fir trees must instance `scenes/fir_tree.tscn`.
 - Do not duplicate round-crown or fir mesh nodes in `campus_blockout.tscn`.
@@ -79,8 +82,9 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - Do not use painted textures in this proof. Shape, palette, normals, soft shadow, and ambient occlusion carry the look.
 - Campus grass must look soft, even, and velvety. Campus hedges and tree crowns must share foliage shading with deeper lit contrast from normals and lighting.
 - Vegetation shading must use one palette albedo and procedural triplanar normals. Do not require authored mesh UVs for grass, hedges, or tree crowns.
-- Use `../docs/concept-art/main-lab-site-context-v1.png` as the visual target for the first Company Campus blockout.
-- The blockout must preserve the central laboratory mass, teal glass facade, orange core, roof equipment, parking lot, perimeter roads, paths, walls, landscape, and site lights.
+- Use `../docs/concept-art/main-lab-site-context-v1.png` as the visual target for the developed Company Campus site.
+- Use `../docs/concept-art/main-lab-concept-v1.png` as the visual target for laboratory stage 2.
+- The blockout must preserve parking, perimeter roads, paths, walls, landscape, and site lights around the instanced laboratory stage.
 
 ## Renderer and state contract
 
@@ -90,14 +94,6 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - The contract states are `growth=0`, `overload=1`, and `scrutiny=2`. Each must alter real SDF geometry and remain visually distinguishable on the common campus.
 - The main output texture must be created by the main RenderingDevice and exposed through `Texture2DRD`. A local RenderingDevice cannot satisfy this contract because its resources are not shareable with the main renderer.
 - This first renderer deliberately uses analytic CSG evaluated in the compute shader. Sparse brick caches, clipmaps, incremental dirty regions, physics meshes, and arbitrary runtime sculpting are later experiments, not implicit requirements.
-
-## Mesh asset library
-
-- `../model-pipeline/source/campus_modular_kit.blend` is the one authoring file. Open it with `scripts/open-campus-kit`. Publish it with `scripts/export-campus-kit`.
-- `../model-pipeline/manifest/assets.json` lists the export collections and GLB paths.
-- Files under `assets/generated` are owned by Blender export. Do not hand-edit them.
-- The comparison harness loads `res://assets/generated/asset_catalog.json`. The SDF renderer does not load or fall back to those assets.
-- The SDF render test does not regenerate Blender assets.
 
 ## Verification
 
