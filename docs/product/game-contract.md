@@ -34,6 +34,26 @@ The Company Campus must use predetermined Site Plots.
 
 The player must be able to customize and upgrade the Company Campus.
 
+The first Company Campus blockout must match the composition in `docs/concept-art/main-lab-site-context-v1.png`.
+
+The blockout must use native Godot primitive geometry.
+
+The blockout must not depend on a Blender or GLB campus asset.
+
+The blockout scene must store its geometry as editable Godot scene nodes.
+
+The blockout scene must not generate its geometry at runtime.
+
+The blockout must place PrimitiveMesh sizes and node origins on a 0.2 m voxel grid.
+
+A box extent must land on the 0.2 m grid.
+
+A cylinder radius, cylinder height, sphere radius, and sphere height must land on the 0.2 m grid.
+
+A mesh node origin must keep each world-axis extent on the 0.2 m grid.
+
+The blockout must show the main laboratory, parking lot, perimeter roads, paths, walls, landscape, and site lights.
+
 The game must not require freeform road construction.
 
 The game must not require unrestricted building placement.
@@ -44,7 +64,7 @@ The game must not add low-value actions only to avoid an information-heavy inter
 
 ## World scope
 
-The initial Company Campus must represent a compact San Francisco territory.
+The initial Company Campus must represent a compact Silicon Valley territory.
 
 Remote Sites and Institutions can appear as selectable locations.
 
