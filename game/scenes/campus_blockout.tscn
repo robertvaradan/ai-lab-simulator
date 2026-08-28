@@ -6,6 +6,12 @@
 
 [ext_resource type="PackedScene" uid="uid://d7m3p9qvstxk2" path="res://scenes/fir_tree.tscn" id="3_fir_tree"]
 
+[ext_resource type="Material" path="res://materials/grass.tres" id="4_grass"]
+
+[ext_resource type="Material" path="res://materials/grass_cut.tres" id="5_grass_cut"]
+
+[ext_resource type="Material" path="res://materials/hedge.tres" id="6_hedge"]
+
 [sub_resource type="Environment" id="Environment_8rkxl"]
 background_mode = 1
 background_color = Color(0.050980393, 0.1254902, 0.15294118, 1)
@@ -37,10 +43,6 @@ roughness = 0.82
 
 [sub_resource type="BoxMesh" id="BoxMesh_7wggf"]
 size = Vector3(52, 0.4, 46)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a66x2"]
-albedo_color = Color(0.1882353, 0.2784314, 0.2, 1)
-roughness = 0.96
 
 [sub_resource type="BoxMesh" id="BoxMesh_024a5"]
 size = Vector3(50, 0.2, 44.4)
@@ -244,10 +246,6 @@ size = Vector3(5.4, 0.2, 0.2)
 [sub_resource type="BoxMesh" id="BoxMesh_o5sfe"]
 size = Vector3(0.2, 0.2, 20)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4jmkl"]
-albedo_color = Color(0.1254902, 0.21568628, 0.16470589, 1)
-roughness = 0.98
-
 [sub_resource type="BoxMesh" id="BoxMesh_v5dad"]
 size = Vector3(0.8, 0.6, 18.800001)
 
@@ -420,10 +418,6 @@ size = Vector3(2.8, 0.6, 2.4)
 
 [sub_resource type="BoxMesh" id="BoxMesh_45phh"]
 size = Vector3(2.4, 0.2, 2)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vm1ib"]
-albedo_color = Color(0.21960784, 0.30980393, 0.20392157, 1)
-roughness = 0.97
 
 [sub_resource type="BoxMesh" id="BoxMesh_5drq7"]
 size = Vector3(7, 0.2, 7.6)
@@ -1024,7 +1018,7 @@ mesh = SubResource("BoxMesh_7wggf")
 
 [node name="GrassPlot" type="MeshInstance3D" parent="GroundAndRoads" unique_id=2147249733]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.5, -4.200001)
-material_override = SubResource("StandardMaterial3D_a66x2")
+material_override = ExtResource("4_grass")
 mesh = SubResource("BoxMesh_024a5")
 
 [node name="SiteBoundaries" type="Node3D" parent="." unique_id=369694098]
@@ -1380,17 +1374,17 @@ mesh = SubResource("BoxMesh_o5sfe")
 
 [node name="ParkingHedgeStrip" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=448147891]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.2, 0.1, -0.5999994)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_v5dad")
 
 [node name="ParkingEdgeHedge" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1750193314]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 0.1, 0.4)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_nsw74")
 
 [node name="ParkingBackHedge" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=976045413]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19, 0.1, -14)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_ttk7o")
 
 [node name="CarA" type="Node3D" parent="ParkingAndPaths" unique_id=1078088282]
@@ -1632,7 +1626,7 @@ mesh = SubResource("BoxMesh_36rxn")
 
 [node name="EntryPlanterLeftSoil" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1057265881]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 0.5, 5.8)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_4v0yg")
 
 [node name="EntryPlanterRightBase" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1043804503]
@@ -1642,12 +1636,12 @@ mesh = SubResource("BoxMesh_krbkm")
 
 [node name="EntryPlanterRightSoil" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1253738641]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2, 0.5, 6.2)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_45phh")
 
 [node name="ActivityGrassCut" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=843233340]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.8, -0.5, -12)
-material_override = SubResource("StandardMaterial3D_vm1ib")
+material_override = ExtResource("5_grass_cut")
 mesh = SubResource("BoxMesh_5drq7")
 
 [node name="ActivityPad" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1152355196]
@@ -1686,7 +1680,7 @@ mesh = SubResource("BoxMesh_dolbg")
 
 [node name="PlazaPlanterASoil" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1110105983]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.5, 5)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_hpswk")
 
 [node name="PlazaPlanterBBase" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1367431402]
@@ -1696,7 +1690,7 @@ mesh = SubResource("BoxMesh_7ycxp")
 
 [node name="PlazaPlanterBSoil" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=932827727]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0.5, 5.2)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_pnuaj")
 
 [node name="LoopIslandABase" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1115344539]
@@ -1706,7 +1700,7 @@ mesh = SubResource("BoxMesh_fsc7r")
 
 [node name="LoopIslandASoil" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1694401341]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.9, 0.3, 15.8)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_arcta")
 
 [node name="LoopIslandBBase" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1834501695]
@@ -1716,7 +1710,7 @@ mesh = SubResource("BoxMesh_opg4a")
 
 [node name="LoopIslandBSoil" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=721968170]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, 0.3, 15.8)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_0js51")
 
 [node name="MainLab" type="Node3D" parent="." unique_id=2042995025]
@@ -2218,107 +2212,107 @@ mesh = SubResource("BoxMesh_a66x2")
 
 [node name="GrassPatch_00" type="MeshInstance3D" parent="Landscaping" unique_id=1929048130]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -13, -0.3, -20.9)
-material_override = SubResource("StandardMaterial3D_vm1ib")
+material_override = ExtResource("5_grass_cut")
 mesh = SubResource("BoxMesh_ukxhb")
 
 [node name="GrassPatch_01" type="MeshInstance3D" parent="Landscaping" unique_id=1562831625]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.7999997, -0.3, -20.1)
-material_override = SubResource("StandardMaterial3D_vm1ib")
+material_override = ExtResource("5_grass_cut")
 mesh = SubResource("BoxMesh_0sqxo")
 
 [node name="Hedge_00" type="MeshInstance3D" parent="Landscaping" unique_id=804681176]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.4, 0.2, -24.9)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_71lfe")
 
 [node name="Hedge_01" type="MeshInstance3D" parent="Landscaping" unique_id=1273099124]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.4, 0.2, 12.5)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_kiuf2")
 
 [node name="Hedge_02" type="MeshInstance3D" parent="Landscaping" unique_id=1547360570]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.2, 12.5)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_m47uo")
 
 [node name="Hedge_08" type="MeshInstance3D" parent="Landscaping" unique_id=662545629]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.5, 0.2, -20.2)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_klfd3")
 
 [node name="Hedge_04" type="MeshInstance3D" parent="Landscaping" unique_id=297414405]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.9, 0.2, -10)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_6fciw")
 
 [node name="Hedge_05" type="MeshInstance3D" parent="Landscaping" unique_id=1103877479]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.3, 0.2, -8)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_2akeu")
 
 [node name="Hedge_06" type="MeshInstance3D" parent="Landscaping" unique_id=870061026]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.2, 10.1)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_b0n3j")
 
 [node name="Hedge_07" type="MeshInstance3D" parent="Landscaping" unique_id=650430646]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 0.2, 8.5)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_f32mq")
 
 [node name="FrontSidewalkStrip" type="MeshInstance3D" parent="Landscaping" unique_id=2085830278]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.1, 17.5)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_darkm")
 
 [node name="FrontHedgeSlot_00" type="MeshInstance3D" parent="Landscaping" unique_id=979638397]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.1, 17.6)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_akvvy")
 
 [node name="FrontHedgeSlot_01" type="MeshInstance3D" parent="Landscaping" unique_id=1051507140]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19, 0.1, 17.6)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_48wxr")
 
 [node name="FrontHedgeSlot_02" type="MeshInstance3D" parent="Landscaping" unique_id=334918736]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0.1, 17.6)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_37hpd")
 
 [node name="FrontHedgeSlot_03" type="MeshInstance3D" parent="Landscaping" unique_id=455491247]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0.1, 17.6)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_cvvap")
 
 [node name="FrontHedgeSlot_04" type="MeshInstance3D" parent="Landscaping" unique_id=1544127541]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.1, 17.6)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_5xt40")
 
 [node name="FrontHedgeSlot_05" type="MeshInstance3D" parent="Landscaping" unique_id=1745294359]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.1, 17.6)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_5lllw")
 
 [node name="FrontHedgeSlot_06" type="MeshInstance3D" parent="Landscaping" unique_id=2093482130]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.1, 17.6)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_juwbd")
 
 [node name="FrontHedgeSlot_07" type="MeshInstance3D" parent="Landscaping" unique_id=774906782]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0.1, 17.6)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_2s7st")
 
 [node name="FrontHedgeSlot_08" type="MeshInstance3D" parent="Landscaping" unique_id=1007451456]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0.1, 17.6)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_kcup8")
 
 [node name="FrontHedgeSlot_09" type="MeshInstance3D" parent="Landscaping" unique_id=1917590457]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 0.1, 17.6)
-material_override = SubResource("StandardMaterial3D_4jmkl")
+material_override = ExtResource("6_hedge")
 mesh = SubResource("BoxMesh_w0ayh")
 
 [node name="Tree_00" parent="Landscaping" unique_id=1425994091 instance=ExtResource("2_round_tree")]

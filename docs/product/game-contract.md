@@ -70,6 +70,14 @@ A mesh node origin must keep each world-axis extent on the 0.2 m grid.
 
 The blockout must show the main laboratory, parking lot, perimeter roads, paths, walls, landscape, and site lights.
 
+Grass surfaces must use a soft, even putting-green vegetation shader.
+
+Hedge and tree crown surfaces must share one foliage shader.
+
+Hedge and tree crown shading must show deeper contrast when light catches the form.
+
+Vegetation shaders must use triplanar procedural shading. They must not depend on mesh UVs.
+
 The game must not require freeform road construction.
 
 The game must not require unrestricted building placement.

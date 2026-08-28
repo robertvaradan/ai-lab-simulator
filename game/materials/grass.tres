@@ -1,0 +1,18 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+
+[ext_resource type="Shader" path="res://shaders/grass.gdshader" id="1_grass"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_grass")
+shader_parameter/albedo_lit = Color(0.34, 0.46, 0.30, 1)
+shader_parameter/albedo_shade = Color(0.18, 0.28, 0.20, 1)
+shader_parameter/color_blend = 0.48
+shader_parameter/noise_scale = 2.8
+shader_parameter/noise_strength = 0.05
+shader_parameter/blend_sharpness = 6.0
+shader_parameter/wrap_amount = 0.68
+shader_parameter/velvet_strength = 0.2
+shader_parameter/velvet_power = 2.6
+shader_parameter/evenness = 0.78
+shader_parameter/roughness_value = 0.97

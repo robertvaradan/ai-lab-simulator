@@ -27,6 +27,12 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - A rectangular frame must use `BoxOutlineMesh`. Do not author four box nodes for one outline.
 - A cylindrical frame must use `CylinderOutlineMesh`. Do not author a stack of cylinder nodes for one outline.
 - Follow `../docs/tools/editor-primitives.md` for editor primitive meshes and handles.
+- Keep campus vegetation shaders under `shaders`. Keep campus vegetation materials under `materials`.
+- Grass meshes must use `materials/grass.tres` or `materials/grass_cut.tres`.
+- Hedge meshes must use `materials/hedge.tres`.
+- Tree crown meshes must use `materials/tree_foliage_a.tres` or `materials/tree_foliage_b.tres`.
+- Grass, hedge, and tree crown materials must use triplanar procedural shading. Do not depend on mesh UVs for vegetation.
+- Hedge and tree crowns must share `shaders/foliage.gdshader`.
 - `scenes/campus_blockout.tscn` must serialize its geometry, materials, lights, environment, and camera.
 - The `CampusBlockout` root must not have a script.
 - A designer must be able to select and edit each campus node in the Godot scene editor.
@@ -63,6 +69,8 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - The world/map is the primary visual surface. UI in the harness is limited to title, renderer contract, state, description, and controls.
 - Keep the HUD on `CanvasLayer` layer 100 so world/UI ordering is explicit. World SDF geometry must never be changed or hidden to repair HUD layout.
 - Do not use painted textures in this proof. Shape, palette, normals, soft shadow, and ambient occlusion carry the look.
+- Campus grass must look soft, even, and velvety. Campus hedges and tree crowns must share foliage shading with deeper lit contrast.
+- Vegetation shading must use triplanar procedural noise. Do not require authored mesh UVs for grass, hedges, or tree crowns.
 - Use `../docs/concept-art/main-lab-site-context-v1.png` as the visual target for the first Company Campus blockout.
 - The blockout must preserve the central laboratory mass, teal glass facade, orange core, roof equipment, parking lot, perimeter roads, paths, walls, landscape, and site lights.
 
