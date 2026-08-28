@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/asset-manifest.schema.json",
-  "schema_version": 1,
-  "asset_id": "campus_modular_kit_v001",
+  "schema_version": 2,
+  "asset_id": "campus_modular_kit_v004",
   "family": [
     "lab_core",
     "compute",
@@ -28,8 +28,45 @@
     "painted_textures": 0
   },
   "source_file": "source/campus_modular_kit.blend",
-  "export_file": "game/assets/generated/campus_modular_kit.glb",
-  "generator": "model-pipeline/scripts/generate_assets.py",
+  "catalog_file": "game/assets/generated/asset_catalog.json",
+  "exports": [
+    {
+      "id": "lab_stage1",
+      "collection": "Export__LabStage1",
+      "layer": "base",
+      "export_file": "game/assets/generated/lab_stage1.glb"
+    },
+    {
+      "id": "compute",
+      "collection": "Export__Compute",
+      "layer": "base",
+      "export_file": "game/assets/generated/compute.glb"
+    },
+    {
+      "id": "research",
+      "collection": "Export__Research",
+      "layer": "base",
+      "export_file": "game/assets/generated/research.glb"
+    },
+    {
+      "id": "growth",
+      "collection": "Export__Growth",
+      "layer": "growth",
+      "export_file": "game/assets/generated/growth.glb"
+    },
+    {
+      "id": "overload",
+      "collection": "Export__Overload",
+      "layer": "overload",
+      "export_file": "game/assets/generated/overload.glb"
+    },
+    {
+      "id": "scrutiny",
+      "collection": "Export__Scrutiny",
+      "layer": "scrutiny",
+      "export_file": "game/assets/generated/scrutiny.glb"
+    }
+  ],
+  "generator": "model-pipeline/scripts/export_assets.py",
   "required_blender": "5.1"
 }
-

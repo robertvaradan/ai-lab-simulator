@@ -14,7 +14,7 @@ This is intentionally not a reimplementation of a complete dynamic sparse-SDF en
 - fixed orthographic isometric camera;
 - palette materials, derived normals, soft shadows, ambient occlusion, and fog;
 - geometry-changing `growth`, `overload`, and `scrutiny` states;
-- render-on-change compute dispatch at 640×360, scaled to a 1280×720 presentation;
+- render-on-change compute dispatch at 640×360, scaled to a 1920×1080 presentation;
 - strict errors when compute, shader, state, dimensions, or GPU resources violate the contract.
 
 Sparse brick caches, geometry clipmaps, incremental dirty-region updates, arbitrary sculpting, physics mesh extraction, and full-resolution continuous animation are explicitly deferred until this look and interaction model earn that complexity.
@@ -27,7 +27,7 @@ Sparse brick caches, geometry clipmaps, incremental dirty-region updates, arbitr
 - PowerShell 7 or Windows PowerShell 5.1 on Windows
 - bash on macOS
 
-The canonical Windows executables are `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe` and `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64_console.exe`. The canonical macOS executable is `.tools/godot/4.7.2/Godot.app/Contents/MacOS/Godot`. Each automation script resolves this location from the repository root for the current host. The scripts reject a missing binary, other versions, and Mono/.NET builds. The scripts do not search `PATH`, Downloads, Program Files, or `/Applications`. The SDF proof does not require Blender at runtime or during its render test. The existing Blender-generated GLB remains in the repository as a legacy visual comparison, not as a fallback.
+The canonical Windows executables are `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe` and `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64_console.exe`. The canonical macOS executable is `.tools/godot/4.7.2/Godot.app/Contents/MacOS/Godot`. Each automation script resolves this location from the repository root for the current host. The scripts reject a missing binary, other versions, and Mono/.NET builds. The scripts do not search `PATH`, Downloads, Program Files, or `/Applications`. The SDF proof does not require Blender at runtime or during its render test. The Blender authoring file is the mesh-asset library. Open it with `scripts/open-campus-kit`. Publish it into the game with `scripts/export-campus-kit`. The SDF main scene does not load those meshes.
 
 Install the standard Godot build without administrator access.
 
@@ -57,7 +57,7 @@ From the repository root on macOS:
 ./scripts/render-test.sh
 ```
 
-The command verifies Godot 4.7, imports the compute shader, launches the real Forward+ renderer, dispatches all three states, captures 1280×720 PNGs under `game/evidence/sdf`, validates the outputs, and exits nonzero on a broken contract.
+The command verifies Godot 4.7, imports the compute shader, launches the real Forward+ renderer, dispatches all three states, captures 1920×1080 PNGs under `game/evidence/sdf`, validates the outputs, and exits nonzero on a broken contract.
 
 Open the editor with the canonical executable.
 
@@ -107,6 +107,6 @@ The command must use the canonical standard Godot 4.7.2 automation executable.
 - `game/renderer/sdf/sdf_renderer.gd`: lightweight GPU resource and compute-dispatch adapter.
 - `game/scripts/sdf_render_harness.gd`: HUD, input, deterministic state capture, and test exit behavior.
 - `scripts/render-test.ps1`: exact end-to-end verification command.
-- `model-pipeline`: earlier Blender/GLB comparison pipeline; not used by the SDF main scene.
+- `model-pipeline`: one Blender authoring file and per-collection GLB export; not used by the SDF main scene.
 
 The renderer has no gameplay rules, HUD logic, asset generator, or mesh fallback. That boundary is deliberate so the visual experiment can be replaced or expanded without entangling the simulation.

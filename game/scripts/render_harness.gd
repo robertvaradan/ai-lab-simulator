@@ -1,7 +1,7 @@
 extends Node3D
 
-const TARGET_SIZE := Vector2i(1280, 720)
-const KIT_PATH := "res://assets/generated/campus_modular_kit.glb"
+const TARGET_SIZE := Vector2i(1920, 1080)
+const CATALOG_PATH := "res://assets/generated/asset_catalog.json"
 const HUD_CANVAS_LAYER := 100
 const STATE_BADGE_SIZE := Vector2(230.0, 42.0)
 const STATE_NAMES: Array[String] = ["growth", "overload", "scrutiny"]
@@ -50,11 +50,14 @@ func _ready() -> void:
 func _unhandled_key_input(event: InputEvent) -> void:
 	if _automated or not event.is_pressed() or event.is_echo():
 		return
-	if event.keycode == KEY_1:
+	if not event is InputEventKey:
+		return
+	var key_event: InputEventKey = event
+	if key_event.keycode == KEY_1:
 		_set_state("growth")
-	elif event.keycode == KEY_2:
+	elif key_event.keycode == KEY_2:
 		_set_state("overload")
-	elif event.keycode == KEY_3:
+	elif key_event.keycode == KEY_3:
 		_set_state("scrutiny")
 
 
@@ -84,7 +87,8 @@ func _create_diorama_ground() -> void:
 	_create_box("WaterPlinth", Vector3(0.0, -1.05, 0.0), Vector3(36.0, 0.7, 18.0), Color("163542"), 0.15, 0.42)
 	_create_box("CampusIsland", Vector3(0.0, -0.48, 0.0), Vector3(32.0, 0.8, 12.8), Color("6f7772"), 0.0, 0.92)
 	_create_box("CentralPromenade", Vector3(0.0, -0.02, 3.2), Vector3(29.0, 0.08, 1.45), Color("c4bca6"), 0.0, 0.88)
-	for x_position in [-9.0, 0.0, 9.0]:
+	var path_x_positions: Array[float] = [-9.0, 0.0, 9.0]
+	for x_position: float in path_x_positions:
 		_create_box("EntryPath_%s" % str(x_position), Vector3(x_position, -0.01, 1.0), Vector3(1.25, 0.09, 5.3), Color("a9a899"), 0.0, 0.9)
 	_create_box("WestWaterStep", Vector3(-14.9, -0.16, 0.0), Vector3(1.0, 0.18, 9.5), Color("d87861"), 0.0, 0.72)
 	_create_box("EastWaterStep", Vector3(14.9, -0.16, 0.0), Vector3(1.0, 0.18, 9.5), Color("3d8f98"), 0.1, 0.48)
@@ -124,7 +128,8 @@ func _create_lighting() -> void:
 	fill_light.shadow_enabled = false
 	add_child(fill_light)
 
-	for x_position in [-9.0, 0.0, 9.0]:
+	var light_x_positions: Array[float] = [-9.0, 0.0, 9.0]
+	for x_position: float in light_x_positions:
 		var status_light := OmniLight3D.new()
 		status_light.name = "StateLight_%s" % str(x_position)
 		status_light.position = Vector3(x_position, 5.5, 1.0)
@@ -207,7 +212,7 @@ func _create_minimal_ui() -> void:
 
 	var controls := Label.new()
 	controls.name = "Controls"
-	controls.position = Vector2(28.0, 678.0)
+	controls.position = Vector2(28.0, float(TARGET_SIZE.y) - 42.0)
 	controls.text = "1 GROWTH   ·   2 OVERLOAD   ·   3 SCRUTINY"
 	controls.add_theme_font_size_override("font_size", 13)
 	controls.add_theme_color_override("font_color", Color(0.85, 0.9, 0.88, 0.72))
@@ -232,24 +237,61 @@ func _validate_ui_contract() -> bool:
 
 
 func _load_authored_kit() -> bool:
-	var resource := ResourceLoader.load(KIT_PATH)
-	if resource == null or not resource is PackedScene:
-		_fatal("required Blender-generated PackedScene is missing or invalid: %s" % KIT_PATH)
+	if not FileAccess.file_exists(CATALOG_PATH):
+		_fatal("required Blender asset catalog is missing: %s" % CATALOG_PATH)
 		return false
-	var instance := (resource as PackedScene).instantiate()
-	if instance == null or not instance is Node3D:
-		_fatal("Blender-generated asset root must instantiate as Node3D: %s" % KIT_PATH)
+	var catalog_file := FileAccess.open(CATALOG_PATH, FileAccess.READ)
+	if catalog_file == null:
+		_fatal("could not read Blender asset catalog: %s" % CATALOG_PATH)
 		return false
-	_kit_root = instance as Node3D
+	var files := _catalog_glb_paths(catalog_file.get_as_text())
+	if files.is_empty():
+		return false
+
+	_kit_root = Node3D.new()
 	_kit_root.name = "BlenderAuthoredCampusKit"
 	add_child(_kit_root)
+
+	for glb_path: String in files:
+		var resource := ResourceLoader.load(glb_path)
+		if resource == null or not resource is PackedScene:
+			_fatal("required Blender-exported PackedScene is missing or invalid: %s" % glb_path)
+			return false
+		var instance := (resource as PackedScene).instantiate()
+		if instance == null or not instance is Node3D:
+			_fatal("Blender-exported asset root must instantiate as Node3D: %s" % glb_path)
+			return false
+		_kit_root.add_child(instance as Node3D)
 	return true
+
+
+func _catalog_glb_paths(catalog_text: String) -> PackedStringArray:
+	var files := PackedStringArray()
+	var lines: PackedStringArray = catalog_text.split("\n", false)
+	for line: String in lines:
+		var trimmed := line.strip_edges()
+		if not trimmed.begins_with('"file"'):
+			continue
+		var colon := trimmed.find(":")
+		var quote_open := trimmed.find('"', colon)
+		var quote_close := trimmed.rfind('"')
+		if colon < 0 or quote_open < 0 or quote_close <= quote_open:
+			_fatal("asset catalog file field is malformed: %s" % trimmed)
+			return PackedStringArray()
+		var glb_path := trimmed.substr(quote_open + 1, quote_close - quote_open - 1)
+		if not glb_path.begins_with("res://assets/generated/") or not glb_path.ends_with(".glb"):
+			_fatal("asset catalog file path is not a generated GLB: %s" % glb_path)
+			return PackedStringArray()
+		files.append(glb_path)
+	if files.is_empty():
+		_fatal("Blender asset catalog has no assets: %s" % CATALOG_PATH)
+	return files
 
 
 func _validate_asset_layers() -> bool:
 	var counts := {"base": 0, "growth": 0, "overload": 0, "scrutiny": 0}
-	for node in _kit_root.find_children("*", "Node3D", true, false):
-		var node_name := String(node.name)
+	for found_node: Node in _kit_root.find_children("*", "Node3D", true, false):
+		var node_name := String(found_node.name)
 		if node_name.begins_with("Base__"):
 			counts["base"] += 1
 		elif node_name.begins_with("Growth__"):
@@ -275,7 +317,11 @@ func _set_state(state_name: String) -> bool:
 		return false
 	var active_prefix := "%s__" % state_name.capitalize()
 	var active_count := 0
-	for node in _kit_root.find_children("*", "Node3D", true, false):
+	for found_node: Node in _kit_root.find_children("*", "Node3D", true, false):
+		var node: Node3D = found_node as Node3D
+		if node == null:
+			_fatal("imported kit Node3D query returned a non-Node3D node: %s" % found_node.name)
+			return false
 		var node_name := String(node.name)
 		if node_name.begins_with("Base__"):
 			node.visible = true

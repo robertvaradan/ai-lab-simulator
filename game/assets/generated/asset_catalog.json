@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "source_file": "model-pipeline/source/campus_modular_kit.blend",
+  "asset_id": "campus_modular_kit_v004",
+  "assets": [
+    {
+      "id": "lab_stage1",
+      "collection": "Export__LabStage1",
+      "layer": "base",
+      "file": "res://assets/generated/lab_stage1.glb"
+    },
+    {
+      "id": "compute",
+      "collection": "Export__Compute",
+      "layer": "base",
+      "file": "res://assets/generated/compute.glb"
+    },
+    {
+      "id": "research",
+      "collection": "Export__Research",
+      "layer": "base",
+      "file": "res://assets/generated/research.glb"
+    },
+    {
+      "id": "growth",
+      "collection": "Export__Growth",
+      "layer": "growth",
+      "file": "res://assets/generated/growth.glb"
+    },
+    {
+      "id": "overload",
+      "collection": "Export__Overload",
+      "layer": "overload",
+      "file": "res://assets/generated/overload.glb"
+    },
+    {
+      "id": "scrutiny",
+      "collection": "Export__Scrutiny",
+      "layer": "scrutiny",
+      "file": "res://assets/generated/scrutiny.glb"
+    }
+  ]
+}

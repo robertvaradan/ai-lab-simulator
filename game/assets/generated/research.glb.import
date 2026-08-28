@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://co2x0hbrmvjay"
-path="res://.godot/imported/campus_modular_kit.glb-e88ecc7eea917aaa3084f070ebab030b.scn"
+uid="uid://bx8eldmrjx8c8"
+path="res://.godot/imported/research.glb-83f5f531e8dc597a80f3c2c943a53ebd.scn"
 
 [deps]
 
-source_file="res://assets/generated/campus_modular_kit.glb"
-dest_files=["res://.godot/imported/campus_modular_kit.glb-e88ecc7eea917aaa3084f070ebab030b.scn"]
+source_file="res://assets/generated/research.glb"
+dest_files=["res://.godot/imported/research.glb-83f5f531e8dc597a80f3c2c943a53ebd.scn"]
 
 [params]
 

@@ -1,39 +1,70 @@
 # Blender pipeline contract
 
-This folder owns deterministic Blender generation and glTF export for the Godot render proof.
+This folder owns one Blender authoring file, Geometry Nodes tools, a Blender add-on, and glTF export for mesh assets.
 
-## Deterministic generation and export
+The SDF renderer does not load these assets. Do not use this kit as a fallback for the compute renderer.
 
-- Run Blender 5.1 in background factory-startup mode through `scripts/generate_assets.py`.
-- The script must begin from an empty factory scene and reconstruct the asset from versioned manifest/config inputs. No user preferences, startup scene, add-ons, network services, random values, or external fonts may influence output.
-- `manifest/assets.json` is the source of truth. `schema/asset-manifest.schema.json` documents its serialized contract. Generator validation must fail before scene mutation when required fields, versions, state names, file paths, or budgets disagree.
-- The generated source is `source/campus_modular_kit.blend`; the generated runtime export is `../game/assets/generated/campus_modular_kit.glb`. Those files are generator-owned and must not be edited by hand.
-- Export real geometry and materials through Blender glTF. Do not reproduce the authored buildings as Godot primitive fallbacks.
+## Authoring source
 
-## Geometry, material, and naming budgets
+- `source/campus_modular_kit.blend` is the one authoring file. Edit every campus asset in that file.
+- Each `Export__*` collection is one exported asset. Duplicate an object, change Geometry Nodes parameters, and keep the object in the correct collection.
+- Object names in `Export__Compute`, `Export__Research`, and state collections must begin with exactly one layer prefix: `Base__`, `Growth__`, `Overload__`, or `Scrutiny__`.
+- `Export__LabStage1` uses plain lab mesh names such as `LabBuildingMain`. Do not prefix those meshes with `Base__` or a state layer.
+- `Base__` contains the persistent compute and research kit. `Export__LabStage1` is the starting lab mass. State layers are dressing on that one campus.
+- Do not place tree objects in the campus source. Place trees later with a scatter tool.
+- `Authoring__Labels` holds viewport guide text. Those objects must not enter `Export__*` collections. Publish must not write them into GLBs.
 
-- Favor bold modular massing, simplified/faceted topology, two-segment bevels, roof silhouettes, rhythmic windows, service ducts, cooling shapes, terraces, fences, and readable state props.
-- Keep the prototype within the manifest's material budget and use zero painted textures. Add identity with geometry, material IDs, palette, lighting, and emissive accents.
-- Material families are architecture/concrete, dark metal, glass, vegetation, ground/water, and emissive/status. Any new material must map to a documented family and remain within budget.
-- Every exported object must begin with exactly one layer prefix: `Base__`, `Growth__`, `Overload__`, or `Scrutiny__`. The remainder of the name must identify subject and part.
-- `Base__` contains the persistent lab/core, compute, and research/talent kit. State layers are modular dressing on that one base asset, not separate replacement campuses.
-- Preserve the manifest fields `asset_id`, `family`, `footprint`, `location_role`, `state_layers`, `lod_policy`, `collision_type`, `material_budget`, and `source_file`.
+## Designer work
 
-## State-layer semantics
+The designer must only place kit pieces and change Geometry Nodes modifier inputs.
 
-- `growth`: expansion pods, vegetation/terraces, optimistic cool-green status lighting.
-- `overload`: additional cooling/service geometry, hot pipes, warning beacons, orange/red status lighting.
-- `scrutiny`: fences, checkpoint/security forms, scan arches, cool inspection lighting.
-- Each layer must remain legible from the actual fixed Godot camera; detail that only reads in Blender close-up does not count.
+The designer must not enable add-ons, set a Scripts path, rebuild node groups, or run Blender CLI.
+
+Open the kit with `scripts/open-campus-kit`. That command registers ALS Campus Kit and syncs node groups.
+
+## Publish into the game
+
+The agent must publish the authoring file with `scripts/export-campus-kit`.
+
+That command syncs node groups, removes tree objects, exports one GLB per collection, and writes `asset_catalog.json`.
+
+The agent must require `PIPELINE_EXPORT_SUCCESS`. The agent must not ask the designer to run Blender CLI.
+
+## Geometry Nodes tools
+
+- Bootstrap and publish install reusable modifier node groups. The ALS sidebar uses the same groups.
+- Exposed group inputs are the authoring parameters. Change them on the Geometry Nodes modifier. Do not rebuild meshes as one-off `bpy` primitives.
+- Every export mesh must end with `ALS_ShadeContract`. That group sets smooth shading and keeps edges sharp above 30 degrees.
+- `ALS_Tree` exists for later scatter. Campus export collections must not contain it.
+- Keep the prototype within the manifest material budget and use zero painted textures.
+- Material families are architecture/concrete, dark metal, glass, vegetation, ground/water, and emissive/status.
+
+## Authoring add-on
+
+- `addons/als_campus_kit` is the Blender authoring add-on.
+- `scripts/open-campus-kit` must register the add-on from this repository path. Do not install a copied add-on into the user add-on folder.
+- The ALS sidebar places kit pieces at the 3D cursor.
+
+## Commands
+
+Pin Blender 5.1.
+
+`scripts/open-campus-kit` opens the authoring file, registers the add-on, and syncs node groups. It must fail when the `.blend` or Blender 5.1 is missing.
+
+`bootstrap` creates the authoring file, node groups, materials, collections, and a starter campus. `bootstrap` must fail when the `.blend` already exists. Do not overwrite artist work.
+
+`sync-tools` opens the existing `.blend`, rebuilds node groups, removes tree objects, restores modifier values by socket name, and writes `ALS_ShadeContract` as the last modifier. `sync-tools` must fail when the `.blend` is missing. `sync-tools` must not delete artist objects except tree objects.
+
+`export` runs `sync-tools`, then writes one GLB per `Export__*` collection and writes `asset_catalog.json`. `scripts/export-campus-kit` is the publish command. `export` must fail when the `.blend` is missing. `export` must not delete artist objects except tree objects.
+
+Interactive authoring uses the normal Blender UI through `scripts/open-campus-kit`. Publish uses `--background --factory-startup --python-exit-code 1` so user add-ons cannot change output and a Python error exits non-zero.
 
 ## Validation
 
-- Pin and validate Blender 5.1 before doing work.
-- Validate manifest/schema version, exact state set, path ownership, object prefixes, required family subjects, material count, painted-texture count, and exported-file existence/size.
-- The end-to-end authority is `..\scripts\render-test.ps1`, which regenerates assets, imports them with Godot, renders all states, and checks evidence.
-- Inspect all evidence after geometry/material changes. A successful export alone is not visual verification.
+- Validate Blender 5.1, manifest schema version, export collections, object prefixes, required base subjects, material count, painted-texture count, node groups, shade contract, absence of tree objects, and exported-file existence/size.
+- The SDF render test does not regenerate Blender assets.
+- Inspect the comparison harness after geometry or material changes. A successful export alone is not visual verification.
 
 ## No fallbacks as fixes
 
-Do not silently skip invalid objects, missing palette entries, export failures, version mismatches, or absent output directories. Do not look in alternate source/export paths and do not generate substitute geometry when a contract is broken. Raise a precise error and fix the manifest, config, toolchain, or generator responsible.
-
+Do not skip invalid objects, missing palette entries, export failures, version mismatches, or absent output directories. Do not look in alternate source or export paths. Do not generate substitute geometry when a contract is broken. Raise a precise error and fix the manifest, config, toolchain, or authoring file.

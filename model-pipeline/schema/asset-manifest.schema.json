@@ -15,13 +15,14 @@
     "collision_type",
     "material_budget",
     "source_file",
-    "export_file",
+    "catalog_file",
+    "exports",
     "generator",
     "required_blender"
   ],
   "properties": {
     "$schema": { "type": "string" },
-    "schema_version": { "const": 1 },
+    "schema_version": { "const": 2 },
     "asset_id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
     "family": {
       "type": "array",
@@ -68,9 +69,25 @@
       }
     },
     "source_file": { "const": "source/campus_modular_kit.blend" },
-    "export_file": { "const": "game/assets/generated/campus_modular_kit.glb" },
-    "generator": { "const": "model-pipeline/scripts/generate_assets.py" },
+    "catalog_file": { "const": "game/assets/generated/asset_catalog.json" },
+    "exports": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "collection", "layer", "export_file"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+          "collection": { "type": "string", "pattern": "^Export__[A-Za-z]+$" },
+          "layer": { "enum": ["base", "growth", "overload", "scrutiny"] },
+          "export_file": { "type": "string", "pattern": "^game/assets/generated/[a-z0-9_]+\\.glb$" }
+        }
+      }
+    },
+    "generator": { "const": "model-pipeline/scripts/export_assets.py" },
     "required_blender": { "const": "5.1" }
   }
 }
-
