@@ -1,12 +1,12 @@
-[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dg3cos0dhhc0u"]
 
-[ext_resource type="Shader" path="res://shaders/foliage.gdshader" id="1_foliage"]
+[ext_resource type="Shader" uid="uid://cjhi7lq46mbfa" path="res://shaders/foliage.gdshader" id="1_foliage"]
 
 [resource]
 render_priority = 0
 shader = ExtResource("1_foliage")
 shader_parameter/albedo_color = Color(0.19215687, 0.35686275, 0.23921569, 1)
-shader_parameter/noise_scale = 3.6
+shader_parameter/noise_scale = 24.0
 shader_parameter/blend_sharpness = 4.5
 shader_parameter/normal_strength = 0.9
 shader_parameter/wrap_amount = 0.36
