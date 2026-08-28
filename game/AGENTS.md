@@ -19,6 +19,9 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - The former mesh/GLB harness remains only as a comparison artifact. Do not silently invoke it when the SDF pipeline fails.
 - `scenes/campus_blockout.tscn` is the native Godot blockout for the first Company Campus composition.
 - The campus blockout must use `PrimitiveMesh` geometry. It must not load a Blender or GLB campus asset.
+- Repeated round-crown trees must instance `scenes/round_tree.tscn`.
+- Repeated fir trees must instance `scenes/fir_tree.tscn`.
+- Do not duplicate round-crown or fir mesh nodes in `campus_blockout.tscn`.
 - The campus blockout must use a 0.2 m voxel grid for `PrimitiveMesh` sizes and mesh node origins.
 - A box, cylinder, or sphere extent must land on the 0.2 m grid. Do not keep off-grid sizes or origins for visual tuning.
 - A rectangular frame must use `BoxOutlineMesh`. Do not author four box nodes for one outline.

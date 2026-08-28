@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://c8k2n4pqrwxy7"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_trunk"]
+albedo_color = Color(0.29411766, 0.22352941, 0.16862746, 1)
+roughness = 0.98
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_trunk"]
+top_radius = 0.2
+bottom_radius = 0.2
+height = 2.2
+radial_segments = 8
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tree_a"]
+albedo_color = Color(0.14901961, 0.28627452, 0.21176471, 1)
+roughness = 0.98
+
+[sub_resource type="SphereMesh" id="SphereMesh_center"]
+radius = 1.4
+height = 2.8
+radial_segments = 8
+rings = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tree_b"]
+albedo_color = Color(0.19215687, 0.35686275, 0.23921569, 1)
+roughness = 0.98
+
+[sub_resource type="SphereMesh" id="SphereMesh_left"]
+radius = 1.0
+height = 2.0
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_side"]
+radius = 0.8
+height = 1.6
+radial_segments = 8
+rings = 4
+
+[node name="RoundTree" type="Node3D"]
+
+[node name="Trunk" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+material_override = SubResource("StandardMaterial3D_trunk")
+mesh = SubResource("CylinderMesh_trunk")
+
+[node name="CrownCenter" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0)
+material_override = SubResource("StandardMaterial3D_tree_a")
+mesh = SubResource("SphereMesh_center")
+
+[node name="CrownLeft" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 3.2, 0)
+material_override = SubResource("StandardMaterial3D_tree_b")
+mesh = SubResource("SphereMesh_left")
+
+[node name="CrownRight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 3.2, 0)
+material_override = SubResource("StandardMaterial3D_tree_a")
+mesh = SubResource("SphereMesh_side")
+
+[node name="CrownTop" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.2, 0)
+material_override = SubResource("StandardMaterial3D_tree_b")
+mesh = SubResource("SphereMesh_side")

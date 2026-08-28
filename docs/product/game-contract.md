@@ -38,6 +38,10 @@ The first Company Campus blockout must match the composition in `docs/concept-ar
 
 The blockout must use native Godot primitive geometry.
 
+Repeated round-crown trees must instance one shared scene.
+
+Repeated fir trees must instance one shared scene.
+
 The blockout must not depend on a Blender or GLB campus asset.
 
 The blockout scene must store its geometry as editable Godot scene nodes.
