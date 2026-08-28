@@ -1,23 +1,20 @@
 shader_type spatial;
 
-// Soft putting-green lawn. Triplanar world noise keeps boxes even without UVs.
+// Soft putting-green lawn. One palette albedo. Depth from triplanar normals.
 render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_burley, specular_disabled;
 
 group_uniforms Color;
-uniform vec3 albedo_lit : source_color = vec3(0.30, 0.42, 0.28);
-uniform vec3 albedo_shade : source_color = vec3(0.18, 0.28, 0.20);
-uniform float color_blend : hint_range(0.0, 1.0) = 0.42;
+uniform vec3 albedo_color : source_color = vec3(0.188, 0.278, 0.200);
 
 group_uniforms Triplanar;
-uniform float noise_scale : hint_range(0.1, 24.0) = 3.2;
-uniform float noise_strength : hint_range(0.0, 0.5) = 0.06;
+uniform float noise_scale : hint_range(0.1, 24.0) = 2.8;
 uniform float blend_sharpness : hint_range(1.0, 16.0) = 6.0;
+uniform float normal_strength : hint_range(0.0, 2.0) = 0.22;
 
 group_uniforms Velvet;
-uniform float wrap_amount : hint_range(0.0, 1.0) = 0.62;
-uniform float velvet_strength : hint_range(0.0, 1.0) = 0.18;
-uniform float velvet_power : hint_range(1.0, 8.0) = 2.8;
-uniform float evenness : hint_range(0.0, 1.0) = 0.72;
+uniform float wrap_amount : hint_range(0.0, 1.0) = 0.68;
+uniform float velvet_strength : hint_range(0.0, 1.0) = 0.2;
+uniform float velvet_power : hint_range(1.0, 8.0) = 2.6;
 
 group_uniforms Surface;
 uniform float roughness_value : hint_range(0.0, 1.0) = 0.97;
@@ -63,22 +60,32 @@ float triplanar_noise(vec3 pos, vec3 normal, float scale, float sharpness) {
 	return nx * blend.x + ny * blend.y + nz * blend.z;
 }
 
+vec3 triplanar_normal(vec3 pos, vec3 normal, float scale, float sharpness, float strength) {
+	float epsilon = 0.05;
+	float h = triplanar_noise(pos, normal, scale, sharpness);
+	float hx = triplanar_noise(pos + vec3(epsilon, 0.0, 0.0), normal, scale, sharpness);
+	float hy = triplanar_noise(pos + vec3(0.0, epsilon, 0.0), normal, scale, sharpness);
+	float hz = triplanar_noise(pos + vec3(0.0, 0.0, epsilon), normal, scale, sharpness);
+	vec3 gradient = vec3(hx - h, hy - h, hz - h) / epsilon;
+	return normalize(normal - gradient * strength);
+}
+
 void vertex() {
 	world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	world_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
 }
 
 void fragment() {
-	float grain = triplanar_noise(world_position, world_normal, noise_scale, blend_sharpness);
-	float variation = (grain - 0.5) * noise_strength;
-	vec3 base = mix(albedo_shade, albedo_lit, color_blend);
-	base = clamp(base + vec3(variation), vec3(0.0), vec3(1.0));
+	vec3 perturbed_world = triplanar_normal(
+		world_position,
+		normalize(world_normal),
+		noise_scale,
+		blend_sharpness,
+		normal_strength
+	);
+	NORMAL = normalize((VIEW_MATRIX * vec4(perturbed_world, 0.0)).xyz);
 
-	// Flatten local contrast so the lawn reads soft and even.
-	base = mix(base, vec3(dot(base, vec3(0.299, 0.587, 0.114))), evenness * 0.22);
-	base = mix(vec3(dot(base, vec3(0.333))), base, 1.0 - evenness * 0.15);
-
-	ALBEDO = base;
+	ALBEDO = albedo_color;
 	ROUGHNESS = roughness_value;
 	METALLIC = 0.0;
 	SPECULAR = 0.0;
@@ -87,7 +94,6 @@ void fragment() {
 void light() {
 	float ndotl = dot(NORMAL, LIGHT);
 	float wrap = clamp((ndotl + wrap_amount) / (1.0 + wrap_amount), 0.0, 1.0);
-	// Soft wrap keeps putts looking velvety instead of hard-shaded.
 	wrap = mix(wrap, smoothstep(0.0, 1.0, wrap), 0.55);
 
 	float view_term = 1.0 - abs(dot(NORMAL, VIEW));

@@ -1,11 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://c8k2n4pqrwxy7"]
+[gd_scene load_steps=8 format=3 uid="uid://c8k2n4pqrwxy7"]
 
 [ext_resource type="Material" path="res://materials/tree_foliage_a.tres" id="1_foliage_a"]
 [ext_resource type="Material" path="res://materials/tree_foliage_b.tres" id="2_foliage_b"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_trunk"]
-albedo_color = Color(0.29411766, 0.22352941, 0.16862746, 1)
-roughness = 0.98
+[ext_resource type="Material" path="res://materials/trunk.tres" id="3_trunk"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_trunk"]
 top_radius = 0.2
@@ -36,7 +33,7 @@ rings = 4
 
 [node name="Trunk" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
-material_override = SubResource("StandardMaterial3D_trunk")
+material_override = ExtResource("3_trunk")
 mesh = SubResource("CylinderMesh_trunk")
 
 [node name="CrownCenter" type="MeshInstance3D" parent="."]

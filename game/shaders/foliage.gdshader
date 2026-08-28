@@ -1,26 +1,21 @@
 shader_type spatial;
 
-// Hedge and tree crowns. Triplanar world noise. Deeper lit contrast than grass.
+// Hedge and tree crowns. One palette albedo. Depth from triplanar normals.
 render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_burley, specular_disabled;
 
 group_uniforms Color;
-uniform vec3 albedo_lit : source_color = vec3(0.28, 0.42, 0.30);
-uniform vec3 albedo_shade : source_color = vec3(0.11, 0.20, 0.14);
-uniform float color_blend : hint_range(0.0, 1.0) = 0.5;
+uniform vec3 albedo_color : source_color = vec3(0.149, 0.286, 0.212);
 
 group_uniforms Triplanar;
 uniform float noise_scale : hint_range(0.1, 24.0) = 4.5;
-uniform float noise_strength : hint_range(0.0, 0.8) = 0.12;
 uniform float blend_sharpness : hint_range(1.0, 16.0) = 5.0;
-uniform float depth_noise_scale : hint_range(0.1, 24.0) = 1.6;
-uniform float depth_noise_strength : hint_range(0.0, 0.5) = 0.08;
+uniform float normal_strength : hint_range(0.0, 2.5) = 0.85;
 
 group_uniforms Depth;
-uniform float contrast : hint_range(0.5, 2.5) = 1.35;
-uniform float wrap_amount : hint_range(0.0, 1.0) = 0.34;
-uniform float catch_strength : hint_range(0.0, 1.5) = 0.42;
-uniform float catch_power : hint_range(1.0, 12.0) = 3.4;
-uniform float shade_floor : hint_range(0.0, 0.5) = 0.18;
+uniform float wrap_amount : hint_range(0.0, 1.0) = 0.32;
+uniform float catch_strength : hint_range(0.0, 1.5) = 0.48;
+uniform float catch_power : hint_range(1.0, 12.0) = 3.2;
+uniform float shade_floor : hint_range(0.0, 0.5) = 0.2;
 
 group_uniforms Surface;
 uniform float roughness_value : hint_range(0.0, 1.0) = 0.94;
@@ -66,24 +61,32 @@ float triplanar_noise(vec3 pos, vec3 normal, float scale, float sharpness) {
 	return nx * blend.x + ny * blend.y + nz * blend.z;
 }
 
+vec3 triplanar_normal(vec3 pos, vec3 normal, float scale, float sharpness, float strength) {
+	float epsilon = 0.04;
+	float h = triplanar_noise(pos, normal, scale, sharpness);
+	float hx = triplanar_noise(pos + vec3(epsilon, 0.0, 0.0), normal, scale, sharpness);
+	float hy = triplanar_noise(pos + vec3(0.0, epsilon, 0.0), normal, scale, sharpness);
+	float hz = triplanar_noise(pos + vec3(0.0, 0.0, epsilon), normal, scale, sharpness);
+	vec3 gradient = vec3(hx - h, hy - h, hz - h) / epsilon;
+	return normalize(normal - gradient * strength);
+}
+
 void vertex() {
 	world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	world_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
 }
 
 void fragment() {
-	float fine = triplanar_noise(world_position, world_normal, noise_scale, blend_sharpness);
-	float deep = triplanar_noise(world_position + 17.3, world_normal, depth_noise_scale, blend_sharpness);
-	float variation = (fine - 0.5) * noise_strength + (deep - 0.5) * depth_noise_strength;
+	vec3 perturbed_world = triplanar_normal(
+		world_position,
+		normalize(world_normal),
+		noise_scale,
+		blend_sharpness,
+		normal_strength
+	);
+	NORMAL = normalize((VIEW_MATRIX * vec4(perturbed_world, 0.0)).xyz);
 
-	vec3 base = mix(albedo_shade, albedo_lit, color_blend);
-	base = clamp(base + vec3(variation), vec3(0.0), vec3(1.0));
-
-	vec3 mid = mix(albedo_shade, albedo_lit, 0.45);
-	base = mid + (base - mid) * contrast;
-	base = clamp(base, vec3(0.0), vec3(1.0));
-
-	ALBEDO = base;
+	ALBEDO = albedo_color;
 	ROUGHNESS = roughness_value;
 	METALLIC = 0.0;
 	SPECULAR = 0.0;
@@ -92,7 +95,6 @@ void fragment() {
 void light() {
 	float ndotl = dot(NORMAL, LIGHT);
 	float wrap = clamp((ndotl + wrap_amount) / (1.0 + wrap_amount), 0.0, 1.0);
-	// Steeper than grass wrap, but keep a readable shade floor.
 	float shaped = pow(max(wrap, 0.0), 1.25);
 	shaped = max(shaped, shade_floor * (0.55 + 0.45 * wrap));
 

@@ -6,11 +6,61 @@
 
 [ext_resource type="PackedScene" uid="uid://d7m3p9qvstxk2" path="res://scenes/fir_tree.tscn" id="3_fir_tree"]
 
-[ext_resource type="Material" path="res://materials/grass.tres" id="4_grass"]
+[ext_resource type="Material" path="res://materials/grass.tres" id="grass"]
 
-[ext_resource type="Material" path="res://materials/grass_cut.tres" id="5_grass_cut"]
+[ext_resource type="Material" path="res://materials/grass_cut.tres" id="grass_cut"]
 
-[ext_resource type="Material" path="res://materials/hedge.tres" id="6_hedge"]
+[ext_resource type="Material" path="res://materials/hedge.tres" id="hedge"]
+
+[ext_resource type="Material" path="res://materials/car_dark.tres" id="car_dark"]
+
+[ext_resource type="Material" path="res://materials/car_gray.tres" id="car_gray"]
+
+[ext_resource type="Material" path="res://materials/car_green.tres" id="car_green"]
+
+[ext_resource type="Material" path="res://materials/charcoal.tres" id="charcoal"]
+
+[ext_resource type="Material" path="res://materials/concrete.tres" id="concrete"]
+
+[ext_resource type="Material" path="res://materials/concrete_light.tres" id="concrete_light"]
+
+[ext_resource type="Material" path="res://materials/cream.tres" id="cream"]
+
+[ext_resource type="Material" path="res://materials/cream_deep.tres" id="cream_deep"]
+
+[ext_resource type="Material" path="res://materials/cyan.tres" id="cyan"]
+
+[ext_resource type="Material" path="res://materials/glass.tres" id="glass"]
+
+[ext_resource type="Material" path="res://materials/glass_dark.tres" id="glass_dark"]
+
+[ext_resource type="Material" path="res://materials/glass_light.tres" id="glass_light"]
+
+[ext_resource type="Material" path="res://materials/glass_mid.tres" id="glass_mid"]
+
+[ext_resource type="Material" path="res://materials/marking.tres" id="marking"]
+
+[ext_resource type="Material" path="res://materials/metal.tres" id="metal"]
+
+[ext_resource type="Material" path="res://materials/metal_dark.tres" id="metal_dark"]
+
+[ext_resource type="Material" path="res://materials/orange.tres" id="orange"]
+
+[ext_resource type="Material" path="res://materials/orange_dark.tres" id="orange_dark"]
+
+[ext_resource type="Material" path="res://materials/plinth.tres" id="plinth"]
+
+[ext_resource type="Material" path="res://materials/road.tres" id="road"]
+
+[ext_resource type="Material" path="res://materials/road_edge.tres" id="road_edge"]
+
+[ext_resource type="Material" path="res://materials/roof.tres" id="roof"]
+
+[ext_resource type="Material" path="res://materials/tire.tres" id="tire"]
+
+[ext_resource type="Material" path="res://materials/void.tres" id="void"]
+
+[ext_resource type="Material" path="res://materials/warm.tres" id="warm"]
 
 [sub_resource type="Environment" id="Environment_8rkxl"]
 background_mode = 1
@@ -30,26 +80,14 @@ glow_intensity = 0.82
 glow_strength = 0.75
 glow_bloom = 0.08
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fhb87"]
-albedo_color = Color(0.050980393, 0.1254902, 0.15294118, 1)
-roughness = 0.95
-
 [sub_resource type="BoxMesh" id="BoxMesh_4ax3b"]
 size = Vector3(52, 1, 46)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_26o1o"]
-albedo_color = Color(0.08235294, 0.16470589, 0.19215687, 1)
-roughness = 0.82
 
 [sub_resource type="BoxMesh" id="BoxMesh_7wggf"]
 size = Vector3(52, 0.4, 46)
 
 [sub_resource type="BoxMesh" id="BoxMesh_024a5"]
 size = Vector3(50, 0.2, 44.4)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5yahr"]
-albedo_color = Color(0.45490196, 0.4627451, 0.43529412, 1)
-roughness = 0.89
 
 [sub_resource type="BoxMesh" id="BoxMesh_rkynf"]
 size = Vector3(50.8, 1.2, 0.4)
@@ -102,20 +140,11 @@ size = Vector3(0.8, 3, 0.6)
 [sub_resource type="BoxMesh" id="BoxMesh_2f0tv"]
 size = Vector3(0.8, 3, 0.6)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vbei2"]
-albedo_color = Color(0.1254902, 0.16078432, 0.17254902, 1)
-metallic = 0.48
-roughness = 0.39
-
 [sub_resource type="BoxMesh" id="BoxMesh_alyyj"]
 size = Vector3(0.6, 0.4, 5.4)
 
 [sub_resource type="BoxMesh" id="BoxMesh_gcg8y"]
 size = Vector3(0.2, 2.8, 0.2)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_12fii"]
-albedo_color = Color(0.09019608, 0.11372549, 0.1254902, 1)
-roughness = 0.91
 
 [sub_resource type="BoxMesh" id="BoxMesh_du6gb"]
 size = Vector3(14.8, 0.2, 26)
@@ -129,16 +158,8 @@ size = Vector3(9.400001, 0.2, 6.4)
 [sub_resource type="BoxMesh" id="BoxMesh_71v0b"]
 size = Vector3(36, 0.2, 5.2000003)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2uh0m"]
-albedo_color = Color(0.30980393, 0.3529412, 0.35686275, 1)
-roughness = 0.93
-
 [sub_resource type="BoxMesh" id="BoxMesh_ft355"]
 size = Vector3(28, 0.2, 11.6)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f4l80"]
-albedo_color = Color(0.20392157, 0.22745098, 0.22352941, 1)
-roughness = 0.9
 
 [sub_resource type="BoxMesh" id="BoxMesh_dll8c"]
 size = Vector3(0.2, 0.2, 10.4)
@@ -190,10 +211,6 @@ size = Vector3(3.6, 0.2, 12)
 
 [sub_resource type="BoxMesh" id="BoxMesh_n85qx"]
 size = Vector3(27.6, 0.2, 2.2)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5bmwd"]
-albedo_color = Color(0.53333336, 0.5294118, 0.49411765, 1)
-roughness = 0.84
 
 [sub_resource type="BoxMesh" id="BoxMesh_1rhc0"]
 size = Vector3(5.4, 0.2, 0.2)
@@ -255,39 +272,14 @@ size = Vector3(0.6, 0.6, 20)
 [sub_resource type="BoxMesh" id="BoxMesh_ttk7o"]
 size = Vector3(12, 0.6, 0.6)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_phcno"]
-albedo_color = Color(0.14509805, 0.1764706, 0.19607843, 1)
-metallic = 0.35
-roughness = 0.5
-
 [sub_resource type="BoxMesh" id="BoxMesh_swc4j"]
 size = Vector3(1.8, 0.6, 3.6)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_24glg"]
-albedo_color = Color(0.07450981, 0.28235295, 0.3137255, 1)
-metallic = 0.1
-roughness = 0.4
-emission_enabled = true
-emission = Color(0.09411765, 0.3764706, 0.40784314, 1)
-emission_energy_multiplier = 0.18
 
 [sub_resource type="BoxMesh" id="BoxMesh_bm4hk"]
 size = Vector3(1.6, 0.6, 1.8)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iu2x2"]
-albedo_color = Color(0.8784314, 0.6901961, 0.4392157, 1)
-metallic = 0.02
-roughness = 0.55
-emission_enabled = true
-emission = Color(1, 0.7529412, 0.47058824, 1)
-emission_energy_multiplier = 2.4
-
 [sub_resource type="BoxMesh" id="BoxMesh_ldkvf"]
 size = Vector3(1.2, 0.2, 0.4)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b4twu"]
-albedo_color = Color(0.06666667, 0.09019608, 0.09803922, 1)
-roughness = 0.96
 
 [sub_resource type="BoxMesh" id="BoxMesh_fggjg"]
 size = Vector3(0.2, 0.4, 0.6)
@@ -300,11 +292,6 @@ size = Vector3(0.2, 0.4, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_srtf0"]
 size = Vector3(0.2, 0.4, 0.6)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_br816"]
-albedo_color = Color(0.33333334, 0.34901962, 0.3529412, 1)
-metallic = 0.28
-roughness = 0.52
 
 [sub_resource type="BoxMesh" id="BoxMesh_bnh0f"]
 size = Vector3(1.8, 0.6, 3.6)
@@ -359,11 +346,6 @@ size = Vector3(0.2, 0.4, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_b3ymy"]
 size = Vector3(0.2, 0.4, 0.6)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0uyvl"]
-albedo_color = Color(0.2901961, 0.34901962, 0.2509804, 1)
-metallic = 0.22
-roughness = 0.55
 
 [sub_resource type="BoxMesh" id="BoxMesh_a04np"]
 size = Vector3(1.8, 0.6, 3.6)
@@ -425,14 +407,6 @@ size = Vector3(7, 0.2, 7.6)
 [sub_resource type="BoxMesh" id="BoxMesh_bqy86"]
 size = Vector3(6, 0.4, 6.4)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mr7sy"]
-albedo_color = Color(0.24313726, 0.78431374, 0.7529412, 1)
-metallic = 0.05
-roughness = 0.3
-emission_enabled = true
-emission = Color(0.3529412, 0.9411765, 0.89411765, 1)
-emission_energy_multiplier = 1.1
-
 [sub_resource type="BoxMesh" id="BoxMesh_qctta"]
 size = Vector3(5, 0.2, 0.2)
 
@@ -472,28 +446,11 @@ size = Vector3(4.4, 0.2, 2.2)
 [sub_resource type="BoxMesh" id="BoxMesh_r18i6"]
 size = Vector3(28, 0.4, 18)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ncmki"]
-albedo_color = Color(0.101960786, 0.15686275, 0.18039216, 1)
-metallic = 0.05
-roughness = 0.72
-
 [sub_resource type="BoxMesh" id="BoxMesh_sw2yc"]
 size = Vector3(9.400001, 14, 8.8)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t4y16"]
-albedo_color = Color(0.65882355, 0.5803922, 0.47058824, 1)
-roughness = 0.92
-
 [sub_resource type="BoxMesh" id="BoxMesh_874sh"]
 size = Vector3(8.6, 0.6, 1.2)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n43g5"]
-albedo_color = Color(0.09019608, 0.43529412, 0.47058824, 1)
-metallic = 0.1
-roughness = 0.3
-emission_enabled = true
-emission = Color(0.16470589, 0.6039216, 0.59607846, 1)
-emission_energy_multiplier = 0.45
 
 [sub_resource type="BoxMesh" id="BoxMesh_y0amr"]
 size = Vector3(7.6, 12.4, 0.2)
@@ -540,27 +497,14 @@ size = Vector3(7.6, 0.2, 0.2)
 [sub_resource type="BoxMesh" id="BoxMesh_krlk2"]
 size = Vector3(7.6, 0.2, 0.2)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u55d5"]
-albedo_color = Color(0.627451, 0.2509804, 0.15686275, 1)
-roughness = 0.76
-
 [sub_resource type="BoxMesh" id="BoxMesh_n7u4q"]
 size = Vector3(1.2, 12.8, 2.4)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4o038"]
-albedo_color = Color(0.8784314, 0.3529412, 0.19607843, 1)
-metallic = 0.02
-roughness = 0.7
 
 [sub_resource type="BoxMesh" id="BoxMesh_7rv88"]
 size = Vector3(1.2, 12.8, 0.4)
 
 [sub_resource type="BoxMesh" id="BoxMesh_qm4xl"]
 size = Vector3(0.4, 12.8, 0.4)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_37its"]
-albedo_color = Color(0.76862746, 0.7058824, 0.5882353, 1)
-roughness = 0.9
 
 [sub_resource type="PrimitiveMesh" id="PrimitiveMesh_vi5ac"]
 resource_local_to_scene = false
@@ -630,11 +574,6 @@ size = Vector3(0.2, 4.2, 0.2)
 [sub_resource type="BoxMesh" id="BoxMesh_kolu5"]
 size = Vector3(0.2, 4.2, 0.2)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t388m"]
-albedo_color = Color(0.16470589, 0.2, 0.21176471, 1)
-metallic = 0.02
-roughness = 0.88
-
 [sub_resource type="BoxMesh" id="BoxMesh_e8i27"]
 size = Vector3(13, 0.4, 10.2)
 
@@ -649,14 +588,6 @@ size = Vector3(8.4, 6.6, 11)
 
 [sub_resource type="BoxMesh" id="BoxMesh_w5ohl"]
 size = Vector3(7, 4.4, 0.2)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ayi8"]
-albedo_color = Color(0.11764706, 0.5019608, 0.53333336, 1)
-metallic = 0.08
-roughness = 0.28
-emission_enabled = true
-emission = Color(0.20392157, 0.6666667, 0.65882355, 1)
-emission_energy_multiplier = 0.35
 
 [sub_resource type="BoxMesh" id="BoxMesh_70rkr"]
 size = Vector3(0.2, 4.4, 10.2)
@@ -717,14 +648,6 @@ size = Vector3(0.2, 0.2, 1.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_ofbl1"]
 size = Vector3(0.2, 0.2, 1.6)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6qcs4"]
-albedo_color = Color(0.18039216, 0.59607846, 0.5647059, 1)
-metallic = 0.06
-roughness = 0.26
-emission_enabled = true
-emission = Color(0.28235295, 0.7529412, 0.7058824, 1)
-emission_energy_multiplier = 0.55
 
 [sub_resource type="BoxMesh" id="BoxMesh_4owdf"]
 size = Vector3(1.8, 0.2, 1.2)
@@ -844,11 +767,6 @@ size = Vector3(3.2, 0.6, 1.2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_w0ayh"]
 size = Vector3(3.2, 0.6, 1.2)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xtbon"]
-albedo_color = Color(0.47843137, 0.49019608, 0.47058824, 1)
-metallic = 0.62
-roughness = 0.42
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_xxq5h"]
 top_radius = 0.2
@@ -1008,886 +926,886 @@ light_energy = 0.36
 
 [node name="VoidBase" type="MeshInstance3D" parent="GroundAndRoads" unique_id=1639998022]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -1.5, -4)
-material_override = SubResource("StandardMaterial3D_fhb87")
+material_override = ExtResource("void")
 mesh = SubResource("BoxMesh_4ax3b")
 
 [node name="SitePlinth" type="MeshInstance3D" parent="GroundAndRoads" unique_id=286662572]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.8, -4)
-material_override = SubResource("StandardMaterial3D_26o1o")
+material_override = ExtResource("plinth")
 mesh = SubResource("BoxMesh_7wggf")
 
 [node name="GrassPlot" type="MeshInstance3D" parent="GroundAndRoads" unique_id=2147249733]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.5, -4.200001)
-material_override = ExtResource("4_grass")
+material_override = ExtResource("grass")
 mesh = SubResource("BoxMesh_024a5")
 
 [node name="SiteBoundaries" type="Node3D" parent="." unique_id=369694098]
 
 [node name="BackWall" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1608278151]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.19999999, -26.6)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_rkynf")
 
 [node name="LeftWallBack" type="MeshInstance3D" parent="SiteBoundaries" unique_id=353981743]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27, 0.100000024, -16.3)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_1xyju")
 
 [node name="LeftWallFront" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1537631569]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27, 0.100000024, 8.5)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_e8g8n")
 
 [node name="RightWallBack" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1493072988]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23, 0.19999999, -20)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_hpud4")
 
 [node name="RightWallFront" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1750778247]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23, 0.100000024, 6.0999994)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_6db0o")
 
 [node name="FrontWallLeft" type="MeshInstance3D" parent="SiteBoundaries" unique_id=795900248]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.6, 0.100000024, 18.2)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_wkxqd")
 
 [node name="FrontWallRight" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1737256102]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0.100000024, 18.2)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_k1qa8")
 
 [node name="WallPost_00" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1006298242]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.2, 0.5, -26.6)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_mfc02")
 
 [node name="WallPost_01" type="MeshInstance3D" parent="SiteBoundaries" unique_id=934139510]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.2, 0.39999998, -26.6)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_r2bch")
 
 [node name="WallPost_02" type="MeshInstance3D" parent="SiteBoundaries" unique_id=830184465]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.2, 0.29999992, 18.1)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_yblyq")
 
 [node name="WallPost_03" type="MeshInstance3D" parent="SiteBoundaries" unique_id=357113418]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.2, 0.29999992, 18.1)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_l7h5x")
 
 [node name="WallPost_04" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1523250913]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.2, 0.29999992, 18.1)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_f0aup")
 
 [node name="WallPost_05" type="MeshInstance3D" parent="SiteBoundaries" unique_id=398456370]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.5, 18.1)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_ex24c")
 
 [node name="WallPost_06" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1015625090]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.2, 0.5, -13.6)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_5jrdp")
 
 [node name="WallPost_07" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1451437785]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.2, 0.29999992, -6.4)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_c1k5p")
 
 [node name="GatePostLeft" type="MeshInstance3D" parent="SiteBoundaries" unique_id=984288678]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27, 0.9, -5.9)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_uk023")
 
 [node name="GatePostRight" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1013694926]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27, 0.9, -1.1)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_2f0tv")
 
 [node name="GateTop" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1263444108]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27, 2.6000001, -3.5000002)
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_alyyj")
 
 [node name="GateBar_00" type="MeshInstance3D" parent="SiteBoundaries" unique_id=847861633]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.9, 1, -5.5)
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_gcg8y")
 
 [node name="GateBar_01" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1769427758]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.9, 1, -4.5)
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_gcg8y")
 
 [node name="GateBar_02" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1918335942]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.9, 1, -3.5)
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_gcg8y")
 
 [node name="GateBar_03" type="MeshInstance3D" parent="SiteBoundaries" unique_id=70603160]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.9, 1, -2.5)
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_gcg8y")
 
 [node name="GateBar_05" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1968172176]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.9, 1, -5.1)
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_gcg8y")
 
 [node name="GateBar_06" type="MeshInstance3D" parent="SiteBoundaries" unique_id=334115270]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.9, 1, -4.1)
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_gcg8y")
 
 [node name="GateBar_07" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1152726460]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.9, 1, -3.1)
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_gcg8y")
 
 [node name="GateBar_08" type="MeshInstance3D" parent="SiteBoundaries" unique_id=1401610668]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.9, 1, -2.1)
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_gcg8y")
 
 [node name="GateBar_04" type="MeshInstance3D" parent="SiteBoundaries" unique_id=972582937]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.9, 1, -1.5)
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_gcg8y")
 
 [node name="ParkingAndPaths" type="Node3D" parent="." unique_id=1588117375]
 
 [node name="ParkingLot" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=616312832]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.1, -0.3, -2)
-material_override = SubResource("StandardMaterial3D_12fii")
+material_override = ExtResource("road")
 mesh = SubResource("BoxMesh_du6gb")
 
 [node name="EntryDrive" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=635510701]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, -0.3, 10.9)
-material_override = SubResource("StandardMaterial3D_12fii")
+material_override = ExtResource("road")
 mesh = SubResource("BoxMesh_ec41n")
 
 [node name="ServiceDrive" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=438604406]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.300001, -0.3, -11.5)
-material_override = SubResource("StandardMaterial3D_12fii")
+material_override = ExtResource("road")
 mesh = SubResource("BoxMesh_m7he0")
 
 [node name="FrontLoopRoad" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1629219982]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.3, 15.6)
-material_override = SubResource("StandardMaterial3D_12fii")
+material_override = ExtResource("road")
 mesh = SubResource("BoxMesh_71v0b")
 
 [node name="BuildingApron" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1060466849]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, -0.3, 2.8)
-material_override = SubResource("StandardMaterial3D_2uh0m")
+material_override = ExtResource("concrete")
 mesh = SubResource("BoxMesh_ft355")
 
 [node name="PlazaTileColumn_00" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=726553377]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, -0.10000001, 2.8)
-material_override = SubResource("StandardMaterial3D_f4l80")
+material_override = ExtResource("road_edge")
 mesh = SubResource("BoxMesh_dll8c")
 
 [node name="PlazaTileColumn_01" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=975060009]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, -0.10000001, 2.8)
-material_override = SubResource("StandardMaterial3D_f4l80")
+material_override = ExtResource("road_edge")
 mesh = SubResource("BoxMesh_4hxbd")
 
 [node name="PlazaTileColumn_02" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1557632540]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, -0.10000001, 2.8)
-material_override = SubResource("StandardMaterial3D_f4l80")
+material_override = ExtResource("road_edge")
 mesh = SubResource("BoxMesh_ph6ac")
 
 [node name="PlazaTileColumn_03" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1177442802]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, -0.10000001, 2.8)
-material_override = SubResource("StandardMaterial3D_f4l80")
+material_override = ExtResource("road_edge")
 mesh = SubResource("BoxMesh_3h3sw")
 
 [node name="PlazaTileColumn_04" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=429936099]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7, -0.10000001, 2.8)
-material_override = SubResource("StandardMaterial3D_f4l80")
+material_override = ExtResource("road_edge")
 mesh = SubResource("BoxMesh_g30gm")
 
 [node name="PlazaTileColumn_05" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1242859062]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, -0.10000001, 2.8)
-material_override = SubResource("StandardMaterial3D_f4l80")
+material_override = ExtResource("road_edge")
 mesh = SubResource("BoxMesh_6h7xm")
 
 [node name="PlazaTileColumn_06" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=822562159]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.3, -0.10000001, 2.8)
-material_override = SubResource("StandardMaterial3D_f4l80")
+material_override = ExtResource("road_edge")
 mesh = SubResource("BoxMesh_lhu7u")
 
 [node name="PlazaTileColumn_07" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1751141804]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.1, -0.10000001, 2.8)
-material_override = SubResource("StandardMaterial3D_f4l80")
+material_override = ExtResource("road_edge")
 mesh = SubResource("BoxMesh_j4cxg")
 
 [node name="PlazaTileColumn_08" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1541028513]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.9, -0.10000001, 2.8)
-material_override = SubResource("StandardMaterial3D_f4l80")
+material_override = ExtResource("road_edge")
 mesh = SubResource("BoxMesh_vvw1o")
 
 [node name="PlazaTileColumn_09" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1343487976]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.7, -0.10000001, 2.8)
-material_override = SubResource("StandardMaterial3D_f4l80")
+material_override = ExtResource("road_edge")
 mesh = SubResource("BoxMesh_56k6r")
 
 [node name="PlazaTileRow_00" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=337897221]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -0.10000001, -1.1999999)
-material_override = SubResource("StandardMaterial3D_f4l80")
+material_override = ExtResource("road_edge")
 mesh = SubResource("BoxMesh_3o32e")
 
 [node name="PlazaTileRow_01" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1142727813]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -0.10000001, 1.1)
-material_override = SubResource("StandardMaterial3D_f4l80")
+material_override = ExtResource("road_edge")
 mesh = SubResource("BoxMesh_ibmri")
 
 [node name="PlazaTileRow_02" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=136338146]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -0.10000001, 3.3000002)
-material_override = SubResource("StandardMaterial3D_f4l80")
+material_override = ExtResource("road_edge")
 mesh = SubResource("BoxMesh_l6136")
 
 [node name="PlazaTileRow_03" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=293731612]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -0.10000001, 5.7)
-material_override = SubResource("StandardMaterial3D_f4l80")
+material_override = ExtResource("road_edge")
 mesh = SubResource("BoxMesh_jauq1")
 
 [node name="PlazaTileRow_04" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1953339391]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -0.10000001, 8)
-material_override = SubResource("StandardMaterial3D_f4l80")
+material_override = ExtResource("road_edge")
 mesh = SubResource("BoxMesh_qvn7r")
 
 [node name="RightWalkway" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1371689481]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -0.3, 1)
-material_override = SubResource("StandardMaterial3D_2uh0m")
+material_override = ExtResource("concrete")
 mesh = SubResource("BoxMesh_8cfay")
 
 [node name="RearWalkway" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1056405107]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1999998, -0.3, -13)
-material_override = SubResource("StandardMaterial3D_2uh0m")
+material_override = ExtResource("concrete")
 mesh = SubResource("BoxMesh_n85qx")
 
 [node name="ParkingLineLeft_00" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=175815151]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, -0.1, -8.9)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_1rhc0")
 
 [node name="ParkingLineRight_00" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1853502336]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, -0.1, -8.9)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_hb8qi")
 
 [node name="ParkingLineLeft_01" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1163566929]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, -0.1, -6.5)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_kxrxt")
 
 [node name="ParkingLineRight_01" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=572118447]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, -0.1, -6.5)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_ybmww")
 
 [node name="ParkingLineLeft_02" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=2133853416]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, -0.1, -4.1)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_vbeqw")
 
 [node name="ParkingLineRight_02" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1520022766]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, -0.1, -4.1)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_a2x13")
 
 [node name="ParkingLineLeft_03" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=823738826]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, -0.1, -1.8)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_sr0ik")
 
 [node name="ParkingLineRight_03" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=934982823]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, -0.1, -1.8)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_ocl45")
 
 [node name="ParkingLineLeft_04" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=676147201]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, -0.1, 0.5)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_ukush")
 
 [node name="ParkingLineRight_04" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1357657818]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, -0.1, 0.5)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_wwtgo")
 
 [node name="ParkingLineLeft_05" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=464096140]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, -0.1, 3)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_h1xg2")
 
 [node name="ParkingLineRight_05" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1465380815]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, -0.1, 3)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_de7c3")
 
 [node name="ParkingLineLeft_06" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=324590642]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, -0.1, 5.5)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_7v3st")
 
 [node name="ParkingLineRight_06" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1216491453]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, -0.1, 5.5)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_ph5oo")
 
 [node name="ParkingLineLeft_07" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1390858438]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, -0.1, 7.7)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_jwgmg")
 
 [node name="ParkingLineRight_07" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=888302030]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, -0.1, 7.7)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_tm676")
 
 [node name="ParkingCenterLine" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=235356324]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.3, -0.1, -0.4)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_5bmwd")
+material_override = ExtResource("marking")
 mesh = SubResource("BoxMesh_o5sfe")
 
 [node name="ParkingHedgeStrip" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=448147891]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.2, 0.1, -0.5999994)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_v5dad")
 
 [node name="ParkingEdgeHedge" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1750193314]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 0.1, 0.4)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_nsw74")
 
 [node name="ParkingBackHedge" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=976045413]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19, 0.1, -14)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_ttk7o")
 
 [node name="CarA" type="Node3D" parent="ParkingAndPaths" unique_id=1078088282]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.4, 0.4, -6)
 
 [node name="Body" type="MeshInstance3D" parent="ParkingAndPaths/CarA" unique_id=1338519620]
-material_override = SubResource("StandardMaterial3D_phcno")
+material_override = ExtResource("car_dark")
 mesh = SubResource("BoxMesh_swc4j")
 
 [node name="Cabin" type="MeshInstance3D" parent="ParkingAndPaths/CarA" unique_id=147471690]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.1)
-material_override = SubResource("StandardMaterial3D_24glg")
+material_override = ExtResource("glass_dark")
 mesh = SubResource("BoxMesh_bm4hk")
 
 [node name="FrontLight" type="MeshInstance3D" parent="ParkingAndPaths/CarA" unique_id=486769075]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 1.7)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_ldkvf")
 
 [node name="Wheel_-0_94_-1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarA" unique_id=424236795]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, -0.2, -1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_fggjg")
 
 [node name="Wheel_-0_94_1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarA" unique_id=1754160795]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, -0.2, 1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_6ro87")
 
 [node name="Wheel_0_94_-1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarA" unique_id=1884436569]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, -0.2, -1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_x4nde")
 
 [node name="Wheel_0_94_1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarA" unique_id=1495773969]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, -0.2, 1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_srtf0")
 
 [node name="CarB" type="Node3D" parent="ParkingAndPaths" unique_id=646609220]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -16, 0.4, -3)
 
 [node name="Body" type="MeshInstance3D" parent="ParkingAndPaths/CarB" unique_id=1626699204]
-material_override = SubResource("StandardMaterial3D_br816")
+material_override = ExtResource("car_gray")
 mesh = SubResource("BoxMesh_bnh0f")
 
 [node name="Cabin" type="MeshInstance3D" parent="ParkingAndPaths/CarB" unique_id=2144415080]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.1)
-material_override = SubResource("StandardMaterial3D_24glg")
+material_override = ExtResource("glass_dark")
 mesh = SubResource("BoxMesh_dl3h6")
 
 [node name="FrontLight" type="MeshInstance3D" parent="ParkingAndPaths/CarB" unique_id=697559918]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 1.7)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_ldkvf")
 
 [node name="Wheel_-0_94_-1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarB" unique_id=103576335]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, -0.2, -1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_unt6g")
 
 [node name="Wheel_-0_94_1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarB" unique_id=479412277]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, -0.2, 1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_bhnuj")
 
 [node name="Wheel_0_94_-1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarB" unique_id=1612146171]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, -0.2, -1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_b3nlv")
 
 [node name="Wheel_0_94_1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarB" unique_id=260253147]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, -0.2, 1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_o3wm3")
 
 [node name="CarC" type="Node3D" parent="ParkingAndPaths" unique_id=1679422440]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.4, 0.4, 2)
 
 [node name="Body" type="MeshInstance3D" parent="ParkingAndPaths/CarC" unique_id=196802151]
-material_override = SubResource("StandardMaterial3D_phcno")
+material_override = ExtResource("car_dark")
 mesh = SubResource("BoxMesh_f1pto")
 
 [node name="Cabin" type="MeshInstance3D" parent="ParkingAndPaths/CarC" unique_id=1415077195]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.1)
-material_override = SubResource("StandardMaterial3D_24glg")
+material_override = ExtResource("glass_dark")
 mesh = SubResource("BoxMesh_i01u4")
 
 [node name="FrontLight" type="MeshInstance3D" parent="ParkingAndPaths/CarC" unique_id=1667254800]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 1.7)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_ldkvf")
 
 [node name="Wheel_-0_94_-1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarC" unique_id=560223172]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, -0.2, -1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_dtkew")
 
 [node name="Wheel_-0_94_1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarC" unique_id=430025364]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, -0.2, 1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_mvg1e")
 
 [node name="Wheel_0_94_-1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarC" unique_id=333924068]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, -0.2, -1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_2pm8t")
 
 [node name="Wheel_0_94_1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarC" unique_id=274263004]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, -0.2, 1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_mpwbg")
 
 [node name="CarD" type="Node3D" parent="ParkingAndPaths" unique_id=1806023646]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -16, 0.4, 5.6)
 
 [node name="Body" type="MeshInstance3D" parent="ParkingAndPaths/CarD" unique_id=47122508]
-material_override = SubResource("StandardMaterial3D_br816")
+material_override = ExtResource("car_gray")
 mesh = SubResource("BoxMesh_0mjqd")
 
 [node name="Cabin" type="MeshInstance3D" parent="ParkingAndPaths/CarD" unique_id=1355276981]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.1)
-material_override = SubResource("StandardMaterial3D_24glg")
+material_override = ExtResource("glass_dark")
 mesh = SubResource("BoxMesh_lwhen")
 
 [node name="FrontLight" type="MeshInstance3D" parent="ParkingAndPaths/CarD" unique_id=810086605]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 1.7)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_ldkvf")
 
 [node name="Wheel_-0_94_-1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarD" unique_id=789232364]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, -0.2, -1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_b1i73")
 
 [node name="Wheel_-0_94_1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarD" unique_id=706892805]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, -0.2, 1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_w4xna")
 
 [node name="Wheel_0_94_-1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarD" unique_id=1658958265]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, -0.2, -1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_udsyp")
 
 [node name="Wheel_0_94_1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarD" unique_id=1205651360]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, -0.2, 1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_b3ymy")
 
 [node name="CarE" type="Node3D" parent="ParkingAndPaths" unique_id=750982290]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -8, 0.4, 10.4)
 
 [node name="Body" type="MeshInstance3D" parent="ParkingAndPaths/CarE" unique_id=194770914]
-material_override = SubResource("StandardMaterial3D_0uyvl")
+material_override = ExtResource("car_green")
 mesh = SubResource("BoxMesh_a04np")
 
 [node name="Cabin" type="MeshInstance3D" parent="ParkingAndPaths/CarE" unique_id=112843814]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.1)
-material_override = SubResource("StandardMaterial3D_24glg")
+material_override = ExtResource("glass_dark")
 mesh = SubResource("BoxMesh_pviax")
 
 [node name="FrontLight" type="MeshInstance3D" parent="ParkingAndPaths/CarE" unique_id=1002967342]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 1.7)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_ldkvf")
 
 [node name="Wheel_-0_94_-1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarE" unique_id=990943768]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, -0.2, -1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_oh3lg")
 
 [node name="Wheel_-0_94_1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarE" unique_id=1233079436]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, -0.2, 1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_e0hsq")
 
 [node name="Wheel_0_94_-1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarE" unique_id=1227822546]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, -0.2, -1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_7bt8a")
 
 [node name="Wheel_0_94_1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarE" unique_id=172394550]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, -0.2, 1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_5gwxc")
 
 [node name="CarF" type="Node3D" parent="ParkingAndPaths" unique_id=1659862138]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -0.4, 0.4, 15.6)
 
 [node name="Body" type="MeshInstance3D" parent="ParkingAndPaths/CarF" unique_id=809687613]
-material_override = SubResource("StandardMaterial3D_br816")
+material_override = ExtResource("car_gray")
 mesh = SubResource("BoxMesh_njxvv")
 
 [node name="Cabin" type="MeshInstance3D" parent="ParkingAndPaths/CarF" unique_id=1523121908]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.1)
-material_override = SubResource("StandardMaterial3D_24glg")
+material_override = ExtResource("glass_dark")
 mesh = SubResource("BoxMesh_t41jr")
 
 [node name="FrontLight" type="MeshInstance3D" parent="ParkingAndPaths/CarF" unique_id=278931870]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 1.7)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_ldkvf")
 
 [node name="Wheel_-0_94_-1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarF" unique_id=596628582]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, -0.2, -1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_5fenf")
 
 [node name="Wheel_-0_94_1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarF" unique_id=1135221972]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, -0.2, 1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_cg0qn")
 
 [node name="Wheel_0_94_-1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarF" unique_id=1269181362]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, -0.2, -1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_b34t3")
 
 [node name="Wheel_0_94_1_08" type="MeshInstance3D" parent="ParkingAndPaths/CarF" unique_id=908004330]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, -0.2, 1.1)
-material_override = SubResource("StandardMaterial3D_b4twu")
+material_override = ExtResource("tire")
 mesh = SubResource("BoxMesh_slguv")
 
 [node name="EntryStep_01" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1832953589]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 6.7)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_4howb")
 
 [node name="EntryStep_02" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1944729615]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 6.2)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_t5bn1")
 
 [node name="EntryPlanterLeftBase" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1144743399]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 0.1, 5.8)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_36rxn")
 
 [node name="EntryPlanterLeftSoil" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1057265881]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 0.5, 5.8)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_4v0yg")
 
 [node name="EntryPlanterRightBase" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1043804503]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2, 0.1, 6.2)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_krbkm")
 
 [node name="EntryPlanterRightSoil" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1253738641]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2, 0.5, 6.2)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_45phh")
 
 [node name="ActivityGrassCut" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=843233340]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.8, -0.5, -12)
-material_override = ExtResource("5_grass_cut")
+material_override = ExtResource("grass_cut")
 mesh = SubResource("BoxMesh_5drq7")
 
 [node name="ActivityPad" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1152355196]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.8, -0.3, -12)
-material_override = SubResource("StandardMaterial3D_2uh0m")
+material_override = ExtResource("concrete")
 mesh = SubResource("BoxMesh_bqy86")
 
 [node name="ActivityPadOutlineFront" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=9845699]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.8, -0.1, -9.3)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_mr7sy")
+material_override = ExtResource("cyan")
 mesh = SubResource("BoxMesh_qctta")
 
 [node name="ActivityPadOutlineBack" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=57292741]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.399998, -0.1, -14.7)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_mr7sy")
+material_override = ExtResource("cyan")
 mesh = SubResource("BoxMesh_03f05")
 
 [node name="ActivityPadOutlineLeft" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=2039867042]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.3, -0.1, -11.9)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_mr7sy")
+material_override = ExtResource("cyan")
 mesh = SubResource("BoxMesh_5cd7t")
 
 [node name="ActivityPadOutlineRight" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=450774571]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.3, -0.1, -11.099999)
 sorting_offset = 1.0
-material_override = SubResource("StandardMaterial3D_mr7sy")
+material_override = ExtResource("cyan")
 mesh = SubResource("BoxMesh_h3s5p")
 
 [node name="PlazaPlanterABase" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=37158675]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.1, 5)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_dolbg")
 
 [node name="PlazaPlanterASoil" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1110105983]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.5, 5)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_hpswk")
 
 [node name="PlazaPlanterBBase" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1367431402]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0.1, 5.2)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_7ycxp")
 
 [node name="PlazaPlanterBSoil" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=932827727]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0.5, 5.2)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_pnuaj")
 
 [node name="LoopIslandABase" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1115344539]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.9, 0, 15.8)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_fsc7r")
 
 [node name="LoopIslandASoil" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1694401341]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.9, 0.3, 15.8)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_arcta")
 
 [node name="LoopIslandBBase" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1834501695]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, 0, 15.8)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_opg4a")
 
 [node name="LoopIslandBSoil" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=721968170]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, 0.3, 15.8)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_0js51")
 
 [node name="MainLab" type="Node3D" parent="." unique_id=2042995025]
 
 [node name="Foundation" type="MeshInstance3D" parent="MainLab" unique_id=687043103]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.2, -3)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_r18i6")
 
 [node name="TowerBody" type="MeshInstance3D" parent="MainLab" unique_id=1222445114]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8999996, 7.4, -3.6)
-material_override = SubResource("StandardMaterial3D_ncmki")
+material_override = ExtResource("charcoal")
 mesh = SubResource("BoxMesh_sw2yc")
 
 [node name="TowerCreamBase" type="MeshInstance3D" parent="MainLab" unique_id=203712132]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.7, 1.4)
-material_override = SubResource("StandardMaterial3D_t4y16")
+material_override = ExtResource("cream_deep")
 mesh = SubResource("BoxMesh_874sh")
 
 [node name="TowerFrontGlass" type="MeshInstance3D" parent="MainLab" unique_id=1608157779]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 7.2, 0.9)
-material_override = SubResource("StandardMaterial3D_n43g5")
+material_override = ExtResource("glass")
 mesh = SubResource("BoxMesh_y0amr")
 
 [node name="TowerFrontMullion_00" type="MeshInstance3D" parent="MainLab" unique_id=1558088408]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.3, 7.1000004, 1.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_hpdl6")
 
 [node name="TowerFrontMullion_01" type="MeshInstance3D" parent="MainLab" unique_id=898767720]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.9, 7.1000004, 1.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_jtkc7")
 
 [node name="TowerFrontMullion_02" type="MeshInstance3D" parent="MainLab" unique_id=500210348]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 7.1000004, 1.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_sm16u")
 
 [node name="TowerFrontMullion_03" type="MeshInstance3D" parent="MainLab" unique_id=1988297122]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, 7.1000004, 1.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_3qwqh")
 
 [node name="TowerFrontMullion_04" type="MeshInstance3D" parent="MainLab" unique_id=1144026183]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 7.1000004, 1.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_2mlfw")
 
 [node name="TowerFrontMullion_05" type="MeshInstance3D" parent="MainLab" unique_id=1188906266]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 7.1000004, 1.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_54e7h")
 
 [node name="TowerFrontBand_00" type="MeshInstance3D" parent="MainLab" unique_id=992743108]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 1.9, 1.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_nhf7u")
 
 [node name="InteriorFloor_00" type="MeshInstance3D" parent="MainLab" unique_id=1998508329]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 2.3, 1)
 sorting_offset = -1.0
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_lm78d")
 
 [node name="TowerFrontBand_01" type="MeshInstance3D" parent="MainLab" unique_id=727163657]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 3.6, 1.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_qmaey")
 
 [node name="InteriorFloor_01" type="MeshInstance3D" parent="MainLab" unique_id=2118799526]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 4.1, 1)
 sorting_offset = -1.0
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_lm78d")
 
 [node name="TowerFrontBand_02" type="MeshInstance3D" parent="MainLab" unique_id=926805979]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 5.3, 1.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_vp841")
 
 [node name="InteriorFloor_02" type="MeshInstance3D" parent="MainLab" unique_id=956753878]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 5.9, 1)
 sorting_offset = -1.0
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_lm78d")
 
 [node name="TowerFrontBand_03" type="MeshInstance3D" parent="MainLab" unique_id=2119900934]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 7.1, 1.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_kojgx")
 
 [node name="InteriorFloor_03" type="MeshInstance3D" parent="MainLab" unique_id=172794615]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 7.5, 1)
 sorting_offset = -1.0
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_lm78d")
 
 [node name="TowerFrontBand_04" type="MeshInstance3D" parent="MainLab" unique_id=394644720]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 8.9, 1.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_r1pqk")
 
 [node name="InteriorFloor_04" type="MeshInstance3D" parent="MainLab" unique_id=693775084]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 9.3, 1)
 sorting_offset = -1.0
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_lm78d")
 
 [node name="TowerFrontBand_05" type="MeshInstance3D" parent="MainLab" unique_id=389690734]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 10.7, 1.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_amtef")
 
 [node name="InteriorFloor_05" type="MeshInstance3D" parent="MainLab" unique_id=656621461]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 11.1, 1)
 sorting_offset = -1.0
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_lm78d")
 
 [node name="TowerFrontBand_06" type="MeshInstance3D" parent="MainLab" unique_id=179153155]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 12.3, 1.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_krlk2")
 
 [node name="InteriorFloor_06" type="MeshInstance3D" parent="MainLab" unique_id=98079504]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.7999997, 12.9, 1)
 sorting_offset = -1.0
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_lm78d")
 
 [node name="OrangeCore" type="MeshInstance3D" parent="MainLab" unique_id=62657892]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 7, 0.2)
-material_override = SubResource("StandardMaterial3D_u55d5")
+material_override = ExtResource("orange_dark")
 mesh = SubResource("BoxMesh_n7u4q")
 
 [node name="OrangePierLeft" type="MeshInstance3D" parent="MainLab" unique_id=716200874]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 7, 1.6)
-material_override = SubResource("StandardMaterial3D_4o038")
+material_override = ExtResource("orange")
 mesh = SubResource("BoxMesh_7rv88")
 
 [node name="OrangePierRight" type="MeshInstance3D" parent="MainLab" unique_id=1376740167]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 7, 1.6)
-material_override = SubResource("StandardMaterial3D_4o038")
+material_override = ExtResource("orange")
 mesh = SubResource("BoxMesh_qm4xl")
 
 [node name="TowerRoofParapetBack" type="MeshInstance3D" parent="MainLab" unique_id=2004574825]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.9, 14.6, -3.5999997)
-material_override = SubResource("StandardMaterial3D_37its")
+material_override = ExtResource("cream")
 mesh = SubResource("PrimitiveMesh_vi5ac")
 
 [node name="TowerRoofParapetBack2" type="MeshInstance3D" parent="MainLab" unique_id=348547539]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.9000006, 14, -3.5999997)
-material_override = SubResource("StandardMaterial3D_37its")
+material_override = ExtResource("cream")
 mesh = SubResource("PrimitiveMesh_fhb87")
 
 [node name="TowerRoofInset" type="MeshInstance3D" parent="MainLab" unique_id=1225688246]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8999996, 14.5, -3.6)
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_42tpf")
 
 [node name="TowerRoofDeck" type="MeshInstance3D" parent="MainLab" unique_id=1570820702]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8999996, 14.7, -3.6)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_1lvki")
 
 [node name="ResearchOffset" type="Node3D" parent="MainLab" unique_id=498712091]
@@ -1895,86 +1813,86 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
 
 [node name="ResearchBody" type="MeshInstance3D" parent="MainLab/ResearchOffset" unique_id=1594488875]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.800001, 4.8, -3.1999998)
-material_override = SubResource("StandardMaterial3D_ncmki")
+material_override = ExtResource("charcoal")
 mesh = SubResource("BoxMesh_6b8dj")
 
 [node name="ResearchFrontGlass" type="MeshInstance3D" parent="MainLab/ResearchOffset" unique_id=824817078]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.8, 4.3, 2.1)
-material_override = SubResource("StandardMaterial3D_n43g5")
+material_override = ExtResource("glass")
 mesh = SubResource("BoxMesh_vymdy")
 
 [node name="ResearchSideGlass" type="MeshInstance3D" parent="MainLab/ResearchOffset" unique_id=2069665438]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.3, 4.3, -3)
-material_override = SubResource("StandardMaterial3D_24glg")
+material_override = ExtResource("glass_dark")
 mesh = SubResource("BoxMesh_2j8jg")
 
 [node name="ResearchFrontLowerBand" type="MeshInstance3D" parent="MainLab/ResearchOffset" unique_id=766021925]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.8, 2.4, 2.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_s1f4d")
 
 [node name="ResearchFrontUpperBand" type="MeshInstance3D" parent="MainLab/ResearchOffset" unique_id=1001121646]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.8, 6.2, 2.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_yqks8")
 
 [node name="ResearchMullion_00" type="MeshInstance3D" parent="MainLab/ResearchOffset" unique_id=413493141]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 4.3, 2.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_ss75f")
 
 [node name="ResearchMullion_01" type="MeshInstance3D" parent="MainLab/ResearchOffset" unique_id=1991367940]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.9, 4.3, 2.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_cw0yl")
 
 [node name="ResearchMullion_02" type="MeshInstance3D" parent="MainLab/ResearchOffset" unique_id=1104361379]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 4.3, 2.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_30841")
 
 [node name="ResearchMullion_03" type="MeshInstance3D" parent="MainLab/ResearchOffset" unique_id=1871083439]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.1, 4.3, 2.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_y1831")
 
 [node name="ResearchMullion_04" type="MeshInstance3D" parent="MainLab/ResearchOffset" unique_id=2100955653]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.7, 4.3, 2.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_qrdpx")
 
 [node name="ResearchMullion_05" type="MeshInstance3D" parent="MainLab/ResearchOffset" unique_id=517438727]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 4.3, 2.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_gdppp")
 
 [node name="ResearchMullion_06" type="MeshInstance3D" parent="MainLab/ResearchOffset" unique_id=340193665]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1, 4.3, 2.3)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_kolu5")
 
 [node name="ResearchRoof" type="MeshInstance3D" parent="MainLab/ResearchOffset" unique_id=1091069211]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.7, 9.4, -3.1999998)
-material_override = SubResource("StandardMaterial3D_t388m")
+material_override = ExtResource("roof")
 mesh = SubResource("BoxMesh_e8i27")
 
 [node name="ResearchCreamFrontEdge" type="MeshInstance3D" parent="MainLab/ResearchOffset" unique_id=384145449]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.9, 4, 2.1999998)
-material_override = SubResource("StandardMaterial3D_37its")
+material_override = ExtResource("cream")
 mesh = SubResource("BoxMesh_crcha")
 
 [node name="ResearchCreamSideEdge" type="MeshInstance3D" parent="MainLab/ResearchOffset" unique_id=2027162999]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 4, 0.5)
-material_override = SubResource("StandardMaterial3D_37its")
+material_override = ExtResource("cream")
 mesh = SubResource("BoxMesh_vifgp")
 
 [node name="RightWingOffset" type="Node3D" parent="MainLab" unique_id=234755986]
@@ -1982,175 +1900,175 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8.8)
 
 [node name="RightWingBody" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=555914043]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.4, 3.3, -0.6999998)
-material_override = SubResource("StandardMaterial3D_ncmki")
+material_override = ExtResource("charcoal")
 mesh = SubResource("BoxMesh_7st16")
 
 [node name="RightWingFrontGlass" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=288493274]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 3.4, 4.9)
-material_override = SubResource("StandardMaterial3D_n43g5")
+material_override = ExtResource("glass")
 mesh = SubResource("BoxMesh_w5ohl")
 
 [node name="RightWingSideGlass" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=2116095338]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.7, 3.4, -0.8)
-material_override = SubResource("StandardMaterial3D_7ayi8")
+material_override = ExtResource("glass_mid")
 mesh = SubResource("BoxMesh_70rkr")
 
 [node name="RightWingRoof" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=83944651]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.6, 6.8, -0.5999994)
-material_override = SubResource("StandardMaterial3D_t388m")
+material_override = ExtResource("roof")
 mesh = SubResource("BoxMesh_vfjox")
 
 [node name="WingFrameLeft" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=2105222321]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.6, 3.5, 5)
-material_override = SubResource("StandardMaterial3D_37its")
+material_override = ExtResource("cream")
 mesh = SubResource("BoxMesh_hat2j")
 
 [node name="WingFrameTop" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1759010476]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.799999, 6.6, 5)
-material_override = SubResource("StandardMaterial3D_37its")
+material_override = ExtResource("cream")
 mesh = SubResource("BoxMesh_7ts5b")
 
 [node name="WingSideFrameTop" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=953653303]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 6.6, -0.8)
-material_override = SubResource("StandardMaterial3D_37its")
+material_override = ExtResource("cream")
 mesh = SubResource("BoxMesh_bmklu")
 
 [node name="WingSideFrameTop2" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=435917713]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0.39999962, -0.8000002)
-material_override = SubResource("StandardMaterial3D_37its")
+material_override = ExtResource("cream")
 mesh = SubResource("BoxMesh_bmklu")
 
 [node name="WingSideFrameEnd" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1524655836]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3.5, -6)
-material_override = SubResource("StandardMaterial3D_37its")
+material_override = ExtResource("cream")
 mesh = SubResource("BoxMesh_bje4d")
 
 [node name="WingSideFrameFront" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1169852354]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.8, 2.9, 5)
-material_override = SubResource("StandardMaterial3D_37its")
+material_override = ExtResource("cream")
 mesh = SubResource("BoxMesh_pa0dt")
 
 [node name="WingCreamBase" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=2044041957]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0.7, 4.9)
-material_override = SubResource("StandardMaterial3D_t4y16")
+material_override = ExtResource("cream_deep")
 mesh = SubResource("BoxMesh_exvad")
 
 [node name="WingFrontMullion_00" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1964694734]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 3.4, 5.1)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_8eg32")
 
 [node name="WingFrontMullion_01" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1543091097]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.1, 3.4, 5.1)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_a68uu")
 
 [node name="WingFrontMullion_02" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1618156321]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 3.4, 5.1)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_kasw1")
 
 [node name="WingFrontMullion_03" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=864964892]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3.4, 5.1)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_85sbx")
 
 [node name="WingFrontMullion_04" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1667678732]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 3.4, 5.1)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_68kpb")
 
 [node name="WingFrontBand" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1205169831]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 3.3, 5.1)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_cf8ju")
 
 [node name="WingSideMullion_04" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=912281563]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.9, 3.2, 1.6999998)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_lbrta")
 
 [node name="WingSideMullion_05" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=22971111]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.9, 3.2, 3.1)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_lbrta")
 
 [node name="WingSideMullion_06" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=6139007]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.9, 3.2, -0.9000006)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_lbrta")
 
 [node name="WingSideMullion_07" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1992784187]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.9, 3.2, 0.5)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_lbrta")
 
 [node name="WingSideMullion_08" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1431077421]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.9, 3.2, -3.500001)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_lbrta")
 
 [node name="WingSideMullion_09" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1183560862]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.9, 3.2, -2.1000004)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_lbrta")
 
 [node name="WingSideMullion_10" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1013986107]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.9, 3.2, -4.9000006)
 sorting_offset = 2.0
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_lbrta")
 
 [node name="SkylightBase" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1615718679]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.8, 7.1, -1.8000002)
-material_override = SubResource("StandardMaterial3D_t4y16")
+material_override = ExtResource("cream_deep")
 mesh = SubResource("BoxMesh_hjrgv")
 
 [node name="SkylightGlowFront" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1176789318]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.8, 7.3, -0.9)
-material_override = SubResource("StandardMaterial3D_mr7sy")
+material_override = ExtResource("cyan")
 mesh = SubResource("BoxMesh_nfi5e")
 
 [node name="SkylightGlowBack" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=355920309]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.8, 7.3, -2.6)
-material_override = SubResource("StandardMaterial3D_mr7sy")
+material_override = ExtResource("cyan")
 mesh = SubResource("BoxMesh_nji4a")
 
 [node name="SkylightGlowLeft" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1835175075]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7, 7.3, -1.8)
-material_override = SubResource("StandardMaterial3D_mr7sy")
+material_override = ExtResource("cyan")
 mesh = SubResource("BoxMesh_fjeah")
 
 [node name="SkylightGlowRight" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1329684400]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.9, 7.3, -1.8)
-material_override = SubResource("StandardMaterial3D_mr7sy")
+material_override = ExtResource("cyan")
 mesh = SubResource("BoxMesh_ofbl1")
 
 [node name="SkylightCenter" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1805281841]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.8, 7.3, -1.8)
-material_override = SubResource("StandardMaterial3D_6qcs4")
+material_override = ExtResource("glass_light")
 mesh = SubResource("BoxMesh_4owdf")
 
 [node name="WingDoor" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1349392057]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.1, 1.7, 4.9)
-material_override = SubResource("StandardMaterial3D_n43g5")
+material_override = ExtResource("glass")
 mesh = SubResource("BoxMesh_s3hbp")
 
 [node name="WingCanopy" type="MeshInstance3D" parent="MainLab/RightWingOffset" unique_id=1292643903]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.1, 3.2, 5.5)
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_jeaol")
 
 [node name="RoofEquipmentOffset" type="Node3D" parent="MainLab" unique_id=100355357]
@@ -2158,32 +2076,32 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
 
 [node name="TowerRoofParapetBack2" type="MeshInstance3D" parent="MainLab/RoofEquipmentOffset" unique_id=1021142015]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.8, 10, -3.2000003)
-material_override = SubResource("StandardMaterial3D_37its")
+material_override = ExtResource("cream")
 mesh = SubResource("PrimitiveMesh_4ax3b")
 
 [node name="TowerRoofParapetBack3" type="MeshInstance3D" parent="MainLab/RoofEquipmentOffset" unique_id=1261312924]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.8, 7, -3.2000003)
-material_override = SubResource("StandardMaterial3D_37its")
+material_override = ExtResource("cream")
 mesh = SubResource("PrimitiveMesh_26o1o")
 
 [node name="TowerRoofDeck" type="MeshInstance3D" parent="MainLab/RoofEquipmentOffset" unique_id=1924174385]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.7999997, 9.9, -3.1999998)
-material_override = SubResource("StandardMaterial3D_5yahr")
+material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_fhb87")
 
 [node name="EntryVestibule" type="MeshInstance3D" parent="MainLab" unique_id=2106209616]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 1.9, 2.1999998)
-material_override = SubResource("StandardMaterial3D_u55d5")
+material_override = ExtResource("orange_dark")
 mesh = SubResource("BoxMesh_xj433")
 
 [node name="EntryDoor" type="MeshInstance3D" parent="MainLab" unique_id=1316755429]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 1.5, 2.7)
-material_override = SubResource("StandardMaterial3D_n43g5")
+material_override = ExtResource("glass")
 mesh = SubResource("BoxMesh_pov7e")
 
 [node name="EntryCanopy" type="MeshInstance3D" parent="MainLab" unique_id=1806291720]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.19999999, 3.6, 2.5)
-material_override = SubResource("StandardMaterial3D_vbei2")
+material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_gbqs4")
 
 [node name="EntryGlow" type="OmniLight3D" parent="MainLab" unique_id=199520999]
@@ -2195,124 +2113,124 @@ omni_range = 7.0
 
 [node name="TowerCreamLeftPier" type="MeshInstance3D" parent="MainLab" unique_id=961157220]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.3, 6.7999997, 0.59999996)
-material_override = SubResource("StandardMaterial3D_37its")
+material_override = ExtResource("cream")
 mesh = SubResource("BoxMesh_0jvae")
 
 [node name="TowerCreamLeftWall" type="MeshInstance3D" parent="MainLab" unique_id=1868841086]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.8, 6.7999997, -4.4000006)
-material_override = SubResource("StandardMaterial3D_37its")
+material_override = ExtResource("cream")
 mesh = SubResource("BoxMesh_642tu")
 
 [node name="TowerCreamLeftWall2" type="MeshInstance3D" parent="MainLab" unique_id=1315887931]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -4.8999996, 6.7999997, -8.400001)
-material_override = SubResource("StandardMaterial3D_37its")
+material_override = ExtResource("cream")
 mesh = SubResource("BoxMesh_a66x2")
 
 [node name="Landscaping" type="Node3D" parent="." unique_id=2042265028]
 
 [node name="GrassPatch_00" type="MeshInstance3D" parent="Landscaping" unique_id=1929048130]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -13, -0.3, -20.9)
-material_override = ExtResource("5_grass_cut")
+material_override = ExtResource("grass_cut")
 mesh = SubResource("BoxMesh_ukxhb")
 
 [node name="GrassPatch_01" type="MeshInstance3D" parent="Landscaping" unique_id=1562831625]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.7999997, -0.3, -20.1)
-material_override = ExtResource("5_grass_cut")
+material_override = ExtResource("grass_cut")
 mesh = SubResource("BoxMesh_0sqxo")
 
 [node name="Hedge_00" type="MeshInstance3D" parent="Landscaping" unique_id=804681176]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.4, 0.2, -24.9)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_71lfe")
 
 [node name="Hedge_01" type="MeshInstance3D" parent="Landscaping" unique_id=1273099124]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.4, 0.2, 12.5)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_kiuf2")
 
 [node name="Hedge_02" type="MeshInstance3D" parent="Landscaping" unique_id=1547360570]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.2, 12.5)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_m47uo")
 
 [node name="Hedge_08" type="MeshInstance3D" parent="Landscaping" unique_id=662545629]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.5, 0.2, -20.2)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_klfd3")
 
 [node name="Hedge_04" type="MeshInstance3D" parent="Landscaping" unique_id=297414405]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.9, 0.2, -10)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_6fciw")
 
 [node name="Hedge_05" type="MeshInstance3D" parent="Landscaping" unique_id=1103877479]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.3, 0.2, -8)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_2akeu")
 
 [node name="Hedge_06" type="MeshInstance3D" parent="Landscaping" unique_id=870061026]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.2, 10.1)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_b0n3j")
 
 [node name="Hedge_07" type="MeshInstance3D" parent="Landscaping" unique_id=650430646]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 0.2, 8.5)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_f32mq")
 
 [node name="FrontSidewalkStrip" type="MeshInstance3D" parent="Landscaping" unique_id=2085830278]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.1, 17.5)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_darkm")
 
 [node name="FrontHedgeSlot_00" type="MeshInstance3D" parent="Landscaping" unique_id=979638397]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.1, 17.6)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_akvvy")
 
 [node name="FrontHedgeSlot_01" type="MeshInstance3D" parent="Landscaping" unique_id=1051507140]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19, 0.1, 17.6)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_48wxr")
 
 [node name="FrontHedgeSlot_02" type="MeshInstance3D" parent="Landscaping" unique_id=334918736]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0.1, 17.6)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_37hpd")
 
 [node name="FrontHedgeSlot_03" type="MeshInstance3D" parent="Landscaping" unique_id=455491247]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0.1, 17.6)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_cvvap")
 
 [node name="FrontHedgeSlot_04" type="MeshInstance3D" parent="Landscaping" unique_id=1544127541]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.1, 17.6)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_5xt40")
 
 [node name="FrontHedgeSlot_05" type="MeshInstance3D" parent="Landscaping" unique_id=1745294359]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.1, 17.6)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_5lllw")
 
 [node name="FrontHedgeSlot_06" type="MeshInstance3D" parent="Landscaping" unique_id=2093482130]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.1, 17.6)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_juwbd")
 
 [node name="FrontHedgeSlot_07" type="MeshInstance3D" parent="Landscaping" unique_id=774906782]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0.1, 17.6)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_2s7st")
 
 [node name="FrontHedgeSlot_08" type="MeshInstance3D" parent="Landscaping" unique_id=1007451456]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0.1, 17.6)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_kcup8")
 
 [node name="FrontHedgeSlot_09" type="MeshInstance3D" parent="Landscaping" unique_id=1917590457]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 0.1, 17.6)
-material_override = ExtResource("6_hedge")
+material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_w0ayh")
 
 [node name="Tree_00" parent="Landscaping" unique_id=1425994091 instance=ExtResource("2_round_tree")]
@@ -2430,17 +2348,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, 17.2)
 
 [node name="Post" type="MeshInstance3D" parent="SiteLights/SiteLight_00" unique_id=1262826842]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("CylinderMesh_xxq5h")
 
 [node name="Arm" type="MeshInstance3D" parent="SiteLights/SiteLight_00" unique_id=1678229905]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("BoxMesh_1q0kw")
 
 [node name="Fixture" type="MeshInstance3D" parent="SiteLights/SiteLight_00" unique_id=1846462210]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_qd1rj")
 
 [node name="WarmPool" type="OmniLight3D" parent="SiteLights/SiteLight_00" unique_id=1430824822]
@@ -2455,17 +2373,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 17.2)
 
 [node name="Post" type="MeshInstance3D" parent="SiteLights/SiteLight_01" unique_id=1337424408]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("CylinderMesh_eagol")
 
 [node name="Arm" type="MeshInstance3D" parent="SiteLights/SiteLight_01" unique_id=1874976608]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("BoxMesh_2drfb")
 
 [node name="Fixture" type="MeshInstance3D" parent="SiteLights/SiteLight_01" unique_id=739696248]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_isa6m")
 
 [node name="WarmPool" type="OmniLight3D" parent="SiteLights/SiteLight_01" unique_id=907348989]
@@ -2480,17 +2398,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 17.2)
 
 [node name="Post" type="MeshInstance3D" parent="SiteLights/SiteLight_02" unique_id=12158105]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("CylinderMesh_o4an0")
 
 [node name="Arm" type="MeshInstance3D" parent="SiteLights/SiteLight_02" unique_id=1408923349]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("BoxMesh_r87u6")
 
 [node name="Fixture" type="MeshInstance3D" parent="SiteLights/SiteLight_02" unique_id=458750484]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_fl1sg")
 
 [node name="WarmPool" type="OmniLight3D" parent="SiteLights/SiteLight_02" unique_id=238744844]
@@ -2505,17 +2423,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 17.2)
 
 [node name="Post" type="MeshInstance3D" parent="SiteLights/SiteLight_03" unique_id=110094144]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("CylinderMesh_fxdof")
 
 [node name="Arm" type="MeshInstance3D" parent="SiteLights/SiteLight_03" unique_id=929078330]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("BoxMesh_2heyl")
 
 [node name="Fixture" type="MeshInstance3D" parent="SiteLights/SiteLight_03" unique_id=264294292]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_ckkn5")
 
 [node name="WarmPool" type="OmniLight3D" parent="SiteLights/SiteLight_03" unique_id=765498924]
@@ -2530,17 +2448,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 17.2)
 
 [node name="Post" type="MeshInstance3D" parent="SiteLights/SiteLight_04" unique_id=978086829]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("CylinderMesh_so5bq")
 
 [node name="Arm" type="MeshInstance3D" parent="SiteLights/SiteLight_04" unique_id=1553968200]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("BoxMesh_a0owu")
 
 [node name="Fixture" type="MeshInstance3D" parent="SiteLights/SiteLight_04" unique_id=79951158]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_ubc0y")
 
 [node name="WarmPool" type="OmniLight3D" parent="SiteLights/SiteLight_04" unique_id=1578565143]
@@ -2555,17 +2473,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 17.2)
 
 [node name="Post" type="MeshInstance3D" parent="SiteLights/SiteLight_05" unique_id=952166899]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("CylinderMesh_l8wle")
 
 [node name="Arm" type="MeshInstance3D" parent="SiteLights/SiteLight_05" unique_id=1476319888]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("BoxMesh_vf5ak")
 
 [node name="Fixture" type="MeshInstance3D" parent="SiteLights/SiteLight_05" unique_id=1463927893]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_14l2h")
 
 [node name="WarmPool" type="OmniLight3D" parent="SiteLights/SiteLight_05" unique_id=586754115]
@@ -2580,17 +2498,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.2, 0, 10)
 
 [node name="Post" type="MeshInstance3D" parent="SiteLights/SiteLight_06" unique_id=1608953044]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("CylinderMesh_da682")
 
 [node name="Arm" type="MeshInstance3D" parent="SiteLights/SiteLight_06" unique_id=448018249]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("BoxMesh_mbuoc")
 
 [node name="Fixture" type="MeshInstance3D" parent="SiteLights/SiteLight_06" unique_id=123820854]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_ljdky")
 
 [node name="WarmPool" type="OmniLight3D" parent="SiteLights/SiteLight_06" unique_id=1577137248]
@@ -2605,17 +2523,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.2, 0, 0)
 
 [node name="Post" type="MeshInstance3D" parent="SiteLights/SiteLight_07" unique_id=467502075]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("CylinderMesh_8txrn")
 
 [node name="Arm" type="MeshInstance3D" parent="SiteLights/SiteLight_07" unique_id=1404814263]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("BoxMesh_bmpoc")
 
 [node name="Fixture" type="MeshInstance3D" parent="SiteLights/SiteLight_07" unique_id=31339060]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_6vdla")
 
 [node name="WarmPool" type="OmniLight3D" parent="SiteLights/SiteLight_07" unique_id=990600650]
@@ -2630,17 +2548,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21, 0, -5)
 
 [node name="Post" type="MeshInstance3D" parent="SiteLights/SiteLight_08" unique_id=2134668630]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("CylinderMesh_rgert")
 
 [node name="Arm" type="MeshInstance3D" parent="SiteLights/SiteLight_08" unique_id=1965678842]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("BoxMesh_uvkg7")
 
 [node name="Fixture" type="MeshInstance3D" parent="SiteLights/SiteLight_08" unique_id=1959745493]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_ys774")
 
 [node name="WarmPool" type="OmniLight3D" parent="SiteLights/SiteLight_08" unique_id=1259355790]
@@ -2655,17 +2573,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 11)
 
 [node name="Post" type="MeshInstance3D" parent="SiteLights/SiteLight_09" unique_id=864904780]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("CylinderMesh_nhest")
 
 [node name="Arm" type="MeshInstance3D" parent="SiteLights/SiteLight_09" unique_id=813312767]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_xtbon")
+material_override = ExtResource("metal")
 mesh = SubResource("BoxMesh_jp1ao")
 
 [node name="Fixture" type="MeshInstance3D" parent="SiteLights/SiteLight_09" unique_id=780775169]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 3.5, 0.1)
-material_override = SubResource("StandardMaterial3D_iu2x2")
+material_override = ExtResource("warm")
 mesh = SubResource("BoxMesh_iv8lg")
 
 [node name="WarmPool" type="OmniLight3D" parent="SiteLights/SiteLight_09" unique_id=744040192]

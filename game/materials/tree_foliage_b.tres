@@ -5,15 +5,10 @@
 [resource]
 render_priority = 0
 shader = ExtResource("1_foliage")
-shader_parameter/albedo_lit = Color(0.3, 0.46, 0.32, 1)
-shader_parameter/albedo_shade = Color(0.14, 0.26, 0.18, 1)
-shader_parameter/color_blend = 0.52
+shader_parameter/albedo_color = Color(0.19215687, 0.35686275, 0.23921569, 1)
 shader_parameter/noise_scale = 3.6
-shader_parameter/noise_strength = 0.11
 shader_parameter/blend_sharpness = 4.5
-shader_parameter/depth_noise_scale = 1.3
-shader_parameter/depth_noise_strength = 0.08
-shader_parameter/contrast = 1.35
+shader_parameter/normal_strength = 0.9
 shader_parameter/wrap_amount = 0.36
 shader_parameter/catch_strength = 0.5
 shader_parameter/catch_power = 3.1
