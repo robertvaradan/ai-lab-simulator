@@ -6,7 +6,7 @@ const STATE_DESCRIPTIONS: Dictionary[StringName, String] = {
 	&"overload": "Thermal debt / demand outrunning control",
 	&"scrutiny": "External review / release access constrained",
 }
-const OUTPUT_RESOLUTION := Vector2i(1280, 720)
+const OUTPUT_RESOLUTION := Vector2i(1920, 1080)
 const HUD_LAYER := 100
 
 var _renderer: SdfRenderer
@@ -22,8 +22,14 @@ var _fatal := false
 
 func _ready() -> void:
 	_parse_arguments()
+	if _fatal:
+		return
 	_validate_viewport_contract()
+	if _fatal:
+		return
 	_build_presentation()
+	if _fatal:
+		return
 	_renderer = SdfRenderer.new()
 	_renderer.name = "SdfRenderer"
 	_renderer.renderer_ready.connect(_on_renderer_ready)
@@ -66,8 +72,21 @@ func _parse_arguments() -> void:
 func _validate_viewport_contract() -> void:
 	var window: Window = get_window()
 	if window.size != OUTPUT_RESOLUTION:
-		_fail("SDF harness requires viewport %s; received %s." % [OUTPUT_RESOLUTION, window.size])
-
+		window.size = OUTPUT_RESOLUTION
+	if window.size == OUTPUT_RESOLUTION:
+		return
+	# Automated capture must write exact 1920x1080 evidence PNGs.
+	if _automated:
+		_fail(
+			"SDF harness requires viewport %s for evidence capture; received %s."
+			% [OUTPUT_RESOLUTION, window.size]
+		)
+		return
+	# Interactive play can land one or two pixels off on macOS window chrome.
+	print(
+		"SDF_VIEWPORT_SIZE_DRIFT requested=%s received=%s interactive_play_continues"
+		% [OUTPUT_RESOLUTION, window.size]
+	)
 
 func _build_presentation() -> void:
 	_world_texture = TextureRect.new()
@@ -83,9 +102,19 @@ func _build_presentation() -> void:
 	hud_layer.layer = HUD_LAYER
 	add_child(hud_layer)
 
+	var output_width := float(OUTPUT_RESOLUTION.x)
+	var output_height := float(OUTPUT_RESOLUTION.y)
+	var panel_width := 262.0
+	var panel_height := 50.0
+	var right_margin := 28.0
+	var footer_margin := 24.0
+	var footer_height := 42.0
+	var panel_x := output_width - right_margin - panel_width
+	var footer_y := output_height - footer_margin - footer_height
+
 	var header_scrim := ColorRect.new()
 	header_scrim.position = Vector2(0, 0)
-	header_scrim.size = Vector2(OUTPUT_RESOLUTION.x, 88)
+	header_scrim.size = Vector2(output_width, 88)
 	header_scrim.color = Color(0.025, 0.045, 0.055, 0.88)
 	hud_layer.add_child(header_scrim)
 
@@ -98,24 +127,24 @@ func _build_presentation() -> void:
 
 	var subtitle := Label.new()
 	subtitle.position = Vector2(29, 49)
-	subtitle.text = "COMPUTE-SDF RENDER PROOF  •  INTERNAL 640×360  •  OUTPUT 1280×720"
+	subtitle.text = "COMPUTE-SDF RENDER PROOF  •  INTERNAL 640×360  •  OUTPUT 1920×1080"
 	subtitle.add_theme_font_size_override("font_size", 13)
 	subtitle.add_theme_color_override("font_color", Color("7fa8a2"))
 	hud_layer.add_child(subtitle)
 
 	var state_panel := ColorRect.new()
-	state_panel.position = Vector2(990, 17)
-	state_panel.size = Vector2(262, 50)
+	state_panel.position = Vector2(panel_x, 17)
+	state_panel.size = Vector2(panel_width, panel_height)
 	state_panel.color = Color(0.055, 0.085, 0.09, 0.95)
 	hud_layer.add_child(state_panel)
 
 	_accent_bar = ColorRect.new()
-	_accent_bar.position = Vector2(990, 17)
-	_accent_bar.size = Vector2(5, 50)
+	_accent_bar.position = Vector2(panel_x, 17)
+	_accent_bar.size = Vector2(5, panel_height)
 	hud_layer.add_child(_accent_bar)
 
 	_state_label = Label.new()
-	_state_label.position = Vector2(1010, 29)
+	_state_label.position = Vector2(panel_x + 20.0, 29)
 	_state_label.size = Vector2(226, 27)
 	_state_label.clip_text = false
 	_state_label.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
@@ -124,20 +153,20 @@ func _build_presentation() -> void:
 	hud_layer.add_child(_state_label)
 
 	var footer_scrim := ColorRect.new()
-	footer_scrim.position = Vector2(24, 654)
-	footer_scrim.size = Vector2(1232, 42)
+	footer_scrim.position = Vector2(footer_margin, footer_y)
+	footer_scrim.size = Vector2(output_width - footer_margin * 2.0, footer_height)
 	footer_scrim.color = Color(0.025, 0.045, 0.055, 0.9)
 	hud_layer.add_child(footer_scrim)
 
 	_description_label = Label.new()
-	_description_label.position = Vector2(42, 665)
+	_description_label.position = Vector2(42, footer_y + 11.0)
 	_description_label.size = Vector2(760, 22)
 	_description_label.add_theme_font_size_override("font_size", 14)
 	_description_label.add_theme_color_override("font_color", Color("c3d6cf"))
 	hud_layer.add_child(_description_label)
 
 	var controls := Label.new()
-	controls.position = Vector2(990, 665)
+	controls.position = Vector2(panel_x, footer_y + 11.0)
 	controls.size = Vector2(238, 22)
 	controls.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	controls.text = "STATE  1 / 2 / 3"

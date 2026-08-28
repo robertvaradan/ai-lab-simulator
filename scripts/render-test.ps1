@@ -49,12 +49,12 @@ if ($importOutput -match '(?m)(SCRIPT ERROR:|Parse Error:|ERROR: Failed to load 
     throw 'Godot import reported a script error.'
 }
 
-Write-Output '[2/2] Dispatching the compute-SDF renderer and capturing three 1280x720 states'
+Write-Output '[2/2] Dispatching the compute-SDF renderer and capturing three 1920x1080 states'
 $previousErrorActionPreference = $ErrorActionPreference
 $ErrorActionPreference = 'Continue'
 try {
     $renderOutputLines = @(
-        & $godotBin --path $gameRoot --resolution 1280x720 --quit-after 900 -- --render-all --output-dir $evidenceRoot 2>&1
+        & $godotBin --path $gameRoot --resolution 1920x1080 --quit-after 900 -- --render-all --output-dir $evidenceRoot 2>&1
     )
     $renderExitCode = $LASTEXITCODE
 }
@@ -93,4 +93,4 @@ foreach ($state in $stateNames) {
 
 $rendererBytes = (Get-Item -LiteralPath $rendererPath).Length
 $shaderBytes = (Get-Item -LiteralPath $shaderPath).Length
-Write-Output "SDF_RENDER_TEST_COMMAND_SUCCESS godot=$godotVersion runtime=standard_non_dotnet internal=640x360 output=1280x720 renderer_bytes=$rendererBytes shader_bytes=$shaderBytes evidence=$evidenceRoot"
+Write-Output "SDF_RENDER_TEST_COMMAND_SUCCESS godot=$godotVersion runtime=standard_non_dotnet internal=640x360 output=1920x1080 renderer_bytes=$rendererBytes shader_bytes=$shaderBytes evidence=$evidenceRoot"

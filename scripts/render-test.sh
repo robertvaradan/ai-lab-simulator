@@ -53,9 +53,9 @@ if [[ "$IMPORT_CODE" -ne 0 ]]; then
 fi
 report_if_script_error "$IMPORT_OUTPUT" 'Godot import'
 
-echo '[2/2] Dispatching the compute-SDF renderer and capturing three 1280x720 states'
+echo '[2/2] Dispatching the compute-SDF renderer and capturing three 1920x1080 states'
 set +e
-RENDER_OUTPUT="$("$GODOT_BIN" --path "$GAME_ROOT" --resolution 1280x720 --quit-after 900 -- --render-all --output-dir "$EVIDENCE_ROOT" 2>&1)"
+RENDER_OUTPUT="$("$GODOT_BIN" --path "$GAME_ROOT" --resolution 1920x1080 --quit-after 900 -- --render-all --output-dir "$EVIDENCE_ROOT" 2>&1)"
 RENDER_CODE=$?
 set -e
 printf '%s\n' "$RENDER_OUTPUT"
@@ -94,4 +94,4 @@ done
 
 renderer_bytes="$(wc -c < "$RENDERER_PATH" | tr -d ' ')"
 shader_bytes="$(wc -c < "$SHADER_PATH" | tr -d ' ')"
-echo "SDF_RENDER_TEST_COMMAND_SUCCESS godot=$GODOT_VERSION runtime=standard_non_dotnet internal=640x360 output=1280x720 renderer_bytes=$renderer_bytes shader_bytes=$shader_bytes evidence=$EVIDENCE_ROOT"
+echo "SDF_RENDER_TEST_COMMAND_SUCCESS godot=$GODOT_VERSION runtime=standard_non_dotnet internal=640x360 output=1920x1080 renderer_bytes=$renderer_bytes shader_bytes=$shader_bytes evidence=$EVIDENCE_ROOT"
