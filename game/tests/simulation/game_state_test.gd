@@ -79,6 +79,14 @@ func _verify_deep_copy(state: GameState, authored_state: GameState) -> void:
 	_expect(state.company != authored_state.company, "The factory reused the authored Company State instance.")
 	_expect(state.world != authored_state.world, "The factory reused the authored World State instance.")
 	_expect(state.cash_ledger != authored_state.cash_ledger, "The factory reused the authored Cash Ledger instance.")
+	_expect(
+		authored_state.quarterly_reports.is_empty(),
+		"The authored starting Game State contains a Quarterly Report."
+	)
+	_expect(
+		state.quarterly_reports.size() == 1,
+		"The factory starting Game State does not contain the opening Quarterly Report."
+	)
 	var state_model: ModelState = state.company.models[&"model.player.starting"]
 	var authored_model: ModelState = authored_state.company.models[&"model.player.starting"]
 	_expect(state_model != authored_model, "The factory reused the authored Model instance.")
@@ -182,6 +190,7 @@ func _verify_starting_state(state: GameState) -> void:
 	_expect(state.pending_command_batch == null, "The starting state has a Pending Command Batch.")
 	_expect(state.attention_events.is_empty(), "The starting state has an Attention Event.")
 	_expect(state.notifications.is_empty(), "The starting state has a Notification.")
+	_verify_opening_report(state)
 	_expect(state.random_generator_state == null, "The deterministic Scenario contains random generator state.")
 
 	var expected_counters: Dictionary[StringName, int] = {
@@ -194,6 +203,7 @@ func _verify_starting_state(state: GameState) -> void:
 		&"model": 1,
 		&"notification": 1,
 		&"project": 1,
+		&"quarterly_report": 1,
 	}
 	_expect(
 		state.runtime_id_counters.next_sequence_by_entity_type == expected_counters,
@@ -219,6 +229,66 @@ func _verify_stable_identifiers(state: GameState) -> void:
 	_expect(model.stable_id == identifier_before_rename, "A Model rename changed its stable identifier.")
 	model.display_name = "Aperture"
 	model.version_label = "1.0"
+
+
+func _verify_opening_report(state: GameState) -> void:
+	_expect(state.quarterly_reports.size() == 1, "The starting state does not contain one Quarterly Report.")
+	if state.quarterly_reports.is_empty():
+		return
+	var report: QuarterlyReportState = state.quarterly_reports[0]
+	_expect(report.stable_id == QuarterlyReportState.KIND_OPENING, "The opening Quarterly Report identifier is incorrect.")
+	_expect(report.report_kind_id == QuarterlyReportState.KIND_OPENING, "The opening Quarterly Report kind is incorrect.")
+	_expect(report.is_immutable(), "The opening Quarterly Report is mutable.")
+	_expect(report.quarter_index == 1, "The opening Quarterly Report quarter is incorrect.")
+	_expect(report.month_step_index == 0, "The opening Quarterly Report Month Step is incorrect.")
+	_expect(report.cash_balance_musd == 150, "The opening Quarterly Report Cash balance is incorrect.")
+	_expect(report.cash_changes.is_empty(), "The opening Quarterly Report contains Cash changes.")
+	_expect(report.projects.is_empty(), "The opening Quarterly Report contains a Project.")
+	_expect(report.applications.is_empty(), "The opening Quarterly Report contains an Application.")
+	_expect(report.models.size() == 1, "The opening Quarterly Report Model count is incorrect.")
+	if report.models.size() == 1:
+		_expect(report.models[0].model_id == &"model.player.starting", "The opening Model identifier is incorrect.")
+		_expect(report.models[0].coding_evaluation_points == 72, "The opening Model coding evaluation is incorrect.")
+		_expect(report.models[0].reasoning_evaluation_points == 70, "The opening Model reasoning evaluation is incorrect.")
+		_expect(report.models[0].efficiency_evaluation_points == 76, "The opening Model efficiency evaluation is incorrect.")
+	_expect(report.competitor_forecasts.size() == 1, "The opening Quarterly Report forecast count is incorrect.")
+	if report.competitor_forecasts.size() == 1:
+		var forecast: CompetitorForecast = report.competitor_forecasts[0]
+		_expect(forecast.competitor_id == &"competitor.northstar", "The opening forecast Competitor is incorrect.")
+		_expect(forecast.known_release_quarter_index == 1, "The opening Northstar release quarter is incorrect.")
+		_expect(forecast.projected_coding_evaluation_min == 80, "The opening coding projection minimum is incorrect.")
+		_expect(forecast.projected_coding_evaluation_max == 84, "The opening coding projection maximum is incorrect.")
+		_expect(forecast.projected_reasoning_evaluation_min == 76, "The opening reasoning projection minimum is incorrect.")
+		_expect(forecast.projected_reasoning_evaluation_max == 80, "The opening reasoning projection maximum is incorrect.")
+		_expect(forecast.projected_efficiency_evaluation_min == 70, "The opening efficiency projection minimum is incorrect.")
+		_expect(forecast.projected_efficiency_evaluation_max == 74, "The opening efficiency projection maximum is incorrect.")
+	_expect(
+		report.competitor_stage_id == &"competitor_stage.northstar.announced",
+		"The opening Competitor Stage is incorrect."
+	)
+	_expect(report.released_competitor_model_id == &"", "The opening Quarterly Report reveals a released Competitor Model.")
+	_expect(report.released_competitor_evaluations == null, "The opening Quarterly Report reveals actual Competitor evaluations.")
+	_expect(report.technical_frontier != null, "The opening technical frontier is missing.")
+	if report.technical_frontier != null:
+		_expect(report.technical_frontier.coding_evaluation_points == 74, "The opening frontier coding evaluation is incorrect.")
+		_expect(report.technical_frontier.reasoning_evaluation_points == 72, "The opening frontier reasoning evaluation is incorrect.")
+		_expect(report.technical_frontier.efficiency_evaluation_points == 74, "The opening frontier efficiency evaluation is incorrect.")
+	_expect(
+		report.previous_technical_frontier != null
+		and report.previous_technical_frontier.coding_evaluation_points == 74
+		and report.previous_technical_frontier.reasoning_evaluation_points == 72
+		and report.previous_technical_frontier.efficiency_evaluation_points == 74,
+		"The opening previous frontier is incorrect."
+	)
+	_expect(report.customer_expectation_coding_evaluation_points == 70, "The opening customer expectation is incorrect.")
+	_expect(
+		report.previous_customer_expectation_coding_evaluation_points == 70,
+		"The opening previous customer expectation is incorrect."
+	)
+	_expect(report.public_trust_points == 55, "The opening Public Trust is incorrect.")
+	_expect(report.previous_public_trust_points == 55, "The opening previous Public Trust is incorrect.")
+	_expect(report.government_trust_points == 50, "The opening Government Trust is incorrect.")
+	_expect(report.previous_government_trust_points == 50, "The opening previous Government Trust is incorrect.")
 
 
 func _verify_snapshot_text() -> void:

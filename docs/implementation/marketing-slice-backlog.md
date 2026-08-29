@@ -285,7 +285,7 @@ Verification:
 
 ### MS1-09: Implement the Quarterly Report
 
-Status: `OPEN`
+Status: `DONE`
 
 Dependencies: `MS1-02`, `MS1-07`, and `MS1-08`.
 
@@ -307,7 +307,7 @@ Verification:
 
 ### MS1-10: Implement Simulation Invariants and replay tests
 
-Status: `BLOCKED`
+Status: `OPEN`
 
 Dependencies: `MS1-02` through `MS1-09`.
 

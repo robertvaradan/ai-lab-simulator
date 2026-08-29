@@ -138,7 +138,8 @@ next_sequence_by_entity_type = {
 &"ledger_transaction": 1,
 &"model": 1,
 &"notification": 1,
-&"project": 1
+&"project": 1,
+&"quarterly_report": 1
 }
 
 [sub_resource type="Resource" id="Resource_starting_game_state"]
@@ -155,6 +156,7 @@ cash_ledger = SubResource("Resource_cash_ledger")
 pending_command_batch = null
 attention_events = []
 notifications = []
+quarterly_reports = []
 random_generator_state = null
 runtime_id_counters = SubResource("Resource_runtime_id_counters")
 
@@ -265,4 +267,4 @@ project_definitions = Array[ExtResource("16_project")]([SubResource("Resource_pr
 competitor_definitions = Array[ExtResource("17_competitor_def")]([SubResource("Resource_competitor_northstar")])
 contract_definitions = Array[ExtResource("18_contract_def")]([SubResource("Resource_contract_standard"), SubResource("Resource_contract_burst")])
 command_type_ids = Array[StringName]([&"command.project.start"])
-content_reference_ids = Array[StringName]([&"difficulty.standard", &"calendar_state.planning", &"contract.compute.standard", &"contract.compute.burst", &"contract_state.active", &"model_release_state.released", &"release_strategy.commercial_api", &"site_plot_state.compact_lab", &"site_plot_state.no_link", &"site_plot_state.product_studio", &"competitor.northstar", &"competitor_stage.northstar.announced", &"competitor_stage.northstar.flagship_released", &"command.project.start", &"project.research.frontier_model", &"project.scale.burst_compute", &"project.application.coding_agent", &"project_status.active", &"project_status.completed", &"application_status.active", &"application.player.coding_agent", &"attention_event.quarter_boundary", &"notification.project.completed", &"cash_category.project.start", &"cash_category.operating_cost", &"cash_category.compute_contract.standard", &"cash_category.compute_contract.burst", &"cash_category.application.revenue"])
+content_reference_ids = Array[StringName]([&"difficulty.standard", &"calendar_state.planning", &"contract.compute.standard", &"contract.compute.burst", &"contract_state.active", &"model_release_state.released", &"release_strategy.commercial_api", &"site_plot_state.compact_lab", &"site_plot_state.no_link", &"site_plot_state.product_studio", &"competitor.northstar", &"competitor_stage.northstar.announced", &"competitor_stage.northstar.flagship_released", &"command.project.start", &"project.research.frontier_model", &"project.scale.burst_compute", &"project.application.coding_agent", &"project_status.active", &"project_status.completed", &"application_status.active", &"application.player.coding_agent", &"attention_event.quarter_boundary", &"notification.project.completed", &"cash_category.project.start", &"cash_category.operating_cost", &"cash_category.compute_contract.standard", &"cash_category.compute_contract.burst", &"cash_category.application.revenue", &"quarterly_report.opening", &"quarterly_report.ending"])

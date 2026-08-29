@@ -107,9 +107,9 @@ A Quarter Boundary must create a blocking Attention Event.
 
 The first marketing slice must create the Quarter Boundary Attention Event before it creates the Quarterly Report.
 
-Until the Quarterly Report exists, the publishable Quarter Boundary Game State must contain the Attention Event.
+The publishable Quarter Boundary Game State must contain the Attention Event.
 
-Until the Quarterly Report exists, the publishable Quarter Boundary Game State must not contain a Quarterly Report.
+The publishable Quarter Boundary Game State must contain the Quarterly Report.
 
 A Quarter Boundary must create a Quarterly Report.
 
