@@ -13,6 +13,9 @@ game/evidence/**/*.png.import
 **/__pycache__/
 *.py[cod]
 
+# Generated game-flow viewer
+.artifacts/game-flow/
+
 # OS/editor noise
 .DS_Store
 Thumbs.db

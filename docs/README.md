@@ -50,6 +50,7 @@ This directory contains the canonical project specifications.
 - [Marketing slice](marketing/marketing-slice.md) owns the first market-facing implementation scope.
 - [Marketing Scenario](marketing/marketing-scenario.md) owns the authored Scenario content and expected results.
 - [Marketing Slice backlog](implementation/marketing-slice-backlog.md) owns the implementation order and task status.
+- [Game Flow Progress Compiler](tools/game-flow-progress-compiler.md) owns the source-map and generated-viewer contracts.
 - [Open decisions](open-decisions.md) records decisions that do not yet have canonical behavior.
 
 ## Decision records
