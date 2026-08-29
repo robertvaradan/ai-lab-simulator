@@ -162,6 +162,8 @@ The starting Coding Agent customer expectation must be 70 coding evaluation poin
 
 The reference Coding Agent price must be 1 MUSD per contract-month.
 
+The starting World State must contain no World Models.
+
 The World State must contain no active government condition.
 
 ## Available Projects
@@ -294,9 +296,23 @@ The projected efficiency evaluation range must be 70 through 74 evaluation point
 
 The projection must not show the actual values before the release.
 
-The Competitor Stage must change to `competitor_stage.northstar.flagship_released` during the Competitor phase of Month Step 3.
+The Competitor Stage must change to `competitor_stage.northstar.flagship_released` during the Advance Competitors phase of Month Step 3.
 
 The release event identifier must be `event.competitor.northstar_flagship_release`.
+
+The released Competitor Model identifier must be `model.competitor.northstar.flagship`.
+
+The released Competitor Model must live in World State.
+
+The released Competitor Model display name must be `Northstar Flagship`.
+
+The released Competitor Model version label must be `1.0`.
+
+The released Competitor Model Release Strategy must be `release_strategy.commercial_api`.
+
+The released Competitor Model training Compute Capacity must be 0 compute-unit-months.
+
+The released Competitor Model inference Compute Capacity must be 0 compute-unit-months for each contract.
 
 The actual Competitor Model must have 82 coding evaluation points.
 
@@ -306,9 +322,15 @@ The actual Competitor Model must have 72 efficiency evaluation points.
 
 The release must set each technical-frontier value to the larger of its current value and the applicable actual evaluation value.
 
+A player Model must not change the technical frontier in this Scenario.
+
 The release must change the Coding Agent customer expectation from 70 to 80 coding evaluation points.
 
 The release event must be the causal input for both World State changes.
+
+The release must not create an Attention Event.
+
+The release must not create a Notification.
 
 ## Derived market effects
 

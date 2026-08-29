@@ -66,6 +66,12 @@ Company State must contain Government Trust.
 
 World State must contain Competitors and their current Competitor Stages.
 
+World State must contain World Models.
+
+A Competitor Model must live in World State.
+
+A Competitor Model must not live in Company State.
+
 World State must contain Market Demand.
 
 World State must contain the current technical frontier.

@@ -9,6 +9,18 @@ const COMPANY_PROJECTS: StringName = &"state.company.projects"
 const COMPANY_MODELS: StringName = &"state.company.models"
 const COMPANY_APPLICATIONS: StringName = &"state.company.applications"
 const COMPANY_CONTRACTS: StringName = &"state.company.contracts"
+const WORLD_COMPETITORS: StringName = &"state.world.competitors"
+const WORLD_MODELS: StringName = &"state.world.models"
+const WORLD_MARKETS: StringName = &"state.world.markets"
+const WORLD_TECHNICAL_FRONTIER_CODING: StringName = (
+	&"state.world.technical_frontier.coding_evaluation_points"
+)
+const WORLD_TECHNICAL_FRONTIER_REASONING: StringName = (
+	&"state.world.technical_frontier.reasoning_evaluation_points"
+)
+const WORLD_TECHNICAL_FRONTIER_EFFICIENCY: StringName = (
+	&"state.world.technical_frontier.efficiency_evaluation_points"
+)
 const CASH_LEDGER_TRANSACTIONS: StringName = &"state.cash_ledger.transactions"
 const CALENDAR_MONTH_STEP_INDEX: StringName = &"state.calendar.current_month_step_index"
 const CALENDAR_QUARTER_INDEX: StringName = &"state.calendar.current_quarter_index"
@@ -76,6 +88,48 @@ static func create_registry() -> SimulationStatePathRegistry:
 			COMPANY_CONTRACTS,
 			SimulationStatePath.Accessor.COMPANY_CONTRACTS,
 			SimulationStatePath.ValueType.RESOURCE_DICTIONARY
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			WORLD_COMPETITORS,
+			SimulationStatePath.Accessor.WORLD_COMPETITORS,
+			SimulationStatePath.ValueType.RESOURCE_DICTIONARY
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			WORLD_MODELS,
+			SimulationStatePath.Accessor.WORLD_MODELS,
+			SimulationStatePath.ValueType.RESOURCE_DICTIONARY
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			WORLD_MARKETS,
+			SimulationStatePath.Accessor.WORLD_MARKETS,
+			SimulationStatePath.ValueType.RESOURCE_DICTIONARY
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			WORLD_TECHNICAL_FRONTIER_CODING,
+			SimulationStatePath.Accessor.WORLD_TECHNICAL_FRONTIER_CODING,
+			SimulationStatePath.ValueType.INTEGER
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			WORLD_TECHNICAL_FRONTIER_REASONING,
+			SimulationStatePath.Accessor.WORLD_TECHNICAL_FRONTIER_REASONING,
+			SimulationStatePath.ValueType.INTEGER
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			WORLD_TECHNICAL_FRONTIER_EFFICIENCY,
+			SimulationStatePath.Accessor.WORLD_TECHNICAL_FRONTIER_EFFICIENCY,
+			SimulationStatePath.ValueType.INTEGER
 		)
 	)
 	registry.register_path(

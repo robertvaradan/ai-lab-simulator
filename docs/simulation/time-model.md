@@ -127,7 +127,11 @@ A Quarterly Report must list known flagship Competitor release quarters.
 
 A Quarterly Report can show Projected Evaluation Ranges for known Competitor releases.
 
-A flagship Competitor Model release must resolve during the applicable Quarter Boundary.
+A flagship Competitor Model release must resolve during the Advance Competitors phase of the Month Step that ends the applicable Quarter.
+
+The first marketing slice must release the Northstar flagship Model during Month Step 3.
+
+The release Rule must not wait for the Create Attention Events phase.
 
 ## Required attention
 

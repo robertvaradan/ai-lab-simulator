@@ -56,6 +56,7 @@ static func validate(definition: MarketingScenarioDefinition) -> GameStateValida
 			result.add_error("Required available Project %s is missing." % required_project_id)
 
 	_validate_project_definitions(definition, available_project_ids, catalog, result)
+	_validate_competitor_definitions(definition, catalog, result)
 
 	var command_types: Dictionary[StringName, bool] = {}
 	for command_type_id: StringName in definition.command_type_ids:
@@ -285,3 +286,160 @@ static func _expect_project_numbers(
 		)
 	if not project_definition.prerequisite_project_ids.is_empty():
 		result.add_error("Project %s must not declare a prerequisite." % project_definition.stable_id)
+
+
+static func _validate_competitor_definitions(
+		definition: MarketingScenarioDefinition,
+		catalog: Dictionary[StringName, bool],
+		result: GameStateValidationResult
+	) -> void:
+	if definition.competitor_definitions.size() != 1:
+		result.add_error("The Marketing Scenario must contain exactly one Competitor definition.")
+	var defined_competitor_ids: Dictionary[StringName, bool] = {}
+	for competitor_definition: CompetitorDefinition in definition.competitor_definitions:
+		if competitor_definition == null:
+			result.add_error("A Competitor definition is missing.")
+			continue
+		if not StableIdentifier.is_valid(competitor_definition.stable_id):
+			result.add_error(
+				"Competitor definition identifier %s is invalid." % competitor_definition.stable_id
+			)
+			continue
+		if defined_competitor_ids.has(competitor_definition.stable_id):
+			result.add_error(
+				"Competitor definition identifier %s is duplicated." % competitor_definition.stable_id
+			)
+		defined_competitor_ids[competitor_definition.stable_id] = true
+		if competitor_definition.stable_id != &"competitor.northstar":
+			result.add_error("The Marketing Scenario Competitor identifier must be competitor.northstar.")
+		if not catalog.has(competitor_definition.stable_id):
+			result.add_error(
+				"Competitor identifier %s does not exist in the content reference catalog."
+				% competitor_definition.stable_id
+			)
+		if competitor_definition.specification_reference != "docs/marketing/marketing-scenario.md":
+			result.add_error(
+				"Competitor %s specification reference is invalid." % competitor_definition.stable_id
+			)
+		if competitor_definition.schema_version != GameStateValidator.CURRENT_SCHEMA_VERSION:
+			result.add_error(
+				"Competitor %s schema version %d is incompatible with schema version %d."
+				% [
+					competitor_definition.stable_id,
+					competitor_definition.schema_version,
+					GameStateValidator.CURRENT_SCHEMA_VERSION,
+				]
+			)
+		if competitor_definition.announced_stage_id != &"competitor_stage.northstar.announced":
+			result.add_error("Northstar announced Competitor Stage identifier is invalid.")
+		if competitor_definition.released_stage_id != &"competitor_stage.northstar.flagship_released":
+			result.add_error("Northstar released Competitor Stage identifier is invalid.")
+		_validate_content_in_catalog(
+			competitor_definition.announced_stage_id,
+			"Northstar announced Competitor Stage",
+			catalog,
+			result
+		)
+		_validate_content_in_catalog(
+			competitor_definition.released_stage_id,
+			"Northstar released Competitor Stage",
+			catalog,
+			result
+		)
+		if competitor_definition.release_month_step_index != 3:
+			result.add_error("Northstar release Month Step must be 3.")
+		if competitor_definition.known_release_quarter_index != 1:
+			result.add_error("Northstar known release quarter must be 1.")
+		if competitor_definition.projected_coding_evaluation_min != 80:
+			result.add_error("Northstar projected coding minimum is invalid.")
+		if competitor_definition.projected_coding_evaluation_max != 84:
+			result.add_error("Northstar projected coding maximum is invalid.")
+		if competitor_definition.projected_reasoning_evaluation_min != 76:
+			result.add_error("Northstar projected reasoning minimum is invalid.")
+		if competitor_definition.projected_reasoning_evaluation_max != 80:
+			result.add_error("Northstar projected reasoning maximum is invalid.")
+		if competitor_definition.projected_efficiency_evaluation_min != 70:
+			result.add_error("Northstar projected efficiency minimum is invalid.")
+		if competitor_definition.projected_efficiency_evaluation_max != 74:
+			result.add_error("Northstar projected efficiency maximum is invalid.")
+		if competitor_definition.actual_coding_evaluation_points != 82:
+			result.add_error("Northstar actual coding evaluation is invalid.")
+		if competitor_definition.actual_reasoning_evaluation_points != 78:
+			result.add_error("Northstar actual reasoning evaluation is invalid.")
+		if competitor_definition.actual_efficiency_evaluation_points != 72:
+			result.add_error("Northstar actual efficiency evaluation is invalid.")
+		_validate_projected_range(
+			competitor_definition.projected_coding_evaluation_min,
+			competitor_definition.projected_coding_evaluation_max,
+			competitor_definition.actual_coding_evaluation_points,
+			"coding",
+			result
+		)
+		_validate_projected_range(
+			competitor_definition.projected_reasoning_evaluation_min,
+			competitor_definition.projected_reasoning_evaluation_max,
+			competitor_definition.actual_reasoning_evaluation_points,
+			"reasoning",
+			result
+		)
+		_validate_projected_range(
+			competitor_definition.projected_efficiency_evaluation_min,
+			competitor_definition.projected_efficiency_evaluation_max,
+			competitor_definition.actual_efficiency_evaluation_points,
+			"efficiency",
+			result
+		)
+		var forecast: CompetitorForecast = competitor_definition.create_forecast()
+		if forecast.reveals_exact_result(
+			competitor_definition.actual_coding_evaluation_points,
+			competitor_definition.actual_reasoning_evaluation_points,
+			competitor_definition.actual_efficiency_evaluation_points
+		):
+			result.add_error("The Northstar projection reveals the exact release result.")
+		if competitor_definition.released_model_id != CompetitorDefinition.RELEASED_MODEL_ID:
+			result.add_error("Northstar released Model identifier is invalid.")
+		if competitor_definition.released_model_display_name != "Northstar Flagship":
+			result.add_error("Northstar released Model display name is invalid.")
+		if competitor_definition.released_model_version_label != "1.0":
+			result.add_error("Northstar released Model version label is invalid.")
+		if competitor_definition.released_model_release_strategy_id != &"release_strategy.commercial_api":
+			result.add_error("Northstar released Model Release Strategy is invalid.")
+		_validate_content_in_catalog(
+			competitor_definition.released_model_release_strategy_id,
+			"Northstar released Model Release Strategy",
+			catalog,
+			result
+		)
+		if competitor_definition.released_model_training_compute_unit_months != 0:
+			result.add_error("Northstar released Model training Compute Capacity is invalid.")
+		if competitor_definition.released_model_inference_compute_unit_months_per_contract != 0:
+			result.add_error("Northstar released Model inference Compute Capacity is invalid.")
+		if competitor_definition.customer_expectation_market_id != CompetitorDefinition.CODING_AGENT_MARKET_ID:
+			result.add_error("Northstar customer-expectation Market identifier is invalid.")
+		if competitor_definition.released_customer_expectation_coding_evaluation_points != 80:
+			result.add_error("Northstar released customer expectation is invalid.")
+		if competitor_definition.release_event_id != CompetitorDefinition.RELEASE_EVENT_ID:
+			result.add_error("Northstar release event identifier is invalid.")
+
+
+static func _validate_projected_range(
+		range_min: int,
+		range_max: int,
+		actual_value: int,
+		dimension_name: String,
+		result: GameStateValidationResult
+	) -> void:
+	if range_min >= range_max:
+		result.add_error("Northstar projected %s range must contain more than one value." % dimension_name)
+	if actual_value < range_min or actual_value > range_max:
+		result.add_error("Northstar actual %s evaluation is outside the projected range." % dimension_name)
+
+
+static func _validate_content_in_catalog(
+		content_id: StringName,
+		owner_name: String,
+		catalog: Dictionary[StringName, bool],
+		result: GameStateValidationResult
+	) -> void:
+	if not catalog.has(content_id):
+		result.add_error("%s %s does not exist in the content reference catalog." % [owner_name, content_id])

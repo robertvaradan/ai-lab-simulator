@@ -13,6 +13,7 @@ var _content_version: int
 var _content_ids: Dictionary[StringName, bool] = {}
 var _command_type_ids: Dictionary[StringName, bool] = {}
 var _project_definitions: Dictionary[StringName, ProjectDefinition] = {}
+var _competitor_definitions: Dictionary[StringName, CompetitorDefinition] = {}
 var _attention_event_response_validators: Dictionary[StringName, AttentionEventResponseValidator] = {}
 var _diagnostics: Array[SimulationDiagnostic] = []
 var _is_sealed: bool = false
@@ -101,6 +102,38 @@ func register_project_definition(definition: ProjectDefinition) -> bool:
 	return true
 
 
+func register_competitor_definition(definition: CompetitorDefinition) -> bool:
+	if _is_sealed:
+		_add_error(&"content_registry.sealed", "The content registry is sealed.")
+		return false
+	if definition == null:
+		_add_error(
+			&"content_registry.missing_competitor_definition",
+			"The Competitor definition is missing."
+		)
+		return false
+	if not StableIdentifier.is_valid(definition.stable_id):
+		_add_error(
+			&"content_registry.invalid_competitor_id",
+			"Competitor identifier %s is invalid." % definition.stable_id
+		)
+		return false
+	if not _content_ids.has(definition.stable_id):
+		_add_error(
+			&"content_registry.unknown_competitor_id",
+			"Competitor identifier %s is not registered content." % definition.stable_id
+		)
+		return false
+	if _competitor_definitions.has(definition.stable_id):
+		_add_error(
+			&"content_registry.duplicate_competitor_id",
+			"Competitor identifier %s is duplicated." % definition.stable_id
+		)
+		return false
+	_competitor_definitions[definition.stable_id] = definition
+	return true
+
+
 func register_attention_event_response_validator(
 		validator: AttentionEventResponseValidator
 	) -> bool:
@@ -174,6 +207,21 @@ func get_project_ids() -> Array[StringName]:
 	project_ids.assign(_project_definitions.keys())
 	project_ids.sort()
 	return project_ids
+
+
+func has_competitor_definition(competitor_id: StringName) -> bool:
+	return _competitor_definitions.has(competitor_id)
+
+
+func get_competitor_definition(competitor_id: StringName) -> CompetitorDefinition:
+	return _competitor_definitions.get(competitor_id)
+
+
+func get_competitor_ids() -> Array[StringName]:
+	var competitor_ids: Array[StringName] = []
+	competitor_ids.assign(_competitor_definitions.keys())
+	competitor_ids.sort()
+	return competitor_ids
 
 
 func get_command_type_ids() -> Array[StringName]:

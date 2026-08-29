@@ -182,36 +182,11 @@ static func _validate_company(
 	model_ids.assign(company.models.keys())
 	model_ids.sort()
 	for model_id: StringName in model_ids:
-		var model: ModelState = company.models[model_id]
-		if model == null:
-			result.add_error("Model %s is missing its state." % model_id)
-			continue
-		_validate_dictionary_identifier(model_id, model.stable_id, "Model", result)
-		if model.display_name.is_empty():
-			result.add_error("Model %s display name is missing." % model_id)
-		if model.version_label.is_empty():
-			result.add_error("Model %s version label is missing." % model_id)
-		_validate_content_reference(
-			model.release_state_id,
-			"Model %s release-state identifier" % model_id,
+		_validate_model_entity(
+			model_id,
+			company.models[model_id],
+			"Model",
 			known_content_ids,
-			result
-		)
-		_validate_content_reference(
-			model.release_strategy_id,
-			"Model %s Release Strategy identifier" % model_id,
-			known_content_ids,
-			result
-		)
-		_validate_model_evaluations(model.evaluations, "Model %s" % model_id, result)
-		_validate_nonnegative(
-			model.training_compute_unit_months,
-			"Model %s training Compute Capacity" % model_id,
-			result
-		)
-		_validate_nonnegative(
-			model.inference_compute_unit_months_per_contract,
-			"Model %s inference Compute Capacity" % model_id,
 			result
 		)
 
@@ -287,6 +262,18 @@ static func _validate_world(
 		result.add_error("World State is missing.")
 		return
 	_validate_model_evaluations(world.technical_frontier, "Technical frontier", result)
+
+	var world_model_ids: Array[StringName] = []
+	world_model_ids.assign(world.models.keys())
+	world_model_ids.sort()
+	for world_model_id: StringName in world_model_ids:
+		_validate_model_entity(
+			world_model_id,
+			world.models[world_model_id],
+			"World Model",
+			known_content_ids,
+			result
+		)
 
 	var competitor_ids: Array[StringName] = []
 	competitor_ids.assign(world.competitors.keys())
@@ -520,6 +507,46 @@ static func _validate_plan_commitment_state(
 				"Pending Command Batch Command at index %d has identifier %s instead of %s."
 				% [command_index, command.stable_id, expected_command_id]
 			)
+
+
+static func _validate_model_entity(
+		model_id: StringName,
+		model: ModelState,
+		owner_name: String,
+		known_content_ids: Dictionary[StringName, bool],
+		result: GameStateValidationResult
+	) -> void:
+	if model == null:
+		result.add_error("%s %s is missing its state." % [owner_name, model_id])
+		return
+	_validate_dictionary_identifier(model_id, model.stable_id, owner_name, result)
+	if model.display_name.is_empty():
+		result.add_error("%s %s display name is missing." % [owner_name, model_id])
+	if model.version_label.is_empty():
+		result.add_error("%s %s version label is missing." % [owner_name, model_id])
+	_validate_content_reference(
+		model.release_state_id,
+		"%s %s release-state identifier" % [owner_name, model_id],
+		known_content_ids,
+		result
+	)
+	_validate_content_reference(
+		model.release_strategy_id,
+		"%s %s Release Strategy identifier" % [owner_name, model_id],
+		known_content_ids,
+		result
+	)
+	_validate_model_evaluations(model.evaluations, "%s %s" % [owner_name, model_id], result)
+	_validate_nonnegative(
+		model.training_compute_unit_months,
+		"%s %s training Compute Capacity" % [owner_name, model_id],
+		result
+	)
+	_validate_nonnegative(
+		model.inference_compute_unit_months_per_contract,
+		"%s %s inference Compute Capacity" % [owner_name, model_id],
+		result
+	)
 
 
 static func _validate_model_evaluations(

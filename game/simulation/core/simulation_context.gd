@@ -478,6 +478,38 @@ func get_project_definition(project_id: StringName) -> ProjectDefinition:
 	return definition
 
 
+func get_competitor_ids() -> Array[StringName]:
+	var competitor_ids: Array[StringName] = []
+	if not _require_current_rule():
+		return competitor_ids
+	if _content_registry == null:
+		_fault(
+			&"context.missing_content_registry",
+			"Rule %s required Competitor content without a content registry." % _current_rule_id()
+		)
+		return competitor_ids
+	return _content_registry.get_competitor_ids()
+
+
+func get_competitor_definition(competitor_id: StringName) -> CompetitorDefinition:
+	if not _require_current_rule():
+		return null
+	if _content_registry == null:
+		_fault(
+			&"context.missing_content_registry",
+			"Rule %s required Competitor content without a content registry." % _current_rule_id()
+		)
+		return null
+	var definition: CompetitorDefinition = _content_registry.get_competitor_definition(competitor_id)
+	if definition == null:
+		_fault(
+			&"context.unknown_competitor_definition",
+			"Rule %s requested unknown Competitor definition %s." % [_current_rule_id(), competitor_id]
+		)
+		return null
+	return definition
+
+
 func record_condition(condition_id: StringName, result: bool) -> bool:
 	if not _require_current_rule():
 		return false

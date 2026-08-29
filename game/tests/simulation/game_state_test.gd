@@ -156,6 +156,7 @@ func _verify_starting_state(state: GameState) -> void:
 
 	var world: WorldState = state.world
 	_expect(world.competitors.size() == 1, "The starting Competitor count is incorrect.")
+	_expect(world.models.is_empty(), "The starting World State contains a World Model.")
 	var competitor: CompetitorState = world.competitors[&"competitor.northstar"]
 	_expect(competitor.stable_id == &"competitor.northstar", "The Competitor identifier is incorrect.")
 	_expect(
