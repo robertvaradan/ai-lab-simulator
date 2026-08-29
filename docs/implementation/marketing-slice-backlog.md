@@ -356,7 +356,7 @@ Verification:
 
 ### MS2-02: Implement the Rule Graph compiler
 
-Status: `OPEN`
+Status: `DONE`
 
 Dependencies: `MS1-03` and `MS1-10`.
 
@@ -377,7 +377,7 @@ Verification:
 
 ### MS2-03: Implement the Rule Graph trace view
 
-Status: `BLOCKED`
+Status: `OPEN`
 
 Dependencies: `MS2-01` and `MS2-02`.
 
