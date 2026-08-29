@@ -43,6 +43,7 @@ This directory contains the canonical project specifications.
 - [Rule contract](simulation/rule-contract.md) owns rule metadata, execution, and trace behavior.
 - [Rule graph](simulation/rule-graph.md) owns graph compilation and visualization data.
 - [Simulation laboratory](tools/simulation-laboratory.md) owns developer simulation tools.
+- [Decision Host](tools/decision-host.md) owns the internal click-through Plan and Advance host.
 - [Simulation invariants](simulation/invariants.md) owns requirements that must remain true in all runs.
 
 ## Delivery specifications

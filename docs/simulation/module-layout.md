@@ -30,6 +30,8 @@ Runtime simulation modules must be included in production exports.
 
 `game/tools/simulation_lab` must own the Simulation Laboratory interface and Policies.
 
+`game/tools/decision_host` must own the Decision Host.
+
 `game/tools/rule_graph` must own graph compilation output and graph visualization.
 
 `game/tests/simulation` must own automated simulation tests and test Scenarios.
@@ -115,6 +117,8 @@ One headless command must run Simulation Core tests.
 One headless command must compile the Rule Graph.
 
 One headless command must run the Marketing Scenario in the Simulation Laboratory.
+
+One headless command must run the Decision Host tests.
 
 Each command must return a nonzero process status after a contract failure.
 

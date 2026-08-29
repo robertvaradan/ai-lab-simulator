@@ -190,6 +190,8 @@ The production game is a Simulation Host.
 
 The Simulation Laboratory is a Simulation Host.
 
+The Decision Host is a Simulation Host.
+
 Editor debug controls are a Simulation Host.
 
 Each Simulation Host must call the same public Simulation Core operations.

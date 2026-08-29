@@ -23,7 +23,7 @@
 | progression | Progression and unlocks | SUBGRAPH | DERIVED | progression | NO | docs/gameplay/progression.md | - | - | Open the progression and skill-tree flow. |
 | market | Competitor, Market, and Model position | SUBGRAPH | DERIVED | market-position | YES | docs/gameplay/progression.md | - | - | Open the competitor and Market flow. |
 | reports | Reports | SUBGRAPH | DERIVED | reports | YES | docs/simulation/time-model.md | - | - | Open the report flow. |
-| tools | Developer tools | SUBGRAPH | DERIVED | developer-tools | YES | docs/tools/simulation-laboratory.md; docs/simulation/rule-graph.md | - | - | Open the developer-tools flow. |
+| tools | Developer tools | SUBGRAPH | DERIVED | developer-tools | YES | docs/tools/simulation-laboratory.md; docs/simulation/rule-graph.md; docs/tools/decision-host.md | - | - | Open the developer-tools flow. |
 | presentation | Production presentation | SUBGRAPH | DERIVED | production-presentation | YES | docs/product/game-contract.md; docs/marketing/marketing-slice.md | - | - | Open the production presentation flow. |
 | marketing | Marketing delivery | SUBGRAPH | DERIVED | marketing-delivery | YES | docs/marketing/marketing-slice.md | - | - | Open the Marketing Slice delivery flow. |
 
