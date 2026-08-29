@@ -9,6 +9,7 @@ const COMPANY_FIXED_OPERATING_COST: StringName = (
 	&"state.company.fixed_operating_cost_musd_per_month_step"
 )
 const COMPANY_PROJECTS: StringName = &"state.company.projects"
+const COMPANY_SITES: StringName = &"state.company.sites"
 const COMPANY_MODELS: StringName = &"state.company.models"
 const COMPANY_APPLICATIONS: StringName = &"state.company.applications"
 const COMPANY_CONTRACTS: StringName = &"state.company.contracts"
@@ -80,6 +81,13 @@ static func create_registry() -> SimulationStatePathRegistry:
 		SimulationStatePath.new(
 			COMPANY_PROJECTS,
 			SimulationStatePath.Accessor.COMPANY_PROJECTS,
+			SimulationStatePath.ValueType.RESOURCE_DICTIONARY
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			COMPANY_SITES,
+			SimulationStatePath.Accessor.COMPANY_SITES,
 			SimulationStatePath.ValueType.RESOURCE_DICTIONARY
 		)
 	)

@@ -97,12 +97,12 @@ static func aligned_window_size(window: Window) -> Vector2i:
 
 static func state_name_from_game_state(state: GameState) -> StringName:
 	var mapping: CampusVisualMapping = CampusVisualMapping.from_state(state)
+	if mapping.has_empty_plot():
+		return &"empty"
 	if mapping.competitor_release_visible:
 		return &"scrutiny"
 	if mapping.compute_link_visible:
 		return &"overload"
-	if mapping.uses_developed_laboratory():
-		return &"growth"
 	return &"growth"
 
 
@@ -121,7 +121,7 @@ func _on_renderer_ready(output_texture: Texture2DRD) -> void:
 	if _world_texture != null:
 		_world_texture.texture = output_texture
 	if _last_state_name == &"":
-		_last_state_name = &"growth"
+		_last_state_name = &"empty"
 	if _renderer != null:
 		_renderer.set_state(_last_state_name)
 

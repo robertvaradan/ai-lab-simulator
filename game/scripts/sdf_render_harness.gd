@@ -1,7 +1,8 @@
 extends Node
 
-const CONTRACT_STATES: Array[StringName] = [&"growth", &"overload", &"scrutiny"]
+const CONTRACT_STATES: Array[StringName] = [&"empty", &"growth", &"overload", &"scrutiny"]
 const STATE_DESCRIPTIONS: Dictionary[StringName, String] = {
+	&"empty": "Empty HQ plot / laboratory not built",
 	&"growth": "Capacity online / hiring accelerating",
 	&"overload": "Thermal debt / demand outrunning control",
 	&"scrutiny": "External review / release access constrained",
@@ -36,7 +37,7 @@ func _ready() -> void:
 	_renderer.renderer_ready.connect(_on_renderer_ready)
 	_renderer.renderer_failed.connect(_on_renderer_failed)
 	add_child(_renderer)
-	_set_presented_state(&"growth")
+	_set_presented_state(&"empty")
 
 
 func _parse_arguments() -> void:
@@ -193,7 +194,7 @@ func _on_renderer_ready(output_texture: Texture2DRD) -> void:
 
 func _announce_interactive_ready() -> void:
 	await _renderer.dispatch_submitted
-	print("AI_LAB_SDF_READY state=growth controls=1|2|3 renderer=compute texture=Texture2DRD")
+	print("AI_LAB_SDF_READY state=empty controls=1|2|3|4 renderer=compute texture=Texture2DRD")
 
 
 func _run_automated_capture() -> void:
@@ -241,6 +242,8 @@ func _set_presented_state(state: StringName) -> void:
 	_state_label.text = "STATE / %s" % String(state).to_upper()
 	_description_label.text = STATE_DESCRIPTIONS[state]
 	match state:
+		&"empty":
+			_accent_bar.color = Color("6b7a7c")
 		&"growth":
 			_accent_bar.color = Color("30b884")
 		&"overload":
@@ -258,10 +261,12 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	var requested_state := StringName()
 	match key_event.keycode:
 		KEY_1:
-			requested_state = &"growth"
+			requested_state = &"empty"
 		KEY_2:
-			requested_state = &"overload"
+			requested_state = &"growth"
 		KEY_3:
+			requested_state = &"overload"
+		KEY_4:
 			requested_state = &"scrutiny"
 	if not requested_state.is_empty():
 		_set_presented_state(requested_state)

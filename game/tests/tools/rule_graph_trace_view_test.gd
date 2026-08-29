@@ -1,6 +1,7 @@
 extends SceneTree
 
 const TEST_SUCCESS: String = "RULE_GRAPH_TRACE_VIEW_TEST_SUCCESS"
+const BUILD_LAB_ID: StringName = &"project.campus.build_laboratory"
 const RESEARCH_ID: StringName = &"project.research.frontier_model"
 
 var _failure_count: int = 0
@@ -86,6 +87,10 @@ func _verify_research_month_one() -> void:
 	if not created.succeeded():
 		return
 	var session: SimulationLabSession = created.session
+	session.stage_command(_build_lab_command(session.get_state(), 0))
+	session.commit_staged_plan()
+	var lab_result: SimulationOperationResult = session.step_month()
+	_expect(lab_result.is_successful(), "The Build Laboratory Month Step failed.")
 	session.stage_command(_research_command(session.get_state(), 0))
 	session.commit_staged_plan()
 	var month_one_result: SimulationOperationResult = session.step_month()
@@ -111,6 +116,19 @@ func _status(view: RuleGraphTraceView, rule_id: StringName) -> SimulationRuleEva
 	if rule_view == null:
 		return SimulationRuleEvaluation.Status.FAILED
 	return rule_view.status
+
+
+func _build_lab_command(state: GameState, command_index: int) -> Command:
+	var command: Command = Command.new()
+	command.stable_id = StableIdentifier.format_runtime_identifier(
+		&"command",
+		state.runtime_id_counters.next_sequence_by_entity_type[&"command"] + command_index
+	)
+	command.command_type_id = ProjectPlanValidator.START_COMMAND_TYPE
+	var payload: Dictionary[StringName, Variant] = {}
+	payload[&"project_id"] = BUILD_LAB_ID
+	command.payload = payload
+	return command
 
 
 func _research_command(state: GameState, command_index: int) -> Command:

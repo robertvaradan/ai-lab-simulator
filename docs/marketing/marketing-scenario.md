@@ -436,15 +436,15 @@ Each baseline scenario run must start `project.campus.build_laboratory` in Month
 
 Each baseline scenario run must start its domain Project only after `project.campus.build_laboratory` completes.
 
-Baseline ending Cash values remain open until implementation recalculates them under the build-laboratory prerequisite.
-
 ### Research-first run
 
 The Research-first run must start `project.campus.build_laboratory`, then `project.research.frontier_model`.
 
+The run must end with a Cash balance of 48 MUSD.
+
 The run must end with `plot.campus.research` in `site_plot_state.compact_lab`.
 
-The run must report a Project cost Cash change that includes the 10 MUSD laboratory cost and the 65 MUSD Research cost.
+The run must report a Project cost Cash change of -75 MUSD.
 
 The run must report a Company operating cost Cash change of -15 MUSD.
 
@@ -456,15 +456,17 @@ The Research Project must remain active at the first Quarter Boundary.
 
 The Scale-first run must start `project.campus.build_laboratory`, then `project.scale.burst_compute`.
 
+The run must end with a Cash balance of 67 MUSD.
+
 The run must end with `contract.compute.burst` active.
 
-The run must report a Project cost Cash change that includes the 10 MUSD laboratory cost and the 30 MUSD Scale cost.
+The run must report a Project cost Cash change of -40 MUSD.
 
 The run must report a Company operating cost Cash change of -15 MUSD.
 
 The run must report a standard compute-contract cost Cash change of -12 MUSD.
 
-The run must report a burst compute-contract cost for each Month Step after the Scale Project completes.
+The run must report a burst compute-contract cost Cash change of -16 MUSD.
 
 The run must end with 130 compute-unit-months of Compute Capacity.
 
@@ -472,13 +474,17 @@ The run must end with 130 compute-unit-months of Compute Capacity.
 
 The Application-first run must start `project.campus.build_laboratory`, then `project.application.coding_agent`.
 
-The run must end with `application.player.coding_agent` active when Project duration allows that result before the first Quarter Boundary.
+The run must end with a Cash balance of 79 MUSD.
 
-The run must report a Project cost Cash change that includes the 10 MUSD laboratory cost and the 40 MUSD Application cost.
+The run must end with `application.player.coding_agent` active.
+
+The run must report a Project cost Cash change of -50 MUSD.
 
 The run must report a Company operating cost Cash change of -15 MUSD.
 
 The run must report a standard compute-contract cost Cash change of -12 MUSD.
+
+The run must report an Application Revenue Cash change of 6 MUSD.
 
 The Application must use `model.player.starting`.
 
@@ -486,9 +492,9 @@ Application presentation must not create an HQ Application building.
 
 ### Hybrid run
 
-The hybrid run must start `project.research.frontier_model` and `project.application.coding_agent`.
+The hybrid run must start `project.campus.build_laboratory`, then `project.research.frontier_model` and `project.application.coding_agent`.
 
-The run must end with a Cash balance of 36 MUSD.
+The run must end with a Cash balance of 14 MUSD.
 
 The run must report a Project cost Cash change of -105 MUSD.
 

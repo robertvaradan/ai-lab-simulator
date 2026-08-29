@@ -30,6 +30,10 @@ func _verify_marketing_artifact() -> void:
 		"The artifact is missing the Quarter Boundary event node."
 	)
 	_expect(
+		_has_node(artifact, "project.campus.build_laboratory", String(RuleGraphArtifact.KIND_PROJECT)),
+		"The artifact is missing the Build Laboratory Project node."
+	)
+	_expect(
 		_has_node(artifact, "project.research.frontier_model", String(RuleGraphArtifact.KIND_PROJECT)),
 		"The artifact is missing the Research Project node."
 	)

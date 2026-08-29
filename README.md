@@ -13,7 +13,7 @@ This is intentionally not a reimplementation of a complete dynamic sparse-SDF en
 - analytic CSG buildings and campus infrastructure;
 - a fixed orthographic isometric camera in the SDF proof;
 - palette materials, derived normals, soft shadows, ambient occlusion, and fog;
-- geometry-changing `growth`, `overload`, and `scrutiny` states;
+- geometry-changing `empty`, `growth`, `overload`, and `scrutiny` states;
 - render-on-change compute dispatch (campaign matches the window size, harness 640×360 scaled to 1920×1080);
 - strict errors when compute, shader, state, dimensions, or GPU resources violate the contract.
 
@@ -79,7 +79,7 @@ From the repository root on Linux:
 
 A headless Linux host runs the windowed render step through an Xvfb virtual display automatically.
 
-The command verifies Godot 4.7, imports the compute shader, launches the real Forward+ renderer, dispatches all three states, captures 1920×1080 PNGs under `game/evidence/sdf`, validates the outputs, and exits nonzero on a broken contract.
+The command verifies Godot 4.7, imports the compute shader, launches the real Forward+ renderer, dispatches all four states, captures 1920×1080 PNGs under `game/evidence/sdf`, validates the outputs, and exits nonzero on a broken contract.
 
 Open the editor with the canonical executable.
 

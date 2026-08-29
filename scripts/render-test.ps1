@@ -21,7 +21,7 @@ foreach ($requiredPath in @($shaderPath, $rendererPath, $harnessPath, $harnessSc
 }
 
 New-Item -ItemType Directory -Path $evidenceRoot -Force | Out-Null
-$stateNames = @('growth', 'overload', 'scrutiny')
+$stateNames = @('empty', 'growth', 'overload', 'scrutiny')
 foreach ($state in $stateNames) {
     $outputPath = Join-Path $evidenceRoot "$state.png"
     foreach ($generatedPath in @($outputPath, "$outputPath.import")) {
@@ -50,7 +50,7 @@ if ($importOutput -match '(?m)(SCRIPT ERROR:|Parse Error:|ERROR: Failed to load 
     throw 'Godot import reported a script error.'
 }
 
-Write-Output '[2/2] Dispatching the compute-SDF renderer and capturing three 1920x1080 states'
+Write-Output '[2/2] Dispatching the compute-SDF renderer and capturing four 1920x1080 states'
 $previousErrorActionPreference = $ErrorActionPreference
 $ErrorActionPreference = 'Continue'
 try {
@@ -73,8 +73,8 @@ if ($renderOutput -match '(?m)(SCRIPT ERROR:|Parse Error:|ERROR: Failed to load 
 if (-not $renderOutput.Contains('SDF_RENDERER_INITIALIZED')) {
     throw 'Godot SDF render test did not initialize the compute renderer.'
 }
-if ([regex]::Matches($renderOutput, 'SDF_DISPATCH_SUBMITTED').Count -ne 3) {
-    throw 'Godot SDF render test did not submit exactly three dispatches.'
+if ([regex]::Matches($renderOutput, 'SDF_DISPATCH_SUBMITTED').Count -ne 4) {
+    throw 'Godot SDF render test did not submit exactly four dispatches.'
 }
 if (-not $renderOutput.Contains('SDF_RENDER_TEST_SUCCESS')) {
     throw 'Godot SDF render test did not report the required success marker.'

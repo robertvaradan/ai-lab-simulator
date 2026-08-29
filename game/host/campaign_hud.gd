@@ -2,11 +2,12 @@ class_name CampaignHud
 extends Control
 
 var _host: CampaignHost
-var _path_select: PathSelectView
 var _fail_state: FailStateView
 var _skill_tree: SkillTreeView
 var _tech_tree: TechTreeView
 var _data_center: DataCenterView
+var _world_map: WorldMapView
+var _government: GovernmentPlaceholderView
 var _play_root: Control
 var _status_label: Label
 var _state_label: Label
@@ -15,6 +16,7 @@ var _attention_label: Label
 var _report_label: Label
 var _advance_button: Button
 var _abandon_button: Button
+var _build_lab_check: CheckBox
 var _research_check: CheckBox
 var _scale_check: CheckBox
 var _coding_check: CheckBox
@@ -28,14 +30,14 @@ var _last_report_text: String = ""
 
 func bind_host(host: CampaignHost) -> void:
 	_host = host
-	if _path_select != null:
-		_path_select.bind_host(host)
 	if _fail_state != null:
 		_fail_state.bind_host(host)
 	if _skill_tree != null:
 		_skill_tree.bind_host(host)
 	if _tech_tree != null:
 		_tech_tree.bind_host(host)
+	if _world_map != null:
+		_world_map.bind_host(host)
 
 
 func _ready() -> void:
@@ -44,10 +46,6 @@ func _ready() -> void:
 	_build()
 	if _host != null:
 		bind_host(_host)
-
-
-func get_path_select() -> PathSelectView:
-	return _path_select
 
 
 func get_fail_state() -> FailStateView:
@@ -64,6 +62,14 @@ func get_tech_tree() -> TechTreeView:
 
 func get_data_center() -> DataCenterView:
 	return _data_center
+
+
+func get_world_map() -> WorldMapView:
+	return _world_map
+
+
+func get_government() -> GovernmentPlaceholderView:
+	return _government
 
 
 func get_advance_button() -> Button:
@@ -94,6 +100,11 @@ func get_lab_text() -> String:
 	return _lab_label.text
 
 
+func set_build_laboratory_selected(selected: bool) -> void:
+	if _build_lab_check != null:
+		_build_lab_check.button_pressed = selected
+
+
 func set_research_selected(selected: bool) -> void:
 	if _research_check != null:
 		_research_check.button_pressed = selected
@@ -122,6 +133,13 @@ func build_plan(state: GameState) -> Plan:
 		return plan
 	var command_index: int = 0
 	if state.company != null:
+		if (
+			_build_lab_check != null
+			and _build_lab_check.button_pressed
+			and not state.company.projects.has(CampaignCatalog.BUILD_LABORATORY_PROJECT_ID)
+		):
+			plan.commands.append(_build_lab_command(state, command_index))
+			command_index += 1
 		if _research_check != null and _research_check.button_pressed and not state.company.projects.has(CampaignCatalog.RESEARCH_PROJECT_ID):
 			plan.commands.append(_research_command(state, command_index))
 			command_index += 1
@@ -149,11 +167,9 @@ func present_state(
 	if _state_label == null or session == null:
 		return
 	_sync_project_checks(session)
-	_path_select.present_state(state, definition)
-	_path_select.visible = not session.has_chosen_path() and not session.failed
 	_fail_state.present_session(state, session)
 	_fail_state.visible = session.failed or session.abandon_pending
-	_play_root.visible = session.has_chosen_path() and not session.failed and not session.abandon_pending
+	_play_root.visible = not session.failed and not session.abandon_pending
 	if state == null:
 		_state_label.text = "Game State is missing."
 		return
@@ -186,11 +202,11 @@ func present_state(
 		_last_status_text = CampaignCatalog.fail_reason_text(session.fail_reason_id)
 	_status_label.text = _last_status_text
 	if _advance_button != null:
-		_advance_button.disabled = session.failed or not session.has_chosen_path()
+		_advance_button.disabled = session.failed
 	_skill_tree.present_state(state, session)
 	_tech_tree.present_state(state, session)
 	_data_center.present_state(state, definition)
-	_apply_view(session.active_view_id)
+	_apply_world_and_view(session)
 
 
 func _build() -> void:
@@ -215,9 +231,14 @@ func _build() -> void:
 	_data_center.name = "DataCenterView"
 	_data_center.visible = false
 	_play_root.add_child(_data_center)
-	_path_select = PathSelectView.new()
-	_path_select.name = "PathSelectView"
-	add_child(_path_select)
+	_world_map = WorldMapView.new()
+	_world_map.name = "WorldMapView"
+	_world_map.visible = false
+	_play_root.add_child(_world_map)
+	_government = GovernmentPlaceholderView.new()
+	_government.name = "GovernmentPlaceholderView"
+	_government.visible = false
+	_play_root.add_child(_government)
 	_fail_state = FailStateView.new()
 	_fail_state.name = "FailStateView"
 	_fail_state.visible = false
@@ -254,6 +275,11 @@ func _build_left_panel() -> void:
 	project_title.text = "Projects"
 	CampaignChrome.apply_heading(project_title)
 	outer.add_child(project_title)
+	_build_lab_check = CheckBox.new()
+	_build_lab_check.name = "BuildLaboratoryCheck"
+	_build_lab_check.text = "Build Laboratory"
+	_build_lab_check.toggled.connect(_on_build_lab_toggled)
+	outer.add_child(_build_lab_check)
 	_research_check = CheckBox.new()
 	_research_check.name = "ResearchCheck"
 	_research_check.text = "Research Frontier Model"
@@ -330,8 +356,9 @@ func _build_view_bar() -> void:
 	bar.offset_bottom = -16.0
 	bar.add_theme_constant_override("separation", 8)
 	_play_root.add_child(bar)
-	_add_view_button(bar, CampaignCatalog.VIEW_CAMPUS, "Campus")
-	_add_view_button(bar, CampaignCatalog.VIEW_DATA_CENTER, "Data Center")
+	_add_world_button(bar, CampaignCatalog.WORLD_MAP, "World Map")
+	_add_world_button(bar, CampaignCatalog.WORLD_HQ, "HQ")
+	_add_world_button(bar, CampaignCatalog.WORLD_DATA_CENTER, "Data Center")
 	_add_view_button(bar, CampaignCatalog.VIEW_SKILL_TREE, "Skill Tree")
 	_add_view_button(bar, CampaignCatalog.VIEW_TECH_TREE, "Tech Tree")
 
@@ -346,19 +373,44 @@ func _add_view_button(bar: HBoxContainer, view_id: StringName, label: String) ->
 	_view_buttons[view_id] = button
 
 
-func _apply_view(view_id: StringName) -> void:
-	_data_center.visible = view_id == CampaignCatalog.VIEW_DATA_CENTER
-	_skill_tree.visible = view_id == CampaignCatalog.VIEW_SKILL_TREE
-	_tech_tree.visible = view_id == CampaignCatalog.VIEW_TECH_TREE
+func _add_world_button(bar: HBoxContainer, world_id: StringName, label: String) -> void:
+	var button: Button = Button.new()
+	button.name = "%sButton" % String(world_id).replace(".", "_")
+	button.text = label
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.pressed.connect(_on_world_pressed.bind(world_id))
+	bar.add_child(button)
+	_view_buttons[world_id] = button
+
+
+func _apply_world_and_view(session: CampaignSessionState) -> void:
+	var overlay: bool = (
+		session.active_view_id == CampaignCatalog.VIEW_SKILL_TREE
+		or session.active_view_id == CampaignCatalog.VIEW_TECH_TREE
+	)
+	_world_map.visible = session.active_world_id == CampaignCatalog.WORLD_MAP and not overlay
+	_data_center.visible = session.active_world_id == CampaignCatalog.WORLD_DATA_CENTER and not overlay
+	_government.visible = session.active_world_id == CampaignCatalog.WORLD_GOVERNMENT and not overlay
+	_skill_tree.visible = session.active_view_id == CampaignCatalog.VIEW_SKILL_TREE
+	_tech_tree.visible = session.active_view_id == CampaignCatalog.VIEW_TECH_TREE
 
 
 func _sync_project_checks(session: CampaignSessionState) -> void:
+	if _build_lab_check != null:
+		_build_lab_check.set_pressed_no_signal(
+			session.has_staged_project(CampaignCatalog.BUILD_LABORATORY_PROJECT_ID)
+		)
 	if _research_check != null:
 		_research_check.set_pressed_no_signal(session.has_staged_project(CampaignCatalog.RESEARCH_PROJECT_ID))
 	if _scale_check != null:
 		_scale_check.set_pressed_no_signal(session.has_staged_project(CampaignCatalog.SCALE_PROJECT_ID))
 	if _coding_check != null:
 		_coding_check.set_pressed_no_signal(session.has_staged_project(CampaignCatalog.CODING_AGENT_PROJECT_ID))
+
+
+func _on_build_lab_toggled(pressed: bool) -> void:
+	if _host != null:
+		_host.set_project_staged(CampaignCatalog.BUILD_LABORATORY_PROJECT_ID, pressed)
 
 
 func _on_research_toggled(pressed: bool) -> void:
@@ -381,6 +433,11 @@ func _on_view_pressed(view_id: StringName) -> void:
 		_host.set_active_view(view_id)
 
 
+func _on_world_pressed(world_id: StringName) -> void:
+	if _host != null:
+		_host.set_active_world(world_id)
+
+
 func _on_advance_pressed() -> void:
 	if _host != null:
 		_host.advance_from_hud()
@@ -389,6 +446,14 @@ func _on_advance_pressed() -> void:
 func _on_abandon_pressed() -> void:
 	if _host != null:
 		_host.request_abandon()
+
+
+func _build_lab_command(state: GameState, command_index: int) -> Command:
+	var command: Command = _make_command(state, command_index)
+	var payload: Dictionary[StringName, Variant] = {}
+	payload[&"project_id"] = CampaignCatalog.BUILD_LABORATORY_PROJECT_ID
+	command.payload = payload
+	return command
 
 
 func _research_command(state: GameState, command_index: int) -> Command:

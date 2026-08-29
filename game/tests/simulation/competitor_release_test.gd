@@ -2,6 +2,7 @@ extends SceneTree
 
 const SCENARIO_PATH: String = "res://simulation/content/marketing_scenario.tres"
 const TEST_SUCCESS: String = "COMPETITOR_RELEASE_TEST_SUCCESS"
+const BUILD_LAB_ID: StringName = &"project.campus.build_laboratory"
 const RESEARCH_ID: StringName = &"project.research.frontier_model"
 const NORTHSTAR_ID: StringName = &"competitor.northstar"
 const FLAGSHIP_MODEL_ID: StringName = CompetitorDefinition.RELEASED_MODEL_ID
@@ -147,16 +148,23 @@ func _verify_empty_plan_release(core: SimulationCore, state: GameState) -> void:
 
 
 func _verify_player_model_does_not_move_frontier(core: SimulationCore, state: GameState) -> void:
-	var after_month_three: GameState = _advance_plan(core, state, [_research_command(state, 0)], 3)
-	if after_month_three == null:
+	var after_lab: GameState = _advance_plan(core, state, [_build_lab_command(state, 0)], 1)
+	if after_lab == null:
 		return
-	_expect_released_world(after_month_three)
+	var at_quarter: GameState = _advance_plan(core, after_lab, [_research_command(after_lab, 0)], 2)
+	if at_quarter == null:
+		return
+	_expect_released_world(at_quarter)
+	var after_research: GameState = _acknowledge_and_step(core, at_quarter)
+	if after_research == null:
+		return
+	_expect_released_world(after_research)
 	_expect(
-		after_month_three.company.models.has(&"model.player.research_output"),
+		after_research.company.models.has(&"model.player.research_output"),
 		"The Research Project did not create the player Model."
 	)
-	if after_month_three.company.models.has(&"model.player.research_output"):
-		var research_model: ModelState = after_month_three.company.models[&"model.player.research_output"]
+	if after_research.company.models.has(&"model.player.research_output"):
+		var research_model: ModelState = after_research.company.models[&"model.player.research_output"]
 		_expect(
 			research_model.evaluations.coding_evaluation_points == 84,
 			"The Research Model coding evaluation is incorrect."
@@ -170,7 +178,7 @@ func _verify_player_model_does_not_move_frontier(core: SimulationCore, state: Ga
 			"The Research Model efficiency evaluation is incorrect."
 		)
 	_expect(
-		not after_month_three.company.models.has(FLAGSHIP_MODEL_ID),
+		not after_research.company.models.has(FLAGSHIP_MODEL_ID),
 		"The Competitor Model was stored in Company State."
 	)
 
@@ -326,6 +334,35 @@ func _step_months(core: SimulationCore, state: GameState, month_count: int) -> G
 			return null
 		current = result.candidate_state
 	return current
+
+
+func _acknowledge_and_step(core: SimulationCore, state: GameState) -> GameState:
+	var plan: Plan = Plan.new()
+	for event: AttentionEventState in state.attention_events:
+		if event == null:
+			continue
+		var response: AttentionEventResponse = AttentionEventResponse.new()
+		response.attention_event_id = event.stable_id
+		response.response_type_id = AcknowledgmentAttentionEventResponseValidator.ACKNOWLEDGMENT_RESPONSE_TYPE_ID
+		plan.attention_event_responses.append(response)
+	var commit: SimulationOperationResult = core.commit_plan(state, plan)
+	_expect(commit.outcome == SimulationOperationOutcome.Type.COMPLETED, "The Quarter Boundary acknowledgment did not commit.")
+	if not commit.has_candidate_state():
+		return null
+	return _step_months(core, commit.candidate_state, 1)
+
+
+func _build_lab_command(state: GameState, command_index: int) -> Command:
+	var command: Command = Command.new()
+	command.stable_id = StableIdentifier.format_runtime_identifier(
+		&"command",
+		state.runtime_id_counters.next_sequence_by_entity_type[&"command"] + command_index
+	)
+	command.command_type_id = ProjectPlanValidator.START_COMMAND_TYPE
+	var payload: Dictionary[StringName, Variant] = {}
+	payload[&"project_id"] = BUILD_LAB_ID
+	command.payload = payload
+	return command
 
 
 func _research_command(state: GameState, command_index: int) -> Command:

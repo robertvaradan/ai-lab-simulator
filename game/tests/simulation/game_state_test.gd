@@ -63,6 +63,7 @@ func _verify_definition(definition: MarketingScenarioDefinition) -> void:
 		"The Scenario specification reference is incorrect."
 	)
 	var expected_project_ids: Array[StringName] = [
+		&"project.campus.build_laboratory",
 		&"project.research.frontier_model",
 		&"project.scale.burst_compute",
 		&"project.application.coding_agent",
@@ -123,18 +124,22 @@ func _verify_starting_state(state: GameState) -> void:
 	_expect(company.sites.size() == 1, "The starting Company Site count is incorrect.")
 	_expect(company.sites.has(&"site.company.sf_campus"), "The Company Campus is missing.")
 	var site: SiteState = company.sites[&"site.company.sf_campus"]
-	_expect(site.site_plots.size() == 3, "The Company Campus Site Plot count is incorrect.")
+	_expect(site.site_plots.size() == 1, "The Company Campus Site Plot count is incorrect.")
 	_expect(
-		site.site_plots[&"plot.campus.research"].state_id == &"site_plot_state.compact_lab",
+		site.site_plots.has(&"plot.campus.research"),
+		"The research Site Plot is missing."
+	)
+	_expect(
+		site.site_plots[&"plot.campus.research"].state_id == &"site_plot_state.empty_plot",
 		"The research Site Plot state is incorrect."
 	)
 	_expect(
-		site.site_plots[&"plot.campus.compute_link"].state_id == &"site_plot_state.no_link",
-		"The compute-link Site Plot state is incorrect."
+		not site.site_plots.has(&"plot.campus.compute_link"),
+		"The Company Campus has a Compute-link Site Plot."
 	)
 	_expect(
-		site.site_plots[&"plot.campus.product"].state_id == &"site_plot_state.product_studio",
-		"The product Site Plot state is incorrect."
+		not site.site_plots.has(&"plot.campus.product"),
+		"The Company Campus has a product Site Plot."
 	)
 
 	_expect(company.models.size() == 1, "The starting Model count is incorrect.")

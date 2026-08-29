@@ -45,12 +45,13 @@ static func validate(definition: MarketingScenarioDefinition) -> GameStateValida
 		if not catalog.has(project_id):
 			result.add_error("Available Project identifier %s does not exist in the content reference catalog." % project_id)
 	var required_project_ids: Array[StringName] = [
+		&"project.campus.build_laboratory",
 		&"project.research.frontier_model",
 		&"project.scale.burst_compute",
 		&"project.application.coding_agent",
 	]
 	if available_project_ids.size() != required_project_ids.size():
-		result.add_error("The Marketing Scenario must contain exactly three available Projects.")
+		result.add_error("The Marketing Scenario must contain exactly four available Projects.")
 	for required_project_id: StringName in required_project_ids:
 		if not available_project_ids.has(required_project_id):
 			result.add_error("Required available Project %s is missing." % required_project_id)
@@ -220,6 +221,18 @@ static func _validate_completion_effect(
 				)
 			if project_definition.completed_application_price_musd_per_contract_month != 1:
 				result.add_error("Coding Agent Project price is invalid.")
+		ProjectDefinition.EFFECT_BUILD_LABORATORY:
+			if project_definition.completed_site_id != &"site.company.sf_campus":
+				result.add_error("Build Laboratory completed Site identifier is invalid.")
+			if project_definition.completed_site_plot_id != &"plot.campus.research":
+				result.add_error("Build Laboratory completed Site Plot identifier is invalid.")
+			if project_definition.completed_site_plot_state_id != &"site_plot_state.compact_lab":
+				result.add_error("Build Laboratory completed Site Plot state is invalid.")
+			if not catalog.has(project_definition.completed_site_plot_state_id):
+				result.add_error(
+					"Build Laboratory completed Site Plot state %s does not exist in the content reference catalog."
+					% project_definition.completed_site_plot_state_id
+				)
 		_:
 			result.add_error(
 				"Project %s completion effect identifier %s is invalid."
@@ -235,6 +248,17 @@ static func _validate_marketing_project_values(
 		if project_definition == null:
 			continue
 		match project_definition.stable_id:
+			&"project.campus.build_laboratory":
+				_expect_project_numbers(
+					project_definition,
+					10,
+					1,
+					1,
+					0,
+					ProjectDefinition.EFFECT_BUILD_LABORATORY,
+					[],
+					result
+				)
 			&"project.research.frontier_model":
 				_expect_project_numbers(
 					project_definition,
@@ -243,6 +267,7 @@ static func _validate_marketing_project_values(
 					1,
 					30,
 					ProjectDefinition.EFFECT_RESEARCH_MODEL,
+					[&"project.campus.build_laboratory"],
 					result
 				)
 			&"project.scale.burst_compute":
@@ -253,6 +278,7 @@ static func _validate_marketing_project_values(
 					1,
 					0,
 					ProjectDefinition.EFFECT_BURST_COMPUTE,
+					[&"project.campus.build_laboratory"],
 					result
 				)
 			&"project.application.coding_agent":
@@ -263,6 +289,7 @@ static func _validate_marketing_project_values(
 					1,
 					10,
 					ProjectDefinition.EFFECT_CODING_AGENT,
+					[&"project.campus.build_laboratory"],
 					result
 				)
 
@@ -274,6 +301,7 @@ static func _expect_project_numbers(
 		reserved_project_teams: int,
 		reserved_compute_unit_months: int,
 		completion_effect_id: StringName,
+		prerequisite_project_ids: Array[StringName],
 		result: GameStateValidationResult
 	) -> void:
 	if project_definition.start_cost_musd != start_cost_musd:
@@ -299,8 +327,10 @@ static func _expect_project_numbers(
 		result.add_error(
 			"Project %s completion effect identifier is invalid." % project_definition.stable_id
 		)
-	if not project_definition.prerequisite_project_ids.is_empty():
-		result.add_error("Project %s must not declare a prerequisite." % project_definition.stable_id)
+	if project_definition.prerequisite_project_ids != prerequisite_project_ids:
+		result.add_error(
+			"Project %s prerequisite Project identifiers are invalid." % project_definition.stable_id
+		)
 
 
 static func _validate_competitor_definitions(

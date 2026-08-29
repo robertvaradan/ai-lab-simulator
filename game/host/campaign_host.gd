@@ -99,22 +99,6 @@ func get_current_state() -> GameState:
 	return _game_state_service.get_current_state()
 
 
-func select_opening_path(path_id: StringName) -> void:
-	if _session == null or _session.failed:
-		return
-	var path: BootstrapPathDefinition = CampaignCatalog.path_for_id(path_id)
-	if path == null:
-		ServiceContract.fail("unknown_opening_path", "The opening path %s is unknown." % String(path_id))
-		return
-	_session.opening_path_id = path_id
-	_session.staged_project_ids[path.project_id] = true
-	var skill_id: StringName = CampaignCatalog.skill_id_for_path(path_id)
-	if skill_id != &"":
-		_session.unlocked_skill_ids[skill_id] = true
-		_session.skill_unlock_month_by_id[skill_id] = get_current_state().calendar.current_month_step_index
-	refresh_presentation()
-
-
 func set_project_staged(project_id: StringName, staged: bool) -> void:
 	if _session == null or _session.failed:
 		return
@@ -129,7 +113,35 @@ func set_active_view(view_id: StringName) -> void:
 	if _session == null or _session.failed:
 		return
 	_session.active_view_id = view_id
+	if view_id == CampaignCatalog.VIEW_SKILL_TREE or view_id == CampaignCatalog.VIEW_TECH_TREE:
+		_session.active_world_id = CampaignCatalog.WORLD_HQ
 	refresh_presentation()
+
+
+func set_active_world(world_id: StringName) -> void:
+	if _session == null or _session.failed:
+		return
+	if not CampaignCatalog.is_valid_world_id(world_id):
+		ServiceContract.fail("unknown_world", "The World %s is unknown." % String(world_id))
+		return
+	_session.active_world_id = world_id
+	_session.active_view_id = CampaignCatalog.VIEW_CAMPUS
+	refresh_presentation()
+
+
+func enter_world(world_id: StringName) -> void:
+	if _session == null or _session.failed:
+		return
+	if not CampaignCatalog.is_valid_enterable_world_id(world_id):
+		ServiceContract.fail("invalid_enterable_world", "The World %s is not enterable." % String(world_id))
+		return
+	set_active_world(world_id)
+
+
+func get_active_world_id() -> StringName:
+	if _session == null:
+		return &""
+	return _session.active_world_id
 
 
 func unlock_skill(skill_id: StringName) -> bool:
@@ -228,12 +240,18 @@ func refresh_presentation() -> void:
 	var state: GameState = get_current_state()
 	if _hud != null:
 		_hud.present_state(state, _last_result, _definition, _session)
-	if _presenter != null:
+	if _presenter == null:
+		return
+	var in_hq: bool = _session != null and _session.active_world_id == CampaignCatalog.WORLD_HQ
+	var world_texture: TextureRect = _presenter.get_world_texture()
+	if world_texture != null:
+		world_texture.visible = in_hq
+	if in_hq:
 		_presenter.present_state(state)
 
 
 func _can_unlock(item: BootstrapUnlockDefinition, is_skill: bool) -> bool:
-	if _session == null or not _session.has_chosen_path() or _session.failed:
+	if _session == null or _session.failed:
 		return false
 	var state: GameState = get_current_state()
 	if state == null or state.calendar == null:

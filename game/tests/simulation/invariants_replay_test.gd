@@ -2,6 +2,7 @@ extends SceneTree
 
 const SCENARIO_PATH: String = "res://simulation/content/marketing_scenario.tres"
 const TEST_SUCCESS: String = "INVARIANTS_REPLAY_TEST_SUCCESS"
+const BUILD_LAB_ID: StringName = &"project.campus.build_laboratory"
 const RESEARCH_ID: StringName = &"project.research.frontier_model"
 const SCALE_ID: StringName = &"project.scale.burst_compute"
 const CODING_AGENT_PROJECT_ID: StringName = &"project.application.coding_agent"
@@ -38,34 +39,36 @@ func _initialize() -> void:
 	_verify_identity_fault(construction.core, state_result.state)
 	_verify_early_completion_fault(construction.core, state_result.state)
 	_verify_replay("empty", construction.core, definition, state_result.state, [])
-	_verify_replay(
-		"research-first",
-		construction.core,
-		definition,
-		state_result.state,
-		[_research_command(state_result.state, 0)]
-	)
-	_verify_replay(
-		"scale-first",
-		construction.core,
-		definition,
-		state_result.state,
-		[_scale_command(state_result.state, 0)]
-	)
-	_verify_replay(
-		"application-first",
-		construction.core,
-		definition,
-		state_result.state,
-		[_coding_agent_command(state_result.state, 0)]
-	)
-	_verify_replay(
-		"hybrid",
-		construction.core,
-		definition,
-		state_result.state,
-		[_research_command(state_result.state, 0), _coding_agent_command(state_result.state, 1)]
-	)
+	var after_lab: GameState = _complete_build_laboratory(construction.core, state_result.state)
+	if after_lab != null:
+		_verify_replay(
+			"research-first",
+			construction.core,
+			definition,
+			after_lab,
+			[_research_command(after_lab, 0)]
+		)
+		_verify_replay(
+			"scale-first",
+			construction.core,
+			definition,
+			after_lab,
+			[_scale_command(after_lab, 0)]
+		)
+		_verify_replay(
+			"application-first",
+			construction.core,
+			definition,
+			after_lab,
+			[_coding_agent_command(after_lab, 0)]
+		)
+		_verify_replay(
+			"hybrid",
+			construction.core,
+			definition,
+			after_lab,
+			[_research_command(after_lab, 0), _coding_agent_command(after_lab, 1)]
+		)
 	_finish()
 
 
@@ -155,18 +158,21 @@ func _verify_identity_fault(core: SimulationCore, state: GameState) -> void:
 
 
 func _verify_early_completion_fault(core: SimulationCore, state: GameState) -> void:
+	var after_lab: GameState = _complete_build_laboratory(core, state)
+	if after_lab == null:
+		return
 	var advanced: SimulationOperationResult = _advance_until_boundary(
 		core,
-		state,
-		[_research_command(state, 0)]
+		after_lab,
+		[_scale_command(after_lab, 0)]
 	)
 	if advanced == null or not advanced.has_candidate_state():
 		return
 	var mutated: GameState = _copy_state(advanced.candidate_state)
-	if mutated == null or not mutated.company.projects.has(RESEARCH_ID):
+	if mutated == null or not mutated.company.projects.has(SCALE_ID):
 		_expect(false, "The early-completion Game State copy failed.")
 		return
-	mutated.company.projects[RESEARCH_ID].completed_month_step_index = 1
+	mutated.company.projects[SCALE_ID].completed_month_step_index = 1
 	var previous_cash_balance_musd: int = mutated.cash_ledger.calculate_balance_musd()
 	for transaction: LedgerTransactionState in mutated.cash_ledger.transactions:
 		if transaction != null and transaction.month_step_index == 3:
@@ -243,6 +249,23 @@ func _verify_replay(
 	)
 
 
+func _complete_build_laboratory(core: SimulationCore, state: GameState) -> GameState:
+	var plan: Plan = Plan.new()
+	plan.commands.append(_build_lab_command(state, 0))
+	var commit: SimulationOperationResult = core.commit_plan(state, plan)
+	_expect(commit.outcome == SimulationOperationOutcome.Type.COMPLETED, "The Build Laboratory Plan did not commit.")
+	if not commit.has_candidate_state():
+		return null
+	var stepped: SimulationOperationResult = core.step_month(commit.candidate_state)
+	_expect(
+		stepped.outcome == SimulationOperationOutcome.Type.COMPLETED,
+		"The Build Laboratory Month Step did not complete."
+	)
+	if not stepped.has_candidate_state():
+		return null
+	return stepped.candidate_state
+
+
 func _advance_until_boundary(
 		core: SimulationCore,
 		state: GameState,
@@ -266,6 +289,14 @@ func _advance_until_boundary(
 			"Advance did not end at Month Step 3."
 		)
 	return advanced
+
+
+func _build_lab_command(state: GameState, command_index: int) -> Command:
+	var command: Command = _make_command(state, command_index)
+	var payload: Dictionary[StringName, Variant] = {}
+	payload[&"project_id"] = BUILD_LAB_ID
+	command.payload = payload
+	return command
 
 
 func _research_command(state: GameState, command_index: int) -> Command:

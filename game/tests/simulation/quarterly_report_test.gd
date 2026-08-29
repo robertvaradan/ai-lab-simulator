@@ -2,6 +2,7 @@ extends SceneTree
 
 const SCENARIO_PATH: String = "res://simulation/content/marketing_scenario.tres"
 const TEST_SUCCESS: String = "QUARTERLY_REPORT_TEST_SUCCESS"
+const BUILD_LAB_ID: StringName = &"project.campus.build_laboratory"
 const RESEARCH_ID: StringName = &"project.research.frontier_model"
 const SCALE_ID: StringName = &"project.scale.burst_compute"
 const CODING_AGENT_PROJECT_ID: StringName = &"project.application.coding_agent"
@@ -112,21 +113,23 @@ func _verify_research_first_ending(
 		definition: MarketingScenarioDefinition,
 		state: GameState
 	) -> void:
-	var ended: GameState = _ending_state(core, state, [_research_command(state, 0)])
+	var after_lab: GameState = _complete_build_laboratory(core, state)
+	if after_lab == null:
+		return
+	var ended: GameState = _ending_state(core, after_lab, [_research_command(after_lab, 0)])
 	if ended == null:
 		return
 	var report: QuarterlyReportState = _require_ending_report(ended)
 	if report == null:
 		return
-	_expect(report.cash_balance_musd == 58, "Research-first ending Cash is incorrect.")
-	_expect(_cash_change(report, PROJECT_START_CATEGORY) == -65, "Research-first Project cost is incorrect.")
+	_expect(report.cash_balance_musd == 48, "Research-first ending Cash is incorrect.")
+	_expect(_cash_change(report, PROJECT_START_CATEGORY) == -75, "Research-first Project cost is incorrect.")
 	_expect(_cash_change(report, OPERATING_CATEGORY) == -15, "Research-first operating cost is incorrect.")
 	_expect(_cash_change(report, STANDARD_COMPUTE_CATEGORY) == -12, "Research-first standard compute cost is incorrect.")
 	_expect(not _has_cash_category(report, REVENUE_CATEGORY), "Research-first posted Application Revenue.")
-	_expect(_has_completed_project(report, RESEARCH_ID), "Research-first did not complete the Research Project.")
-	_expect(_model_coding(report, RESEARCH_MODEL_ID) == 84, "Research-first Model coding evaluation is incorrect.")
-	_expect(_model_reasoning(report, RESEARCH_MODEL_ID) == 79, "Research-first Model reasoning evaluation is incorrect.")
-	_expect(_model_efficiency(report, RESEARCH_MODEL_ID) == 80, "Research-first Model efficiency evaluation is incorrect.")
+	_expect(_has_completed_project(report, BUILD_LAB_ID), "Research-first did not complete the Build Laboratory Project.")
+	_expect(_has_active_project(report, RESEARCH_ID), "Research-first did not keep the Research Project active.")
+	_expect(_model_coding(report, RESEARCH_MODEL_ID) == -1, "Research-first released the Research Model before the Quarter Boundary.")
 	_expect(report.applications.is_empty(), "Research-first ending report contains an Application.")
 	_verify_released_northstar(report)
 	_verify_frontier_and_expectation_delta(report)
@@ -139,17 +142,21 @@ func _verify_scale_first_ending(
 		definition: MarketingScenarioDefinition,
 		state: GameState
 	) -> void:
-	var ended: GameState = _ending_state(core, state, [_scale_command(state, 0)])
+	var after_lab: GameState = _complete_build_laboratory(core, state)
+	if after_lab == null:
+		return
+	var ended: GameState = _ending_state(core, after_lab, [_scale_command(after_lab, 0)])
 	if ended == null:
 		return
 	var report: QuarterlyReportState = _require_ending_report(ended)
 	if report == null:
 		return
-	_expect(report.cash_balance_musd == 69, "Scale-first ending Cash is incorrect.")
-	_expect(_cash_change(report, PROJECT_START_CATEGORY) == -30, "Scale-first Project cost is incorrect.")
+	_expect(report.cash_balance_musd == 67, "Scale-first ending Cash is incorrect.")
+	_expect(_cash_change(report, PROJECT_START_CATEGORY) == -40, "Scale-first Project cost is incorrect.")
 	_expect(_cash_change(report, OPERATING_CATEGORY) == -15, "Scale-first operating cost is incorrect.")
 	_expect(_cash_change(report, STANDARD_COMPUTE_CATEGORY) == -12, "Scale-first standard compute cost is incorrect.")
-	_expect(_cash_change(report, BURST_COMPUTE_CATEGORY) == -24, "Scale-first burst compute cost is incorrect.")
+	_expect(_cash_change(report, BURST_COMPUTE_CATEGORY) == -16, "Scale-first burst compute cost is incorrect.")
+	_expect(_has_completed_project(report, BUILD_LAB_ID), "Scale-first did not complete the Build Laboratory Project.")
 	_expect(_has_completed_project(report, SCALE_ID), "Scale-first did not complete the Scale Project.")
 	_expect(report.applications.is_empty(), "Scale-first ending report contains an Application.")
 	_verify_released_northstar(report)
@@ -163,20 +170,24 @@ func _verify_application_first_ending(
 		definition: MarketingScenarioDefinition,
 		state: GameState
 	) -> void:
-	var ended: GameState = _ending_state(core, state, [_coding_agent_command(state, 0)])
+	var after_lab: GameState = _complete_build_laboratory(core, state)
+	if after_lab == null:
+		return
+	var ended: GameState = _ending_state(core, after_lab, [_coding_agent_command(after_lab, 0)])
 	if ended == null:
 		return
 	var report: QuarterlyReportState = _require_ending_report(ended)
 	if report == null:
 		return
-	_expect(report.cash_balance_musd == 101, "Application-first ending Cash is incorrect.")
-	_expect(_cash_change(report, PROJECT_START_CATEGORY) == -40, "Application-first Project cost is incorrect.")
+	_expect(report.cash_balance_musd == 79, "Application-first ending Cash is incorrect.")
+	_expect(_cash_change(report, PROJECT_START_CATEGORY) == -50, "Application-first Project cost is incorrect.")
 	_expect(_cash_change(report, OPERATING_CATEGORY) == -15, "Application-first operating cost is incorrect.")
 	_expect(
 		_cash_change(report, STANDARD_COMPUTE_CATEGORY) == -12,
 		"Application-first standard compute cost is incorrect."
 	)
-	_expect(_cash_change(report, REVENUE_CATEGORY) == 18, "Application-first Revenue is incorrect.")
+	_expect(_cash_change(report, REVENUE_CATEGORY) == 6, "Application-first Revenue is incorrect.")
+	_expect(_has_completed_project(report, BUILD_LAB_ID), "Application-first did not complete the Build Laboratory Project.")
 	_expect(
 		_has_completed_project(report, CODING_AGENT_PROJECT_ID),
 		"Application-first did not complete the Coding Agent Project."
@@ -198,27 +209,31 @@ func _verify_hybrid_ending(
 		definition: MarketingScenarioDefinition,
 		state: GameState
 	) -> void:
+	var after_lab: GameState = _complete_build_laboratory(core, state)
+	if after_lab == null:
+		return
 	var ended: GameState = _ending_state(
 		core,
-		state,
-		[_research_command(state, 0), _coding_agent_command(state, 1)]
+		after_lab,
+		[_research_command(after_lab, 0), _coding_agent_command(after_lab, 1)]
 	)
 	if ended == null:
 		return
 	var report: QuarterlyReportState = _require_ending_report(ended)
 	if report == null:
 		return
-	_expect(report.cash_balance_musd == 36, "Hybrid ending Cash is incorrect.")
-	_expect(_cash_change(report, PROJECT_START_CATEGORY) == -105, "Hybrid Project cost is incorrect.")
+	_expect(report.cash_balance_musd == 14, "Hybrid ending Cash is incorrect.")
+	_expect(_cash_change(report, PROJECT_START_CATEGORY) == -115, "Hybrid Project cost is incorrect.")
 	_expect(_cash_change(report, OPERATING_CATEGORY) == -15, "Hybrid operating cost is incorrect.")
 	_expect(_cash_change(report, STANDARD_COMPUTE_CATEGORY) == -12, "Hybrid standard compute cost is incorrect.")
-	_expect(_cash_change(report, REVENUE_CATEGORY) == 18, "Hybrid Revenue is incorrect.")
-	_expect(_has_completed_project(report, RESEARCH_ID), "Hybrid did not complete the Research Project.")
+	_expect(_cash_change(report, REVENUE_CATEGORY) == 6, "Hybrid Revenue is incorrect.")
+	_expect(_has_completed_project(report, BUILD_LAB_ID), "Hybrid did not complete the Build Laboratory Project.")
+	_expect(_has_active_project(report, RESEARCH_ID), "Hybrid did not keep the Research Project active.")
 	_expect(
 		_has_completed_project(report, CODING_AGENT_PROJECT_ID),
 		"Hybrid did not complete the Coding Agent Project."
 	)
-	_expect(_model_coding(report, RESEARCH_MODEL_ID) == 84, "Hybrid Model coding evaluation is incorrect.")
+	_expect(_model_coding(report, RESEARCH_MODEL_ID) == -1, "Hybrid released the Research Model before the Quarter Boundary.")
 	var application: QuarterlyReportApplicationEntry = _application_entry(report, CODING_AGENT_APP_ID)
 	_expect(application != null, "Hybrid ending report is missing the Coding Agent.")
 	if application != null:
@@ -235,7 +250,10 @@ func _verify_recompile_equality(
 		definition: MarketingScenarioDefinition,
 		state: GameState
 	) -> void:
-	var ended: GameState = _ending_state(core, state, [_research_command(state, 0)])
+	var after_lab: GameState = _complete_build_laboratory(core, state)
+	if after_lab == null:
+		return
+	var ended: GameState = _ending_state(core, after_lab, [_research_command(after_lab, 0)])
 	if ended == null:
 		return
 	var report: QuarterlyReportState = _require_ending_report(ended)
@@ -428,6 +446,28 @@ func _expect_ending_equals_recompile(
 	)
 
 
+func _complete_build_laboratory(core: SimulationCore, state: GameState) -> GameState:
+	var commit: SimulationOperationResult = _commit_plan(core, state, [_build_lab_command(state, 0)])
+	if commit == null or not commit.has_candidate_state():
+		return null
+	var stepped: SimulationOperationResult = core.step_month(commit.candidate_state)
+	_expect(
+		stepped.outcome == SimulationOperationOutcome.Type.COMPLETED,
+		"The Build Laboratory Month Step did not complete."
+	)
+	if not stepped.has_candidate_state():
+		return null
+	return stepped.candidate_state
+
+
+func _commit_plan(core: SimulationCore, state: GameState, commands: Array[Command]) -> SimulationOperationResult:
+	var plan: Plan = Plan.new()
+	plan.commands.assign(commands)
+	var commit: SimulationOperationResult = core.commit_plan(state, plan)
+	_expect(commit.outcome == SimulationOperationOutcome.Type.COMPLETED, "The Quarterly Report Plan did not commit.")
+	return commit
+
+
 func _ending_state(core: SimulationCore, state: GameState, commands: Array[Command]) -> GameState:
 	var advanced: SimulationOperationResult = _advance_until_boundary(core, state, commands)
 	if advanced == null or not advanced.has_candidate_state():
@@ -467,6 +507,14 @@ func _advance_until_boundary(
 		"Advance did not stop at the Quarter Boundary."
 	)
 	return advanced
+
+
+func _build_lab_command(state: GameState, command_index: int) -> Command:
+	var command: Command = _make_command(state, command_index)
+	var payload: Dictionary[StringName, Variant] = {}
+	payload[&"project_id"] = BUILD_LAB_ID
+	command.payload = payload
+	return command
 
 
 func _research_command(state: GameState, command_index: int) -> Command:
@@ -528,6 +576,18 @@ func _has_completed_project(report: QuarterlyReportState, project_id: StringName
 			and project_entry.project_id == project_id
 			and project_entry.status_id == ProjectState.STATUS_COMPLETED
 			and project_entry.remaining_month_steps == 0
+		):
+			return true
+	return false
+
+
+func _has_active_project(report: QuarterlyReportState, project_id: StringName) -> bool:
+	for project_entry: QuarterlyReportProjectEntry in report.projects:
+		if (
+			project_entry != null
+			and project_entry.project_id == project_id
+			and project_entry.status_id == ProjectState.STATUS_ACTIVE
+			and project_entry.remaining_month_steps > 0
 		):
 			return true
 	return false

@@ -47,5 +47,4 @@ An implementation must not invent an answer to an open decision.
 - Define the final event presentation format.
 - Define Government World content after the regulation system closes.
 - Define owned Data Center World geometry after owned Data Center content exists.
-- Define exact World map zoom and selection controls.
-- Recalculate Marketing Scenario baseline ending Cash after `project.campus.build_laboratory` lands.
+- Define exact World map zoom and selection controls beyond the view-bar entry.

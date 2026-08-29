@@ -32,7 +32,7 @@ for required_path in "$SHADER_PATH" "$RENDERER_PATH" "$HARNESS_PATH" "$HARNESS_S
 done
 
 mkdir -p "$EVIDENCE_ROOT"
-for state in growth overload scrutiny; do
+for state in empty growth overload scrutiny; do
 	output_path="$EVIDENCE_ROOT/$state.png"
 	rm -f "$output_path" "$output_path.import"
 done
@@ -58,7 +58,7 @@ if [[ "$IMPORT_CODE" -ne 0 ]]; then
 fi
 report_if_script_error "$IMPORT_OUTPUT" 'Godot import'
 
-echo '[2/2] Dispatching the compute-SDF renderer and capturing three 1920x1080 states'
+echo '[2/2] Dispatching the compute-SDF renderer and capturing four 1920x1080 states'
 set +e
 RENDER_OUTPUT="$(godot_standard_run_windowed "$GODOT_BIN" --path "$GAME_ROOT" --resolution 1920x1080 --quit-after 900 --scene res://scenes/sdf_render_harness.tscn -- --render-all --output-dir "$EVIDENCE_ROOT" 2>&1)"
 RENDER_CODE=$?
@@ -74,8 +74,8 @@ if ! echo "$RENDER_OUTPUT" | grep -F 'SDF_RENDERER_INITIALIZED' >/dev/null; then
 	exit 1
 fi
 dispatch_count="$(echo "$RENDER_OUTPUT" | grep -c 'SDF_DISPATCH_SUBMITTED' || true)"
-if [[ "$dispatch_count" -ne 3 ]]; then
-	echo 'Godot SDF render test did not submit exactly three dispatches.' >&2
+if [[ "$dispatch_count" -ne 4 ]]; then
+	echo 'Godot SDF render test did not submit exactly four dispatches.' >&2
 	exit 1
 fi
 if ! echo "$RENDER_OUTPUT" | grep -F 'SDF_RENDER_TEST_SUCCESS' >/dev/null; then
@@ -83,7 +83,7 @@ if ! echo "$RENDER_OUTPUT" | grep -F 'SDF_RENDER_TEST_SUCCESS' >/dev/null; then
 	exit 1
 fi
 
-for state in growth overload scrutiny; do
+for state in empty growth overload scrutiny; do
 	output_path="$EVIDENCE_ROOT/$state.png"
 	if [[ ! -f "$output_path" ]]; then
 		echo "SDF render test did not create expected evidence: $output_path" >&2

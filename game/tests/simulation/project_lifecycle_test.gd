@@ -2,9 +2,12 @@ extends SceneTree
 
 const SCENARIO_PATH: String = "res://simulation/content/marketing_scenario.tres"
 const TEST_SUCCESS: String = "PROJECT_LIFECYCLE_TEST_SUCCESS"
+const BUILD_LAB_ID: StringName = &"project.campus.build_laboratory"
 const RESEARCH_ID: StringName = &"project.research.frontier_model"
 const SCALE_ID: StringName = &"project.scale.burst_compute"
 const CODING_AGENT_ID: StringName = &"project.application.coding_agent"
+const RESEARCH_PLOT_ID: StringName = &"plot.campus.research"
+const HQ_SITE_ID: StringName = &"site.company.sf_campus"
 
 var _failure_count: int = 0
 
@@ -117,94 +120,133 @@ func _verify_compute_capacity_exceeded(core: SimulationCore, state: GameState) -
 
 
 func _verify_hybrid_plan_valid(core: SimulationCore, state: GameState) -> void:
+	var after_lab: GameState = _complete_build_laboratory(core, state)
+	if after_lab == null:
+		return
 	var plan: Plan = Plan.new()
-	plan.commands.append(_research_command(state, 0))
-	plan.commands.append(_coding_agent_command(state, 1))
-	var validation: PlanValidationResult = core.validate_plan(state, plan)
+	plan.commands.append(_research_command(after_lab, 0))
+	plan.commands.append(_coding_agent_command(after_lab, 1))
+	var validation: PlanValidationResult = core.validate_plan(after_lab, plan)
 	_expect(validation.is_valid(), "A valid hybrid Plan failed validation:\n%s" % validation.format_diagnostics())
-	var commit: SimulationOperationResult = core.commit_plan(state, plan)
+	var commit: SimulationOperationResult = core.commit_plan(after_lab, plan)
 	_expect(commit.outcome == SimulationOperationOutcome.Type.COMPLETED, "A valid hybrid Plan did not commit.")
 	if commit.has_candidate_state():
 		_expect(
-			commit.candidate_state.company.projects.is_empty(),
+			not commit.candidate_state.company.projects.has(RESEARCH_ID),
+			"Plan commitment started a Project."
+		)
+		_expect(
+			not commit.candidate_state.company.projects.has(CODING_AGENT_ID),
 			"Plan commitment started a Project."
 		)
 
 
 func _verify_research_lifecycle(core: SimulationCore, state: GameState) -> void:
-	var after_month_one: GameState = _advance_plan(core, state, [_research_command(state, 0)], 1)
-	if after_month_one == null:
+	var after_lab: GameState = _complete_build_laboratory(core, state)
+	if after_lab == null:
 		return
-	_expect(after_month_one.company.projects.has(RESEARCH_ID), "The Research Project did not start.")
-	var research: ProjectState = after_month_one.company.projects[RESEARCH_ID]
-	_expect(research.status_id == ProjectState.STATUS_ACTIVE, "The Research Project is not active after Month Step 1.")
-	_expect(research.remaining_month_steps == 2, "The Research Project remaining duration is incorrect after Month Step 1.")
+	_expect(
+		after_lab.company.sites[HQ_SITE_ID].site_plots[RESEARCH_PLOT_ID].state_id
+		== &"site_plot_state.compact_lab",
+		"The Build Laboratory Project did not set the research Site Plot to compact laboratory."
+	)
+	_expect(
+		after_lab.company.projects[BUILD_LAB_ID].status_id == ProjectState.STATUS_COMPLETED,
+		"The Build Laboratory Project did not complete in Month Step 1."
+	)
+	var after_research_month_one: GameState = _advance_plan(
+		core,
+		after_lab,
+		[_research_command(after_lab, 0)],
+		1
+	)
+	if after_research_month_one == null:
+		return
+	_expect(after_research_month_one.company.projects.has(RESEARCH_ID), "The Research Project did not start.")
+	var research: ProjectState = after_research_month_one.company.projects[RESEARCH_ID]
+	_expect(research.status_id == ProjectState.STATUS_ACTIVE, "The Research Project is not active after its first Month Step.")
+	_expect(research.remaining_month_steps == 2, "The Research Project remaining duration is incorrect after its first Month Step.")
 	_expect(research.reserved_project_teams == 1, "The Research Project did not reserve one project team.")
 	_expect(research.reserved_compute_unit_months == 30, "The Research Project Compute reservation is incorrect.")
 	_expect(
-		after_month_one.cash_ledger.calculate_balance_musd() == 76,
-		"The Research Project Month Step 1 Cash is incorrect."
+		after_research_month_one.cash_ledger.calculate_balance_musd() == 57,
+		"The Research Project first Month Step Cash is incorrect."
 	)
 	_expect(
-		ProjectCapacity.free_project_teams(after_month_one.company) == 1,
+		ProjectCapacity.free_project_teams(after_research_month_one.company) == 1,
 		"The Research Project did not leave one free project team."
 	)
-	var after_month_three: GameState = _step_months(core, after_month_one, 2)
-	if after_month_three == null:
+	var at_quarter: GameState = _step_months(core, after_research_month_one, 1)
+	if at_quarter == null:
 		return
-	research = after_month_three.company.projects[RESEARCH_ID]
-	_expect(research.status_id == ProjectState.STATUS_COMPLETED, "The Research Project did not complete in Month Step 3.")
+	research = at_quarter.company.projects[RESEARCH_ID]
 	_expect(
-		after_month_three.company.models.has(&"model.player.research_output"),
+		research.status_id == ProjectState.STATUS_ACTIVE,
+		"The Research Project did not remain active at the first Quarter Boundary."
+	)
+	_expect(research.remaining_month_steps == 1, "The Research Project remaining duration is incorrect at the Quarter Boundary.")
+	var after_complete: GameState = _acknowledge_and_step(core, at_quarter)
+	if after_complete == null:
+		return
+	research = after_complete.company.projects[RESEARCH_ID]
+	_expect(research.status_id == ProjectState.STATUS_COMPLETED, "The Research Project did not complete after the Quarter Boundary.")
+	_expect(
+		after_complete.company.models.has(&"model.player.research_output"),
 		"The Research Project did not create the completed Model."
 	)
-	var completed_model: ModelState = after_month_three.company.models[&"model.player.research_output"]
+	var completed_model: ModelState = after_complete.company.models[&"model.player.research_output"]
 	_expect(completed_model.display_name == "Aperture", "The completed Model display name is incorrect.")
 	_expect(completed_model.version_label == "2.0", "The completed Model version label is incorrect.")
 	_expect(completed_model.evaluations.coding_evaluation_points == 84, "The completed Model coding evaluation is incorrect.")
 	_expect(completed_model.training_compute_unit_months == 30, "The completed Model training Compute Capacity is incorrect.")
 	_expect(
-		_has_project_completion_notification(after_month_three, RESEARCH_ID),
+		_has_project_completion_notification(after_complete, RESEARCH_ID),
 		"The Research Project completion did not create a Notification."
 	)
 
 
 func _verify_scale_lifecycle(core: SimulationCore, state: GameState) -> void:
-	var after_month_one: GameState = _advance_plan(core, state, [_scale_command(state, 0)], 1)
-	if after_month_one == null:
+	var after_lab: GameState = _complete_build_laboratory(core, state)
+	if after_lab == null:
 		return
-	var scale_project: ProjectState = after_month_one.company.projects[SCALE_ID]
+	var after_scale: GameState = _advance_plan(core, after_lab, [_scale_command(after_lab, 0)], 1)
+	if after_scale == null:
+		return
+	var scale_project: ProjectState = after_scale.company.projects[SCALE_ID]
 	_expect(scale_project.status_id == ProjectState.STATUS_COMPLETED, "The Scale Project did not complete in its start Month Step.")
 	_expect(
-		after_month_one.company.contracts.has(&"contract.compute.burst"),
+		after_scale.company.contracts.has(&"contract.compute.burst"),
 		"The Scale Project did not create the burst compute contract."
 	)
 	_expect(
-		after_month_one.company.compute_capacity_unit_months == 130,
+		after_scale.company.compute_capacity_unit_months == 130,
 		"The Scale Project did not add 60 compute-unit-months."
 	)
 	_expect(
-		after_month_one.cash_ledger.calculate_balance_musd() == 103,
-		"The Scale Project Month Step 1 Cash is incorrect."
+		after_scale.cash_ledger.calculate_balance_musd() == 84,
+		"The Scale Project start Month Step Cash is incorrect."
 	)
 	_expect(
-		ProjectCapacity.free_project_teams(after_month_one.company) == 2,
+		ProjectCapacity.free_project_teams(after_scale.company) == 2,
 		"The completed Scale Project still reserves a project team."
 	)
 
 
 func _verify_coding_agent_lifecycle(core: SimulationCore, state: GameState) -> void:
-	var after_month_one: GameState = _advance_plan(core, state, [_coding_agent_command(state, 0)], 1)
+	var after_lab: GameState = _complete_build_laboratory(core, state)
+	if after_lab == null:
+		return
+	var after_month_one: GameState = _advance_plan(core, after_lab, [_coding_agent_command(after_lab, 0)], 1)
 	if after_month_one == null:
 		return
 	var coding_agent: ProjectState = after_month_one.company.projects[CODING_AGENT_ID]
-	_expect(coding_agent.status_id == ProjectState.STATUS_ACTIVE, "The Coding Agent Project is not active after Month Step 1.")
-	_expect(coding_agent.remaining_month_steps == 1, "The Coding Agent Project remaining duration is incorrect after Month Step 1.")
+	_expect(coding_agent.status_id == ProjectState.STATUS_ACTIVE, "The Coding Agent Project is not active after its first Month Step.")
+	_expect(coding_agent.remaining_month_steps == 1, "The Coding Agent Project remaining duration is incorrect after its first Month Step.")
 	var after_month_two: GameState = _step_months(core, after_month_one, 1)
 	if after_month_two == null:
 		return
 	coding_agent = after_month_two.company.projects[CODING_AGENT_ID]
-	_expect(coding_agent.status_id == ProjectState.STATUS_COMPLETED, "The Coding Agent Project did not complete in Month Step 2.")
+	_expect(coding_agent.status_id == ProjectState.STATUS_COMPLETED, "The Coding Agent Project did not complete in its second Month Step.")
 	_expect(
 		after_month_two.company.applications.has(&"application.player.coding_agent"),
 		"The Coding Agent Project did not create the Coding Agent."
@@ -216,23 +258,26 @@ func _verify_coding_agent_lifecycle(core: SimulationCore, state: GameState) -> v
 	)
 	_expect(application.price_musd_per_contract_month == 1, "The Coding Agent price is incorrect.")
 	_expect(
-		after_month_two.cash_ledger.calculate_balance_musd() == 104,
-		"The Coding Agent Project Month Step 2 Cash is incorrect."
+		after_month_two.cash_ledger.calculate_balance_musd() == 79,
+		"The Coding Agent Project second Month Step Cash is incorrect."
 	)
 
 
 func _verify_hybrid_lifecycle(core: SimulationCore, state: GameState) -> void:
+	var after_lab: GameState = _complete_build_laboratory(core, state)
+	if after_lab == null:
+		return
 	var ended: GameState = _advance_plan(
 		core,
-		state,
-		[_research_command(state, 0), _coding_agent_command(state, 1)],
-		3
+		after_lab,
+		[_research_command(after_lab, 0), _coding_agent_command(after_lab, 1)],
+		2
 	)
 	if ended == null:
 		return
 	_expect(
-		ended.company.projects[RESEARCH_ID].status_id == ProjectState.STATUS_COMPLETED,
-		"The hybrid Research Project did not complete."
+		ended.company.projects[RESEARCH_ID].status_id == ProjectState.STATUS_ACTIVE,
+		"The hybrid Research Project did not remain active at the Quarter Boundary."
 	)
 	_expect(
 		ended.company.projects[CODING_AGENT_ID].status_id == ProjectState.STATUS_COMPLETED,
@@ -244,11 +289,11 @@ func _verify_hybrid_lifecycle(core: SimulationCore, state: GameState) -> void:
 		"The hybrid Coding Agent replaced its supporting Model."
 	)
 	_expect(
-		ended.company.models.has(&"model.player.research_output"),
-		"The hybrid Research Project did not create its Model."
+		not ended.company.models.has(&"model.player.research_output"),
+		"The hybrid Research Project released its Model before the Quarter Boundary."
 	)
 	_expect(
-		ended.cash_ledger.calculate_balance_musd() == 36,
+		ended.cash_ledger.calculate_balance_musd() == 14,
 		"The hybrid Project ending Cash is incorrect."
 	)
 
@@ -299,6 +344,26 @@ func _verify_prerequisite_rejection(
 	)
 
 
+func _complete_build_laboratory(core: SimulationCore, state: GameState) -> GameState:
+	return _advance_plan(core, state, [_build_lab_command(state, 0)], 1)
+
+
+func _acknowledge_and_step(core: SimulationCore, state: GameState) -> GameState:
+	var plan: Plan = Plan.new()
+	for event: AttentionEventState in state.attention_events:
+		if event == null:
+			continue
+		var response: AttentionEventResponse = AttentionEventResponse.new()
+		response.attention_event_id = event.stable_id
+		response.response_type_id = AcknowledgmentAttentionEventResponseValidator.ACKNOWLEDGMENT_RESPONSE_TYPE_ID
+		plan.attention_event_responses.append(response)
+	var commit: SimulationOperationResult = core.commit_plan(state, plan)
+	_expect(commit.outcome == SimulationOperationOutcome.Type.COMPLETED, "The Quarter Boundary acknowledgment did not commit.")
+	if not commit.has_candidate_state():
+		return null
+	return _step_months(core, commit.candidate_state, 1)
+
+
 func _advance_plan(
 		core: SimulationCore,
 		state: GameState,
@@ -327,6 +392,14 @@ func _step_months(core: SimulationCore, state: GameState, month_count: int) -> G
 			return null
 		current = result.candidate_state
 	return current
+
+
+func _build_lab_command(state: GameState, command_index: int) -> Command:
+	var command: Command = _make_command(state, command_index)
+	var payload: Dictionary[StringName, Variant] = {}
+	payload[&"project_id"] = BUILD_LAB_ID
+	command.payload = payload
+	return command
 
 
 func _research_command(state: GameState, command_index: int) -> Command:

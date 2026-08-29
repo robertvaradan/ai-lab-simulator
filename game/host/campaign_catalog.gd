@@ -1,10 +1,7 @@
 class_name CampaignCatalog
 extends RefCounted
 
-const PATH_RESEARCH: StringName = &"path.research"
-const PATH_SCALE: StringName = &"path.scale"
-const PATH_APPLICATIONS: StringName = &"path.applications"
-
+const BUILD_LABORATORY_PROJECT_ID: StringName = &"project.campus.build_laboratory"
 const RESEARCH_PROJECT_ID: StringName = &"project.research.frontier_model"
 const SCALE_PROJECT_ID: StringName = &"project.scale.burst_compute"
 const CODING_AGENT_PROJECT_ID: StringName = &"project.application.coding_agent"
@@ -14,6 +11,11 @@ const VIEW_CAMPUS: StringName = &"view.campus"
 const VIEW_DATA_CENTER: StringName = &"view.data_center"
 const VIEW_SKILL_TREE: StringName = &"view.skill_tree"
 const VIEW_TECH_TREE: StringName = &"view.tech_tree"
+
+const WORLD_MAP: StringName = &"world.map"
+const WORLD_HQ: StringName = &"world.hq"
+const WORLD_DATA_CENTER: StringName = &"world.data_center"
+const WORLD_GOVERNMENT: StringName = &"world.government"
 
 const SKILL_RESEARCH_FOCUS: StringName = &"skill.research.focus"
 const SKILL_SCALE_FOCUS: StringName = &"skill.scale.focus"
@@ -28,35 +30,6 @@ const TECH_TEAM_CAPACITY: StringName = &"tech.team_capacity"
 
 const FAIL_ABANDONED: StringName = &"fail.abandoned"
 const FAIL_CASH_EXHAUSTED: StringName = &"fail.cash_exhausted"
-
-
-static func opening_paths() -> Array[BootstrapPathDefinition]:
-	var paths: Array[BootstrapPathDefinition] = []
-	paths.append(
-		_path(
-			PATH_RESEARCH,
-			"Research",
-			"Train the next Model version. This path upgrades the visible laboratory when the Project completes.",
-			RESEARCH_PROJECT_ID
-		)
-	)
-	paths.append(
-		_path(
-			PATH_SCALE,
-			"Scale",
-			"Buy burst Third-Party Compute. This path fills the Data Center slot with more capacity.",
-			SCALE_PROJECT_ID
-		)
-	)
-	paths.append(
-		_path(
-			PATH_APPLICATIONS,
-			"Applications",
-			"Ship a Coding Agent. This path turns the starting Model into Revenue.",
-			CODING_AGENT_PROJECT_ID
-		)
-	)
-	return paths
 
 
 static func skill_definitions() -> Array[BootstrapUnlockDefinition]:
@@ -168,13 +141,6 @@ static func tech_definitions() -> Array[BootstrapUnlockDefinition]:
 	return techs
 
 
-static func path_for_id(path_id: StringName) -> BootstrapPathDefinition:
-	for path: BootstrapPathDefinition in opening_paths():
-		if path.stable_id == path_id:
-			return path
-	return null
-
-
 static func skill_for_id(skill_id: StringName) -> BootstrapUnlockDefinition:
 	for skill: BootstrapUnlockDefinition in skill_definitions():
 		if skill.stable_id == skill_id:
@@ -187,16 +153,6 @@ static func tech_for_id(tech_id: StringName) -> BootstrapUnlockDefinition:
 		if tech.stable_id == tech_id:
 			return tech
 	return null
-
-
-static func skill_id_for_path(path_id: StringName) -> StringName:
-	if path_id == PATH_RESEARCH:
-		return SKILL_RESEARCH_FOCUS
-	if path_id == PATH_SCALE:
-		return SKILL_SCALE_FOCUS
-	if path_id == PATH_APPLICATIONS:
-		return SKILL_APPLICATION_FOCUS
-	return &""
 
 
 static func find_project(
@@ -236,9 +192,36 @@ static func laboratory_capacity_level(state: GameState) -> int:
 
 
 static func laboratory_stage_label(state: GameState) -> String:
-	if CampusVisualMapping.from_state(state).uses_developed_laboratory():
+	var mapping: CampusVisualMapping = CampusVisualMapping.from_state(state)
+	if mapping.has_empty_plot():
+		return "Empty plot"
+	if mapping.uses_developed_laboratory():
 		return "Developed laboratory"
 	return "Compact laboratory"
+
+
+static func is_valid_enterable_world_id(world_id: StringName) -> bool:
+	return (
+		world_id == WORLD_HQ
+		or world_id == WORLD_DATA_CENTER
+		or world_id == WORLD_GOVERNMENT
+	)
+
+
+static func is_valid_world_id(world_id: StringName) -> bool:
+	return world_id == WORLD_MAP or is_valid_enterable_world_id(world_id)
+
+
+static func world_display_name(world_id: StringName) -> String:
+	if world_id == WORLD_MAP:
+		return "World Map"
+	if world_id == WORLD_HQ:
+		return "HQ"
+	if world_id == WORLD_DATA_CENTER:
+		return "Data Center"
+	if world_id == WORLD_GOVERNMENT:
+		return "Government"
+	return ""
 
 
 static func fail_reason_text(reason_id: StringName) -> String:
@@ -247,20 +230,6 @@ static func fail_reason_text(reason_id: StringName) -> String:
 	if reason_id == FAIL_CASH_EXHAUSTED:
 		return "Cash reached 0 MUSD or less."
 	return "The campaign ended."
-
-
-static func _path(
-		stable_id: StringName,
-		display_name: String,
-		summary: String,
-		project_id: StringName
-	) -> BootstrapPathDefinition:
-	var path: BootstrapPathDefinition = BootstrapPathDefinition.new()
-	path.stable_id = stable_id
-	path.display_name = display_name
-	path.summary = summary
-	path.project_id = project_id
-	return path
 
 
 static func _unlock(

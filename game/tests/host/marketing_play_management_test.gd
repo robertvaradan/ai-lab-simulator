@@ -1,6 +1,7 @@
 extends SceneTree
 
 const TEST_SUCCESS: String = "MARKETING_PLAY_MANAGEMENT_TEST_SUCCESS"
+const BUILD_LAB_ID: StringName = &"project.campus.build_laboratory"
 const RESEARCH_ID: StringName = &"project.research.frontier_model"
 const SCALE_ID: StringName = &"project.scale.burst_compute"
 const CODING_AGENT_PROJECT_ID: StringName = &"project.application.coding_agent"
@@ -50,6 +51,7 @@ func _verify_three_project_rejection(host: MarketingPlayHost) -> void:
 
 
 func _verify_hybrid_completion(host: MarketingPlayHost) -> void:
+	_complete_build_laboratory_on_host(host)
 	host.get_overlay().set_research_selected(true)
 	host.get_overlay().set_coding_agent_selected(true)
 	host.get_overlay().set_model_identity("Aperture", "2.0")
@@ -58,6 +60,7 @@ func _verify_hybrid_completion(host: MarketingPlayHost) -> void:
 	if not lab_created.succeeded():
 		return
 	var lab: SimulationLabSession = lab_created.session
+	_complete_build_laboratory_session(lab)
 	lab.stage_command(_research_command(lab.get_state(), 0))
 	lab.stage_command(_coding_command(lab.get_state(), 1))
 	lab.commit_staged_plan()
@@ -82,7 +85,7 @@ func _verify_hybrid_completion(host: MarketingPlayHost) -> void:
 	)
 	_expect(host.get_overlay().get_report_text().contains("quarterly_report.ending"), "The overlay does not present the ending report.")
 	_expect(host.get_overlay().get_attention_text().contains("attention_event.quarter_boundary"), "The overlay does not present the Quarter Boundary Attention Event.")
-	_expect(host.get_current_state().cash_ledger.calculate_balance_musd() == 36, "The hybrid ending Cash is incorrect.")
+	_expect(host.get_current_state().cash_ledger.calculate_balance_musd() == 14, "The hybrid ending Cash is incorrect.")
 
 
 func _make_host() -> MarketingPlayHost:
@@ -92,6 +95,41 @@ func _make_host() -> MarketingPlayHost:
 	overlay.name = "Overlay"
 	host.add_child(overlay)
 	return host
+
+
+func _complete_build_laboratory_session(lab: SimulationLabSession) -> void:
+	lab.stage_command(_build_lab_command(lab.get_state(), 0))
+	lab.commit_staged_plan()
+	lab.step_month()
+
+
+func _complete_build_laboratory_on_host(host: MarketingPlayHost) -> void:
+	host.get_overlay().set_build_laboratory_selected(true)
+	var plan: Plan = host.get_overlay().build_plan(host.get_current_state())
+	var commit: SimulationOperationResult = host.get_core().commit_plan(host.get_current_state(), plan)
+	_expect(commit.outcome == SimulationOperationOutcome.Type.COMPLETED, "The Build Laboratory Plan did not commit.")
+	if not commit.has_candidate_state():
+		return
+	var stepped: SimulationOperationResult = host.get_core().step_month(commit.candidate_state)
+	_expect(stepped.has_candidate_state(), "The Build Laboratory Month Step has no candidate Game State.")
+	if not stepped.has_candidate_state():
+		return
+	host.get_game_state_service().publish_operation_result(stepped)
+	host.get_overlay().set_build_laboratory_selected(false)
+	host.refresh_presentation()
+
+
+func _build_lab_command(state: GameState, command_index: int) -> Command:
+	var command: Command = Command.new()
+	command.stable_id = StableIdentifier.format_runtime_identifier(
+		&"command",
+		state.runtime_id_counters.next_sequence_by_entity_type[&"command"] + command_index
+	)
+	command.command_type_id = ProjectPlanValidator.START_COMMAND_TYPE
+	var payload: Dictionary[StringName, Variant] = {}
+	payload[&"project_id"] = BUILD_LAB_ID
+	command.payload = payload
+	return command
 
 
 func _research_command(state: GameState, command_index: int) -> Command:

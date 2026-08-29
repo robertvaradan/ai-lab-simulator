@@ -22,8 +22,9 @@ func _ready() -> void:
 func present_state(state: GameState) -> void:
 	_last_mapping = CampusVisualMapping.from_state(state)
 	_apply_laboratory(_last_mapping)
+	# Scale presentation belongs to the Data Center World. HQ must not show a Compute link mass.
 	if _compute_link != null:
-		_compute_link.visible = _last_mapping.compute_link_visible
+		_compute_link.visible = false
 	if _competitor_root != null:
 		_competitor_root.visible = _last_mapping.competitor_release_visible
 	if _competitor_label != null:
@@ -72,6 +73,7 @@ func _apply_laboratory(mapping: CampusVisualMapping) -> void:
 	var campus: Node = _campus_node()
 	if campus == null:
 		return
+	var use_empty: bool = mapping.has_empty_plot()
 	var use_developed: bool = mapping.uses_developed_laboratory()
 	var stage_two: Node3D = campus.get_node_or_null(LAB_STAGE_2_NAME) as Node3D
 	if use_developed and stage_two == null:
@@ -94,9 +96,9 @@ func _apply_laboratory(mapping: CampusVisualMapping) -> void:
 		campus.add_child(stage_two)
 	var stage_one: Node3D = campus.get_node_or_null(LAB_STAGE_1_NAME) as Node3D
 	if stage_one != null:
-		stage_one.visible = not use_developed
+		stage_one.visible = not use_empty and not use_developed
 	if stage_two != null:
-		stage_two.visible = use_developed
+		stage_two.visible = not use_empty and use_developed
 
 
 func _build_compute_link() -> void:

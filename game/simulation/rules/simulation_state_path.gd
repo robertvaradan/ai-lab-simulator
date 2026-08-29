@@ -9,6 +9,7 @@ enum Accessor {
 	COMPANY_COMPUTE_CAPACITY,
 	COMPANY_FIXED_OPERATING_COST,
 	COMPANY_PROJECTS,
+	COMPANY_SITES,
 	COMPANY_MODELS,
 	COMPANY_APPLICATIONS,
 	COMPANY_CONTRACTS,
@@ -328,6 +329,10 @@ func read_resource_dictionary(state: GameState) -> Dictionary:
 			if state.company == null:
 				return resources
 			resources.assign(state.company.projects)
+		Accessor.COMPANY_SITES:
+			if state.company == null:
+				return resources
+			resources.assign(state.company.sites)
 		Accessor.COMPANY_MODELS:
 			if state.company == null:
 				return resources
@@ -367,6 +372,12 @@ func write_resource_dictionary(state: GameState, resources: Dictionary) -> Simul
 			var projects: Dictionary[StringName, ProjectState] = {}
 			projects.assign(resources)
 			state.company.projects = projects
+		Accessor.COMPANY_SITES:
+			if state.company == null:
+				return _access_error("The Company State is missing.")
+			var sites: Dictionary[StringName, SiteState] = {}
+			sites.assign(resources)
+			state.company.sites = sites
 		Accessor.COMPANY_MODELS:
 			if state.company == null:
 				return _access_error("The Company State is missing.")
@@ -430,7 +441,7 @@ func is_valid_contract() -> bool:
 			return value_type == ValueType.NOTIFICATIONS
 		Accessor.QUARTERLY_REPORTS:
 			return value_type == ValueType.QUARTERLY_REPORTS
-		Accessor.COMPANY_PROJECTS, Accessor.COMPANY_MODELS, Accessor.COMPANY_APPLICATIONS, Accessor.COMPANY_CONTRACTS:
+		Accessor.COMPANY_PROJECTS, Accessor.COMPANY_SITES, Accessor.COMPANY_MODELS, Accessor.COMPANY_APPLICATIONS, Accessor.COMPANY_CONTRACTS:
 			return value_type == ValueType.RESOURCE_DICTIONARY
 		Accessor.WORLD_COMPETITORS, Accessor.WORLD_MODELS, Accessor.WORLD_MARKETS:
 			return value_type == ValueType.RESOURCE_DICTIONARY

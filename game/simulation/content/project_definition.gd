@@ -4,6 +4,7 @@ extends Resource
 const EFFECT_RESEARCH_MODEL: StringName = &"project_completion.research_model"
 const EFFECT_BURST_COMPUTE: StringName = &"project_completion.burst_compute"
 const EFFECT_CODING_AGENT: StringName = &"project_completion.coding_agent"
+const EFFECT_BUILD_LABORATORY: StringName = &"project_completion.build_laboratory"
 const PAYLOAD_PROJECT_ID: StringName = &"project_id"
 const PAYLOAD_MODEL_DISPLAY_NAME: StringName = &"model_display_name"
 const PAYLOAD_MODEL_VERSION_LABEL: StringName = &"model_version_label"
@@ -29,6 +30,9 @@ const PAYLOAD_SUPPORTING_MODEL_ID: StringName = &"supporting_model_id"
 @export var completed_contract_compute_unit_months: int = -1
 @export var completed_application_id: StringName = &""
 @export var completed_application_price_musd_per_contract_month: int = -1
+@export var completed_site_id: StringName = &""
+@export var completed_site_plot_id: StringName = &""
+@export var completed_site_plot_state_id: StringName = &""
 
 
 func _init() -> void:

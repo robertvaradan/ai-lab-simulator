@@ -56,11 +56,11 @@ vec2 map_growth(vec3 point, vec2 hit) {
 vec2 map_overload(vec3 point, vec2 hit) {
 	for (int index = 0; index < 4; index++) {
 		float z = -0.5 + float(index) * 0.78;
-		hit = union_hit(hit, sd_cylinder_y(point - vec3(0.75, 3.15, z), vec2(0.19, 0.8)), 5.0);
+		hit = union_hit(hit, sd_cylinder_y(point - vec3(-3.75, 3.15, z), vec2(0.19, 0.8)), 5.0);
 	}
-	hit = union_hit(hit, sd_capsule(point, vec3(-0.9, 1.2, 2.45), vec3(2.4, 1.2, 2.45), 0.14), 5.0);
-	hit = union_hit(hit, sd_capsule(point, vec3(2.4, 1.2, 2.45), vec3(2.4, 2.65, 2.45), 0.14), 5.0);
-	hit = union_hit(hit, sd_round_box(point - vec3(3.15, 0.22, 3.1), vec3(1.45, 0.18, 0.12), 0.05), 6.0);
+	hit = union_hit(hit, sd_capsule(point, vec3(-5.4, 1.2, 1.45), vec3(-2.1, 1.2, 1.45), 0.14), 5.0);
+	hit = union_hit(hit, sd_capsule(point, vec3(-2.1, 1.2, 1.45), vec3(-2.1, 2.65, 1.45), 0.14), 5.0);
+	hit = union_hit(hit, sd_round_box(point - vec3(-1.35, 0.22, 3.1), vec3(1.45, 0.18, 0.12), 0.05), 6.0);
 	return hit;
 }
 
@@ -75,6 +75,14 @@ vec2 map_scrutiny(vec3 point, vec2 hit) {
 	return hit;
 }
 
+vec2 map_laboratory(vec3 point, vec2 hit) {
+	// Research headquarters: a low institutional block plus a luminous upper lab.
+	hit = union_hit(hit, sd_round_box(point - vec3(-3.75, 1.15, -0.55), vec3(2.05, 1.15, 1.65), 0.18), 2.0);
+	hit = union_hit(hit, sd_round_box(point - vec3(-3.75, 2.58, -0.55), vec3(1.42, 0.28, 1.1), 0.12), 3.0);
+	hit = union_hit(hit, sd_round_box(point - vec3(-5.85, 0.75, -0.55), vec3(0.18, 0.74, 0.84), 0.07), 8.0);
+	return hit;
+}
+
 vec2 map_scene(vec3 point) {
 	vec2 hit = vec2(1000.0, 0.0);
 
@@ -83,30 +91,17 @@ vec2 map_scene(vec3 point) {
 	hit = union_hit(hit, sd_round_box(point - vec3(0.0, 0.03, 4.55), vec3(7.7, 0.035, 0.72), 0.08), 7.0);
 	hit = union_hit(hit, sd_round_box(point - vec3(-0.3, 0.055, 1.95), vec3(0.72, 0.04, 2.3), 0.08), 7.0);
 
-	// Research headquarters: a low institutional block plus a luminous upper lab.
-	hit = union_hit(hit, sd_round_box(point - vec3(-3.75, 1.15, -0.55), vec3(2.05, 1.15, 1.65), 0.18), 2.0);
-	hit = union_hit(hit, sd_round_box(point - vec3(-3.75, 2.58, -0.55), vec3(1.42, 0.28, 1.1), 0.12), 3.0);
-	hit = union_hit(hit, sd_round_box(point - vec3(-5.85, 0.75, -0.55), vec3(0.18, 0.74, 0.84), 0.07), 8.0);
-
-	// Compute hall: long server volume, cooling spine, and roof plant.
-	hit = union_hit(hit, sd_round_box(point - vec3(0.55, 0.9, 0.45), vec3(2.05, 0.88, 2.05), 0.12), 2.0);
-	hit = union_hit(hit, sd_round_box(point - vec3(0.55, 1.95, 0.45), vec3(1.72, 0.18, 1.72), 0.08), 3.0);
-	for (int index = 0; index < 3; index++) {
-		float x = -0.65 + float(index) * 1.2;
-		hit = union_hit(hit, sd_cylinder_y(point - vec3(x, 2.45, 0.4), vec2(0.42, 0.32)), 8.0);
-	}
-
-	// Commercial wing: a taller, aspirational tower with a rooftop beacon.
-	hit = union_hit(hit, sd_round_box(point - vec3(4.25, 1.55, -1.05), vec3(1.35, 1.55, 1.35), 0.16), 2.0);
-	hit = union_hit(hit, sd_round_box(point - vec3(4.25, 3.22, -1.05), vec3(0.9, 0.18, 0.9), 0.1), 3.0);
-	hit = union_hit(hit, sd_cylinder_y(point - vec3(4.25, 3.72, -1.05), vec2(0.14, 0.42)), 9.0);
-
 	int state = int(params.render_data.z + 0.5);
-	if (state == 0) {
+	// empty=0 is land only. growth=1, overload=2, scrutiny=3 show the HQ laboratory.
+	// HQ must not present Data Center or Application building mass.
+	if (state != 0) {
+		hit = map_laboratory(point, hit);
+	}
+	if (state == 1) {
 		hit = map_growth(point, hit);
-	} else if (state == 1) {
+	} else if (state == 2) {
 		hit = map_overload(point, hit);
-	} else {
+	} else if (state == 3) {
 		hit = map_scrutiny(point, hit);
 	}
 	return hit;

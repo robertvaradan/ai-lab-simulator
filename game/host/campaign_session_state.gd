@@ -1,12 +1,12 @@
 class_name CampaignSessionState
 extends RefCounted
 
-var opening_path_id: StringName = &""
 var staged_project_ids: Dictionary[StringName, bool] = {}
 var unlocked_skill_ids: Dictionary[StringName, bool] = {}
 var unlocked_tech_ids: Dictionary[StringName, bool] = {}
 var skill_unlock_month_by_id: Dictionary[StringName, int] = {}
 var active_view_id: StringName = CampaignCatalog.VIEW_CAMPUS
+var active_world_id: StringName = CampaignCatalog.WORLD_HQ
 var failed: bool = false
 var fail_reason_id: StringName = &""
 var abandon_pending: bool = false
@@ -14,10 +14,6 @@ var abandon_pending: bool = false
 
 func _init() -> void:
 	pass
-
-
-func has_chosen_path() -> bool:
-	return opening_path_id != &""
 
 
 func has_skill(skill_id: StringName) -> bool:

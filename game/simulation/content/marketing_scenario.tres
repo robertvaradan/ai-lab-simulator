@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MarketingScenarioDefinition" load_steps=40 format=3]
+[gd_resource type="Resource" script_class="MarketingScenarioDefinition" load_steps=39 format=3]
 
 [ext_resource type="Script" path="res://simulation/content/marketing_scenario_definition.gd" id="1_scenario"]
 [ext_resource type="Script" path="res://simulation/state/game_state.gd" id="2_game"]
@@ -38,24 +38,12 @@ inference_compute_unit_months_per_contract = 2
 [sub_resource type="Resource" id="Resource_research_plot"]
 script = ExtResource("6_plot")
 stable_id = &"plot.campus.research"
-state_id = &"site_plot_state.compact_lab"
-
-[sub_resource type="Resource" id="Resource_compute_link_plot"]
-script = ExtResource("6_plot")
-stable_id = &"plot.campus.compute_link"
-state_id = &"site_plot_state.no_link"
-
-[sub_resource type="Resource" id="Resource_product_plot"]
-script = ExtResource("6_plot")
-stable_id = &"plot.campus.product"
-state_id = &"site_plot_state.product_studio"
+state_id = &"site_plot_state.empty_plot"
 
 [sub_resource type="Resource" id="Resource_company_site"]
 script = ExtResource("5_site")
 stable_id = &"site.company.sf_campus"
 site_plots = {
-&"plot.campus.compute_link": SubResource("Resource_compute_link_plot"),
-&"plot.campus.product": SubResource("Resource_product_plot"),
 &"plot.campus.research": SubResource("Resource_research_plot")
 }
 
@@ -160,6 +148,22 @@ quarterly_reports = []
 random_generator_state = null
 runtime_id_counters = SubResource("Resource_runtime_id_counters")
 
+[sub_resource type="Resource" id="Resource_project_build_lab"]
+script = ExtResource("16_project")
+stable_id = &"project.campus.build_laboratory"
+specification_reference = "docs/marketing/marketing-scenario.md"
+schema_version = 2
+start_cost_musd = 10
+duration_month_steps = 1
+reserved_project_teams = 1
+reserved_compute_unit_months = 0
+prerequisite_project_ids = Array[StringName]([])
+required_payload_keys = Array[StringName]([&"project_id"])
+completion_effect_id = &"project_completion.build_laboratory"
+completed_site_id = &"site.company.sf_campus"
+completed_site_plot_id = &"plot.campus.research"
+completed_site_plot_state_id = &"site_plot_state.compact_lab"
+
 [sub_resource type="Resource" id="Resource_project_research"]
 script = ExtResource("16_project")
 stable_id = &"project.research.frontier_model"
@@ -169,7 +173,7 @@ start_cost_musd = 65
 duration_month_steps = 3
 reserved_project_teams = 1
 reserved_compute_unit_months = 30
-prerequisite_project_ids = Array[StringName]([])
+prerequisite_project_ids = Array[StringName]([&"project.campus.build_laboratory"])
 required_payload_keys = Array[StringName]([&"project_id", &"model_display_name", &"model_version_label", &"release_strategy_id"])
 completion_effect_id = &"project_completion.research_model"
 completed_model_id = &"model.player.research_output"
@@ -187,7 +191,7 @@ start_cost_musd = 30
 duration_month_steps = 1
 reserved_project_teams = 1
 reserved_compute_unit_months = 0
-prerequisite_project_ids = Array[StringName]([])
+prerequisite_project_ids = Array[StringName]([&"project.campus.build_laboratory"])
 required_payload_keys = Array[StringName]([&"project_id"])
 completion_effect_id = &"project_completion.burst_compute"
 completed_contract_id = &"contract.compute.burst"
@@ -202,7 +206,7 @@ start_cost_musd = 40
 duration_month_steps = 2
 reserved_project_teams = 1
 reserved_compute_unit_months = 10
-prerequisite_project_ids = Array[StringName]([])
+prerequisite_project_ids = Array[StringName]([&"project.campus.build_laboratory"])
 required_payload_keys = Array[StringName]([&"project_id", &"supporting_model_id"])
 completion_effect_id = &"project_completion.coding_agent"
 completed_application_id = &"application.player.coding_agent"
@@ -262,9 +266,9 @@ stable_id = &"scenario.marketing.first_quarter"
 difficulty_profile_id = &"difficulty.standard"
 specification_reference = "docs/marketing/marketing-scenario.md"
 starting_game_state = SubResource("Resource_starting_game_state")
-available_project_ids = Array[StringName]([&"project.research.frontier_model", &"project.scale.burst_compute", &"project.application.coding_agent"])
-project_definitions = Array[ExtResource("16_project")]([SubResource("Resource_project_research"), SubResource("Resource_project_scale"), SubResource("Resource_project_coding_agent")])
+available_project_ids = Array[StringName]([&"project.campus.build_laboratory", &"project.research.frontier_model", &"project.scale.burst_compute", &"project.application.coding_agent"])
+project_definitions = Array[ExtResource("16_project")]([SubResource("Resource_project_build_lab"), SubResource("Resource_project_research"), SubResource("Resource_project_scale"), SubResource("Resource_project_coding_agent")])
 competitor_definitions = Array[ExtResource("17_competitor_def")]([SubResource("Resource_competitor_northstar")])
 contract_definitions = Array[ExtResource("18_contract_def")]([SubResource("Resource_contract_standard"), SubResource("Resource_contract_burst")])
 command_type_ids = Array[StringName]([&"command.project.start"])
-content_reference_ids = Array[StringName]([&"difficulty.standard", &"calendar_state.planning", &"contract.compute.standard", &"contract.compute.burst", &"contract_state.active", &"model_release_state.released", &"release_strategy.commercial_api", &"site_plot_state.compact_lab", &"site_plot_state.no_link", &"site_plot_state.product_studio", &"competitor.northstar", &"competitor_stage.northstar.announced", &"competitor_stage.northstar.flagship_released", &"command.project.start", &"project.research.frontier_model", &"project.scale.burst_compute", &"project.application.coding_agent", &"project_status.active", &"project_status.completed", &"application_status.active", &"application.player.coding_agent", &"attention_event.quarter_boundary", &"notification.project.completed", &"cash_category.project.start", &"cash_category.operating_cost", &"cash_category.compute_contract.standard", &"cash_category.compute_contract.burst", &"cash_category.application.revenue", &"quarterly_report.opening", &"quarterly_report.ending"])
+content_reference_ids = Array[StringName]([&"difficulty.standard", &"calendar_state.planning", &"contract.compute.standard", &"contract.compute.burst", &"contract_state.active", &"model_release_state.released", &"release_strategy.commercial_api", &"site_plot_state.empty_plot", &"site_plot_state.compact_lab", &"competitor.northstar", &"competitor_stage.northstar.announced", &"competitor_stage.northstar.flagship_released", &"command.project.start", &"project.campus.build_laboratory", &"project.research.frontier_model", &"project.scale.burst_compute", &"project.application.coding_agent", &"project_completion.build_laboratory", &"project_status.active", &"project_status.completed", &"application_status.active", &"application.player.coding_agent", &"attention_event.quarter_boundary", &"notification.project.completed", &"cash_category.project.start", &"cash_category.operating_cost", &"cash_category.compute_contract.standard", &"cash_category.compute_contract.burst", &"cash_category.application.revenue", &"quarterly_report.opening", &"quarterly_report.ending"])

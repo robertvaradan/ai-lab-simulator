@@ -2,6 +2,7 @@ extends SceneTree
 
 const TEST_SUCCESS: String = "DECISION_HOST_TEST_SUCCESS"
 const SCENE_PATH: String = "res://tools/decision_host/decision_host.tscn"
+const BUILD_LAB_ID: StringName = &"project.campus.build_laboratory"
 const RESEARCH_ID: StringName = &"project.research.frontier_model"
 const SCALE_ID: StringName = &"project.scale.burst_compute"
 const CODING_AGENT_PROJECT_ID: StringName = &"project.application.coding_agent"
@@ -92,7 +93,7 @@ func _verify_registry_controls(host: DecisionHost) -> void:
 	var registry_ids: Array[StringName] = host.get_core().get_content_registry().get_project_ids()
 	var presented_ids: Array[StringName] = host.get_view().get_presented_project_ids()
 	_expect(presented_ids == registry_ids, "The Decision Host did not present one control per registered Project.")
-	_expect(presented_ids.size() == 3, "The Marketing Scenario Decision Host did not present three Projects.")
+	_expect(presented_ids.size() == 4, "The Marketing Scenario Decision Host did not present four Projects.")
 
 
 func _verify_empty_plan_matches_laboratory(host: DecisionHost) -> void:
@@ -153,6 +154,7 @@ func _verify_three_project_rejection(host: DecisionHost) -> void:
 
 
 func _verify_hybrid_matches_laboratory(host: DecisionHost) -> void:
+	_complete_build_laboratory_on_host(host)
 	host.get_view().set_project_selected(RESEARCH_ID, true)
 	host.get_view().set_project_selected(CODING_AGENT_PROJECT_ID, true)
 	host.get_view().set_model_identity(RESEARCH_ID, "Aperture", "2.0")
@@ -161,6 +163,7 @@ func _verify_hybrid_matches_laboratory(host: DecisionHost) -> void:
 	if not lab_created.succeeded():
 		return
 	var lab: SimulationLabSession = lab_created.session
+	_complete_build_laboratory_session(lab)
 	lab.stage_command(_research_command(lab.get_state(), 0))
 	lab.stage_command(_coding_command(lab.get_state(), 1))
 	lab.commit_staged_plan()
@@ -178,7 +181,7 @@ func _verify_hybrid_matches_laboratory(host: DecisionHost) -> void:
 		== var_to_bytes_with_objects(lab.get_state()),
 		"The hybrid Decision Host run does not match the laboratory Game State."
 	)
-	_expect(host.get_current_state().cash_ledger.calculate_balance_musd() == 36, "The hybrid ending Cash is incorrect.")
+	_expect(host.get_current_state().cash_ledger.calculate_balance_musd() == 14, "The hybrid ending Cash is incorrect.")
 	_expect(
 		host.get_view().get_inspect_text().contains("remaining_month_steps"),
 		"The hybrid Decision Host inspect text is missing Project remaining duration."
@@ -200,6 +203,41 @@ func _plan_uses_hidden_defaults(plan: Plan) -> bool:
 			if command.payload[&"supporting_model_id"] != DecisionHostCatalog.HIDDEN_SUPPORTING_MODEL_VALUE:
 				return false
 	return saw_release_strategy and saw_supporting_model
+
+
+func _complete_build_laboratory_session(lab: SimulationLabSession) -> void:
+	lab.stage_command(_build_lab_command(lab.get_state(), 0))
+	lab.commit_staged_plan()
+	lab.step_month()
+
+
+func _complete_build_laboratory_on_host(host: DecisionHost) -> void:
+	host.get_view().set_project_selected(BUILD_LAB_ID, true)
+	var plan: Plan = host.get_view().build_plan(host.get_current_state())
+	var commit: SimulationOperationResult = host.get_core().commit_plan(host.get_current_state(), plan)
+	_expect(commit.outcome == SimulationOperationOutcome.Type.COMPLETED, "The Build Laboratory Plan did not commit.")
+	if not commit.has_candidate_state():
+		return
+	var stepped: SimulationOperationResult = host.get_core().step_month(commit.candidate_state)
+	_expect(stepped.has_candidate_state(), "The Build Laboratory Month Step has no candidate Game State.")
+	if not stepped.has_candidate_state():
+		return
+	host.get_game_state_service().publish_operation_result(stepped)
+	host.get_view().set_project_selected(BUILD_LAB_ID, false)
+	host.refresh_presentation()
+
+
+func _build_lab_command(state: GameState, command_index: int) -> Command:
+	var command: Command = Command.new()
+	command.stable_id = StableIdentifier.format_runtime_identifier(
+		&"command",
+		state.runtime_id_counters.next_sequence_by_entity_type[&"command"] + command_index
+	)
+	command.command_type_id = ProjectPlanValidator.START_COMMAND_TYPE
+	var payload: Dictionary[StringName, Variant] = {}
+	payload[&"project_id"] = BUILD_LAB_ID
+	command.payload = payload
+	return command
 
 
 func _research_command(state: GameState, command_index: int) -> Command:

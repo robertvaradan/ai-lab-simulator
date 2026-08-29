@@ -6,7 +6,7 @@ signal renderer_failed(message: String)
 signal dispatch_submitted(state_name: String)
 
 const SHADER_RESOURCE: RDShaderFile = preload("res://renderer/sdf/campus_sdf.glsl")
-const STATE_NAMES: Array[StringName] = [&"growth", &"overload", &"scrutiny"]
+const STATE_NAMES: Array[StringName] = [&"empty", &"growth", &"overload", &"scrutiny"]
 const WORKGROUP_SIZE := Vector2i(8, 8)
 const DEFAULT_CAMERA := Vector3(0.78, 0.62, 8.1)
 

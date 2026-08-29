@@ -2,6 +2,7 @@ extends SceneTree
 
 const SNAPSHOT_PATH: String = "user://ms2_01_lab_snapshot.tres"
 const TEST_SUCCESS: String = "SIMULATION_LAB_TEST_SUCCESS"
+const BUILD_LAB_ID: StringName = &"project.campus.build_laboratory"
 const RESEARCH_ID: StringName = &"project.research.frontier_model"
 
 var _failure_count: int = 0
@@ -83,6 +84,7 @@ func _verify_research_run() -> void:
 	if not created.succeeded():
 		return
 	var session: SimulationLabSession = created.session
+	_complete_build_laboratory(session)
 	session.stage_command(_research_command(session.get_state(), 0))
 	var commit: SimulationOperationResult = session.commit_staged_plan()
 	_expect(commit.outcome == SimulationOperationOutcome.Type.COMPLETED, "The Research laboratory Plan did not commit.")
@@ -92,7 +94,7 @@ func _verify_research_run() -> void:
 		"The Research laboratory advance did not stop at the Attention Boundary."
 	)
 	_expect(session.get_state().company.projects.has(RESEARCH_ID), "The Research Project is missing.")
-	_expect(session.get_cash_ledger().calculate_balance_musd() == 58, "The Research-first laboratory Cash is incorrect.")
+	_expect(session.get_cash_ledger().calculate_balance_musd() == 48, "The Research-first laboratory Cash is incorrect.")
 	var replay: SimulationLabReplayResult = session.replay_exported_operations()
 	_expect(replay.succeeded(), "The Research laboratory replay failed:\n%s" % replay.format_diagnostics())
 
@@ -113,6 +115,25 @@ func _verify_replay_mismatch() -> void:
 	var replay: SimulationLabReplayResult = session.replay_operations(operations)
 	_expect(not replay.succeeded(), "A truncated laboratory replay succeeded.")
 	_expect(not replay.matched, "A truncated laboratory replay reported a match.")
+
+
+func _complete_build_laboratory(session: SimulationLabSession) -> void:
+	session.stage_command(_build_lab_command(session.get_state(), 0))
+	session.commit_staged_plan()
+	session.step_month()
+
+
+func _build_lab_command(state: GameState, command_index: int) -> Command:
+	var command: Command = Command.new()
+	command.stable_id = StableIdentifier.format_runtime_identifier(
+		&"command",
+		state.runtime_id_counters.next_sequence_by_entity_type[&"command"] + command_index
+	)
+	command.command_type_id = ProjectPlanValidator.START_COMMAND_TYPE
+	var payload: Dictionary[StringName, Variant] = {}
+	payload[&"project_id"] = BUILD_LAB_ID
+	command.payload = payload
+	return command
 
 
 func _research_command(state: GameState, command_index: int) -> Command:

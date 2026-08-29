@@ -13,6 +13,7 @@ func _init() -> void:
 	read_state_paths = [
 		CanonicalSimulationStatePaths.CALENDAR_MONTH_STEP_INDEX,
 		CanonicalSimulationStatePaths.COMPANY_PROJECTS,
+		CanonicalSimulationStatePaths.COMPANY_SITES,
 		CanonicalSimulationStatePaths.COMPANY_MODELS,
 		CanonicalSimulationStatePaths.COMPANY_APPLICATIONS,
 		CanonicalSimulationStatePaths.COMPANY_CONTRACTS,
@@ -20,6 +21,7 @@ func _init() -> void:
 	]
 	write_state_paths = [
 		CanonicalSimulationStatePaths.COMPANY_PROJECTS,
+		CanonicalSimulationStatePaths.COMPANY_SITES,
 		CanonicalSimulationStatePaths.COMPANY_MODELS,
 		CanonicalSimulationStatePaths.COMPANY_APPLICATIONS,
 		CanonicalSimulationStatePaths.COMPANY_CONTRACTS,
@@ -41,6 +43,10 @@ func evaluate(context: SimulationContext) -> SimulationRuleEvaluation:
 		return SimulationRuleEvaluation.failed(month_result.diagnostic)
 	var projects: Dictionary[StringName, ProjectState] = {}
 	projects.assign(context.read_resource_dictionary(CanonicalSimulationStatePaths.COMPANY_PROJECTS))
+	if context.has_fault():
+		return _failed_from_context(context)
+	var sites: Dictionary[StringName, SiteState] = {}
+	sites.assign(context.read_resource_dictionary(CanonicalSimulationStatePaths.COMPANY_SITES))
 	if context.has_fault():
 		return _failed_from_context(context)
 	var models: Dictionary[StringName, ModelState] = {}
@@ -77,6 +83,7 @@ func evaluate(context: SimulationContext) -> SimulationRuleEvaluation:
 		var effect_diagnostic: SimulationDiagnostic = _apply_completion_effect(
 			definition,
 			project,
+			sites,
 			models,
 			applications,
 			contracts
@@ -99,6 +106,8 @@ func evaluate(context: SimulationContext) -> SimulationRuleEvaluation:
 		completed = true
 	if not context.write_resource_dictionary(CanonicalSimulationStatePaths.COMPANY_PROJECTS, projects):
 		return _failed_from_context(context)
+	if not context.write_resource_dictionary(CanonicalSimulationStatePaths.COMPANY_SITES, sites):
+		return _failed_from_context(context)
 	if not context.write_resource_dictionary(CanonicalSimulationStatePaths.COMPANY_MODELS, models):
 		return _failed_from_context(context)
 	if not context.write_resource_dictionary(CanonicalSimulationStatePaths.COMPANY_APPLICATIONS, applications):
@@ -115,6 +124,7 @@ func evaluate(context: SimulationContext) -> SimulationRuleEvaluation:
 func _apply_completion_effect(
 		definition: ProjectDefinition,
 		project: ProjectState,
+		sites: Dictionary[StringName, SiteState],
 		models: Dictionary[StringName, ModelState],
 		applications: Dictionary[StringName, ApplicationState],
 		contracts: Dictionary[StringName, ContractState]
@@ -126,6 +136,8 @@ func _apply_completion_effect(
 			return _create_burst_contract(definition, contracts)
 		ProjectDefinition.EFFECT_CODING_AGENT:
 			return _create_coding_agent(definition, project, models, applications)
+		ProjectDefinition.EFFECT_BUILD_LABORATORY:
+			return _apply_build_laboratory(definition, project, sites)
 		_:
 			return SimulationDiagnostic.new(
 				SimulationDiagnostic.Severity.ERROR,
@@ -189,6 +201,57 @@ func _create_burst_contract(
 	contract.content_definition_id = definition.completed_contract_id
 	contract.status_id = &"contract_state.active"
 	contracts[contract.stable_id] = contract
+	return null
+
+
+func _apply_build_laboratory(
+		definition: ProjectDefinition,
+		project: ProjectState,
+		sites: Dictionary[StringName, SiteState]
+	) -> SimulationDiagnostic:
+	if definition.completed_site_id == &"":
+		return SimulationDiagnostic.new(
+			SimulationDiagnostic.Severity.ERROR,
+			&"rule.project.build_laboratory_site_missing",
+			"Project %s completed Site identifier is missing." % project.stable_id,
+			stable_id,
+			CanonicalSimulationStatePaths.COMPANY_SITES
+		)
+	if not sites.has(definition.completed_site_id):
+		return SimulationDiagnostic.new(
+			SimulationDiagnostic.Severity.ERROR,
+			&"rule.project.build_laboratory_site_unknown",
+			"Completed Site %s does not exist." % definition.completed_site_id,
+			stable_id,
+			CanonicalSimulationStatePaths.COMPANY_SITES
+		)
+	var site: SiteState = sites[definition.completed_site_id]
+	if site == null:
+		return SimulationDiagnostic.new(
+			SimulationDiagnostic.Severity.ERROR,
+			&"rule.project.build_laboratory_site_invalid",
+			"Completed Site %s is invalid." % definition.completed_site_id,
+			stable_id,
+			CanonicalSimulationStatePaths.COMPANY_SITES
+		)
+	if not site.site_plots.has(definition.completed_site_plot_id):
+		return SimulationDiagnostic.new(
+			SimulationDiagnostic.Severity.ERROR,
+			&"rule.project.build_laboratory_plot_unknown",
+			"Completed Site Plot %s does not exist." % definition.completed_site_plot_id,
+			stable_id,
+			CanonicalSimulationStatePaths.COMPANY_SITES
+		)
+	var plot: SitePlotState = site.site_plots[definition.completed_site_plot_id]
+	if plot == null:
+		return SimulationDiagnostic.new(
+			SimulationDiagnostic.Severity.ERROR,
+			&"rule.project.build_laboratory_plot_invalid",
+			"Completed Site Plot %s is invalid." % definition.completed_site_plot_id,
+			stable_id,
+			CanonicalSimulationStatePaths.COMPANY_SITES
+		)
+	plot.state_id = definition.completed_site_plot_state_id
 	return null
 
 

@@ -241,10 +241,7 @@ func _verify_pending_command_batch_executes_once(
 	var plan: Plan = Plan.new()
 	var start_command: Command = _make_command(state, 0, START_PROJECT_COMMAND_TYPE)
 	var mutation_payload: Dictionary[StringName, Variant] = {}
-	mutation_payload[&"project_id"] = &"project.research.frontier_model"
-	mutation_payload[&"model_display_name"] = "Aperture"
-	mutation_payload[&"model_version_label"] = "2.0"
-	mutation_payload[&"release_strategy_id"] = &"release_strategy.commercial_api"
+	mutation_payload[&"project_id"] = &"project.campus.build_laboratory"
 	start_command.payload = mutation_payload
 	plan.commands.append(start_command)
 	var commit: SimulationOperationResult = core.commit_plan(state, plan)

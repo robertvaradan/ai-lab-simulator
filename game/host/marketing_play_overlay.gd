@@ -2,6 +2,7 @@ class_name MarketingPlayOverlay
 extends Control
 
 const PANEL_WIDTH_PX: float = 460.0
+const BUILD_LABORATORY_PROJECT_ID: StringName = &"project.campus.build_laboratory"
 const RESEARCH_ID: StringName = &"project.research.frontier_model"
 const SCALE_ID: StringName = &"project.scale.burst_compute"
 const CODING_AGENT_PROJECT_ID: StringName = &"project.application.coding_agent"
@@ -14,6 +15,7 @@ var _forecast_label: Label
 var _attention_label: Label
 var _report_label: Label
 var _advance_button: Button
+var _build_lab_check: CheckBox
 var _research_check: CheckBox
 var _scale_check: CheckBox
 var _coding_check: CheckBox
@@ -32,6 +34,11 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	_build_panel()
+
+
+func set_build_laboratory_selected(selected: bool) -> void:
+	if _build_lab_check != null:
+		_build_lab_check.button_pressed = selected
 
 
 func set_research_selected(selected: bool) -> void:
@@ -62,6 +69,13 @@ func build_plan(state: GameState) -> Plan:
 		return plan
 	var command_index: int = 0
 	if state.company != null:
+		if (
+			_build_lab_check != null
+			and _build_lab_check.button_pressed
+			and not state.company.projects.has(BUILD_LABORATORY_PROJECT_ID)
+		):
+			plan.commands.append(_build_lab_command(state, command_index))
+			command_index += 1
 		if _research_check != null and _research_check.button_pressed and not state.company.projects.has(RESEARCH_ID):
 			plan.commands.append(_research_command(state, command_index))
 			command_index += 1
@@ -177,6 +191,10 @@ func _build_panel() -> void:
 	var project_title: Label = Label.new()
 	project_title.text = "Projects"
 	layout.add_child(project_title)
+	_build_lab_check = CheckBox.new()
+	_build_lab_check.name = "BuildLaboratoryCheck"
+	_build_lab_check.text = "Build Laboratory"
+	layout.add_child(_build_lab_check)
 	_research_check = CheckBox.new()
 	_research_check.name = "ResearchCheck"
 	_research_check.text = "Research Frontier Model"
@@ -231,6 +249,14 @@ func _on_advance_pressed() -> void:
 	if _host == null:
 		return
 	_host.advance_from_overlay()
+
+
+func _build_lab_command(state: GameState, command_index: int) -> Command:
+	var command: Command = _make_command(state, command_index)
+	var payload: Dictionary[StringName, Variant] = {}
+	payload[&"project_id"] = BUILD_LABORATORY_PROJECT_ID
+	command.payload = payload
+	return command
 
 
 func _research_command(state: GameState, command_index: int) -> Command:
