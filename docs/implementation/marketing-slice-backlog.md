@@ -421,7 +421,7 @@ Verification:
 
 ### MS3-02: Implement the representative management interface
 
-Status: `OPEN`
+Status: `DONE`
 
 Dependencies: `MS3-01`.
 
