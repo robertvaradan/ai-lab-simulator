@@ -32,6 +32,7 @@ func _ready() -> void:
 		return
 	_renderer = SdfRenderer.new()
 	_renderer.name = "SdfRenderer"
+	_renderer.output_size = Vector2i(640, 360)
 	_renderer.renderer_ready.connect(_on_renderer_ready)
 	_renderer.renderer_failed.connect(_on_renderer_failed)
 	add_child(_renderer)

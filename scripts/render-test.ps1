@@ -10,10 +10,11 @@ $godotBin = Get-CanonicalGodotAutomationExecutable -RepoRoot $repoRoot
 $shaderPath = Join-Path (Join-Path (Join-Path $gameRoot 'renderer') 'sdf') 'campus_sdf.glsl'
 $rendererPath = Join-Path (Join-Path (Join-Path $gameRoot 'renderer') 'sdf') 'sdf_renderer.gd'
 $harnessPath = Join-Path (Join-Path $gameRoot 'scripts') 'sdf_render_harness.gd'
+$harnessScene = Join-Path (Join-Path $gameRoot 'scenes') 'sdf_render_harness.tscn'
 $evidenceRoot = Join-Path (Join-Path $gameRoot 'evidence') 'sdf'
 
 $godotVersion = Assert-CanonicalGodotExecutable -GodotPath $godotBin
-foreach ($requiredPath in @($shaderPath, $rendererPath, $harnessPath)) {
+foreach ($requiredPath in @($shaderPath, $rendererPath, $harnessPath, $harnessScene)) {
     if (-not (Test-Path -LiteralPath $requiredPath -PathType Leaf)) {
         throw "Required SDF pipeline source is missing: $requiredPath"
     }
@@ -54,7 +55,7 @@ $previousErrorActionPreference = $ErrorActionPreference
 $ErrorActionPreference = 'Continue'
 try {
     $renderOutputLines = @(
-        & $godotBin --path $gameRoot --resolution 1920x1080 --quit-after 900 -- --render-all --output-dir $evidenceRoot 2>&1
+        & $godotBin --path $gameRoot --resolution 1920x1080 --quit-after 900 --scene 'res://scenes/sdf_render_harness.tscn' -- --render-all --output-dir $evidenceRoot 2>&1
     )
     $renderExitCode = $LASTEXITCODE
 }

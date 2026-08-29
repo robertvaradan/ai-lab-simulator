@@ -79,7 +79,9 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 
 ## Visual contract
 
-- Frame at exactly 1920×1080 (16:9). The SDF proof renders internally at 640×360 and scales once through a `Texture2DRD`; changing either resolution requires updating the shader, harness, script, documentation, and inspected evidence together.
+- Frame at exactly 1920×1080 (16:9).
+- The SDF capture harness renders internally at 640×360 and scales once through a `Texture2DRD`. Changing that harness resolution requires updating the shader contract, harness, capture scripts, documentation, and inspected evidence together.
+- The production campaign presenter must set `SdfRenderer.output_size` to 1920×1080. Do not use the harness resolution for the campaign world view.
 - Keep an orthographic isometric gameplay camera. The camera must not rotate. The player can pan and zoom. Follow `../docs/presentation/isometric-camera.md`.
 - Keep camera implementation under `camera`. Automated campus capture must disable camera input and snap to the authored pose.
 - Keep the SDF proof camera fixed. A pose, material, shader, dispatch, texture, or presentation change requires regenerating and inspecting all evidence images.

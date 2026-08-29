@@ -21,9 +21,10 @@ GODOT_VERSION="$(godot_standard_require "$GODOT_BIN")"
 SHADER_PATH="$GAME_ROOT/renderer/sdf/campus_sdf.glsl"
 RENDERER_PATH="$GAME_ROOT/renderer/sdf/sdf_renderer.gd"
 HARNESS_PATH="$GAME_ROOT/scripts/sdf_render_harness.gd"
+HARNESS_SCENE="$GAME_ROOT/scenes/sdf_render_harness.tscn"
 EVIDENCE_ROOT="$GAME_ROOT/evidence/sdf"
 
-for required_path in "$SHADER_PATH" "$RENDERER_PATH" "$HARNESS_PATH"; do
+for required_path in "$SHADER_PATH" "$RENDERER_PATH" "$HARNESS_PATH" "$HARNESS_SCENE"; do
 	if [[ ! -f "$required_path" ]]; then
 		echo "Required SDF pipeline source is missing: $required_path" >&2
 		exit 1
@@ -59,7 +60,7 @@ report_if_script_error "$IMPORT_OUTPUT" 'Godot import'
 
 echo '[2/2] Dispatching the compute-SDF renderer and capturing three 1920x1080 states'
 set +e
-RENDER_OUTPUT="$(godot_standard_run_windowed "$GODOT_BIN" --path "$GAME_ROOT" --resolution 1920x1080 --quit-after 900 -- --render-all --output-dir "$EVIDENCE_ROOT" 2>&1)"
+RENDER_OUTPUT="$(godot_standard_run_windowed "$GODOT_BIN" --path "$GAME_ROOT" --resolution 1920x1080 --quit-after 900 --scene res://scenes/sdf_render_harness.tscn -- --render-all --output-dir "$EVIDENCE_ROOT" 2>&1)"
 RENDER_CODE=$?
 set -e
 printf '%s\n' "$RENDER_OUTPUT"

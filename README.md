@@ -6,7 +6,7 @@ The [canonical specification index](docs/README.md) defines the game loop, domai
 
 The current runtime implementation still answers one narrow production question: can a solo-friendly, fixed-camera AI-campus management game use a lightweight signed-distance-field renderer to create a distinctive, geometry-first look inside Godot?
 
-The working answer is **yes, at prototype scale**. The main scene now bypasses Godot's normal 3D scene renderer for the campus image. A GLSL compute shader ray-marches an analytic SDF campus into a GPU texture, `Texture2DRD` exposes that texture to Godot, and a separate harness presents it with a minimal HUD and deterministic capture.
+The working answer is **yes, at prototype scale**. The production campaign presents the authored compute SDF campus at 1920×1080. A GLSL compute shader ray-marches an analytic SDF campus into a GPU texture, and `Texture2DRD` exposes that texture to Godot. The SDF capture harness remains a separate proof. It renders internally at 640×360 and scales to a 1920×1080 viewport.
 
 This is intentionally not a reimplementation of a complete dynamic sparse-SDF engine. The first proof includes:
 
@@ -14,7 +14,7 @@ This is intentionally not a reimplementation of a complete dynamic sparse-SDF en
 - a fixed orthographic isometric camera in the SDF proof;
 - palette materials, derived normals, soft shadows, ambient occlusion, and fog;
 - geometry-changing `growth`, `overload`, and `scrutiny` states;
-- render-on-change compute dispatch at 640×360, scaled to a 1920×1080 presentation;
+- render-on-change compute dispatch (campaign 1920×1080, harness 640×360 scaled to 1920×1080);
 - strict errors when compute, shader, state, dimensions, or GPU resources violate the contract.
 
 Sparse brick caches, geometry clipmaps, incremental dirty-region updates, arbitrary sculpting, physics mesh extraction, and full-resolution continuous animation are explicitly deferred until this look and interaction model earn that complexity.
@@ -127,7 +127,9 @@ The command must use the canonical standard Godot 4.7.2 automation executable.
 
 - `game/renderer/sdf/campus_sdf.glsl`: distance functions, ray marching, lighting, and state geometry.
 - `game/renderer/sdf/sdf_renderer.gd`: lightweight GPU resource and compute-dispatch adapter.
-- `game/scripts/sdf_render_harness.gd`: HUD, input, deterministic state capture, and test exit behavior.
+- `game/host/sdf_campus_presenter.gd`: production campaign SDF presenter at 1920×1080.
+- `game/scripts/sdf_render_harness.gd`: capture-harness HUD, input, deterministic state capture, and test exit behavior.
+- `game/scenes/sdf_render_harness.tscn`: capture-harness scene. Capture scripts must load this scene. Do not use the editor Run scene.
 - `scripts/render-test.ps1`: exact end-to-end verification command.
 - `game/scenes/campus_blockout.tscn`: authored Company Campus site.
 - `game/scenes/lab_stage_1.tscn`: starting laboratory PackedScene.

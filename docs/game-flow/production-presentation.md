@@ -14,7 +14,8 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | presentation-flow | Production presentation flow | BRANCH | DERIVED | - | YES | docs/product/game-contract.md; docs/marketing/marketing-slice.md | - | - | The production game presents simulation decisions through the Company Campus. |
 | camera | Isometric gameplay camera | LEAF | COMPLETE | - | YES | docs/presentation/isometric-camera.md | game/camera/isometric_camera.gd; game/scenes/campus_blockout.tscn | game/tests/camera/isometric_camera_test.gd | The canonical orthographic camera behavior exists and has automated verification. |
-| campus | Representative Company Campus | LEAF | COMPLETE | - | YES | docs/presentation/campus-authoring.md; docs/marketing/marketing-slice.md | game/scenes/campus_blockout.tscn; game/host/campus_visual_presenter.gd | game/tests/host/campus_visual_presenter_test.gd | The Company Campus blockout presents laboratory stage, Third-Party Compute, and Competitor release from Simulation Core state. |
+| campus | Representative Company Campus | LEAF | COMPLETE | - | YES | docs/presentation/campus-authoring.md; docs/marketing/marketing-slice.md | game/scenes/campus_blockout.tscn; game/host/campus_visual_presenter.gd | game/tests/host/campus_visual_presenter_test.gd | The Marketing Slice campus blockout presents laboratory stage, Third-Party Compute, and Competitor release from Simulation Core state. |
+| sdf-campus | Authored compute SDF campus | LEAF | COMPLETE | - | NO | docs/gameplay/production-bootstrap.md | game/host/sdf_campus_presenter.gd; game/renderer/sdf/campus_sdf.glsl | game/tests/host/production_bootstrap_test.gd | The campaign presents the authored GLSL campus through SdfRenderer at 1920 by 1080. |
 | simulation-connection | Connect production to Simulation Core | LEAF | COMPLETE | - | YES | docs/gameplay/core-loop.md; docs/marketing/marketing-slice.md | game/host/marketing_play_host.gd; game/host/marketing_play_overlay.gd; game/scenes/marketing_play.tscn | game/tests/host/marketing_play_host_test.gd | The production host loads the Marketing Scenario, runs Advance, and presents Attention Events and the Quarterly Report. |
 | management-interface | Management interface | LEAF | COMPLETE | - | YES | docs/marketing/marketing-slice.md | game/host/marketing_play_overlay.gd | game/tests/host/marketing_play_management_test.gd | The overlay provides Project selection, Model identity input, Projected Evaluation Ranges, Attention Events, and the Quarterly Report. |
 | end-to-end-play | Complete production Scenario | LEAF | COMPLETE | - | YES | docs/marketing/marketing-slice.md; docs/marketing/marketing-scenario.md | game/host/marketing_play_host.gd; game/host/marketing_play_overlay.gd; game/host/campus_visual_presenter.gd | game/tests/host/marketing_play_management_test.gd; game/tests/host/campus_visual_presenter_test.gd | A player can complete the Marketing Scenario first quarter through the production overlay, and the campus presents the resulting world states. |
@@ -32,9 +33,10 @@
 | From | To | Label |
 | --- | --- | --- |
 | presentation-flow | bootstrap-entry | starts from |
+| presentation-flow | camera | also frames |
 | bootstrap-entry | opening-path | loads scenario then |
 | opening-path | campaign-shell | enters |
-| campaign-shell | camera | frames |
+| campaign-shell | sdf-campus | presents |
 | camera | campus | displays |
 | campus | simulation-connection | must connect to |
 | simulation-connection | management-interface | enables |
