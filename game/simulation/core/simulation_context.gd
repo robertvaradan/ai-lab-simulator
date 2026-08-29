@@ -6,6 +6,7 @@ const CASH_LEDGER_PATH: StringName = &"state.cash_ledger.transactions"
 var _candidate_state: GameState
 var _state_path_registry: SimulationStatePathRegistry
 var _event_registry: SimulationEventRegistry
+var _content_registry: SimulationContentRegistry
 var _trace: SimulationTrace
 var _random: RandomNumberGenerator
 var _current_rule: SimulationRule
@@ -20,12 +21,14 @@ func _init(
 		candidate_state: GameState,
 		state_path_registry: SimulationStatePathRegistry,
 		event_registry: SimulationEventRegistry,
+		content_registry: SimulationContentRegistry,
 		trace: SimulationTrace,
 		random_seed: int
 	) -> void:
 	_candidate_state = candidate_state
 	_state_path_registry = state_path_registry
 	_event_registry = event_registry
+	_content_registry = content_registry
 	_trace = trace
 	_random = RandomNumberGenerator.new()
 	_random.seed = random_seed
@@ -306,6 +309,173 @@ func write_attention_events(events: Array[AttentionEventState]) -> bool:
 		events.size()
 	)
 	return true
+
+
+func read_notifications() -> Array[NotificationState]:
+	var rule_id: StringName = _current_rule_id()
+	var state_path: StringName = CanonicalSimulationStatePaths.NOTIFICATIONS
+	var notifications: Array[NotificationState] = []
+	if not _require_current_rule(state_path):
+		_trace._append_read(rule_id, state_path, false)
+		return notifications
+	if not _declared_reads.has(state_path):
+		_fault(
+			&"context.undeclared_read",
+			"Rule %s read undeclared state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return notifications
+	var path: SimulationStatePath = _state_path_registry.get_path(state_path)
+	if path == null or path.value_type != SimulationStatePath.ValueType.NOTIFICATIONS:
+		_fault(
+			&"context.unknown_read_path",
+			"Rule %s read unknown state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return notifications
+	notifications = path.read_notifications(_candidate_state)
+	_trace._append_read(rule_id, state_path, true, true, notifications.size())
+	return notifications
+
+
+func write_notifications(notifications: Array[NotificationState]) -> bool:
+	var rule_id: StringName = _current_rule_id()
+	var state_path: StringName = CanonicalSimulationStatePaths.NOTIFICATIONS
+	if not _require_current_rule(state_path):
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	if not _declared_writes.has(state_path):
+		_fault(
+			&"context.undeclared_write",
+			"Rule %s wrote undeclared state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	var path: SimulationStatePath = _state_path_registry.get_path(state_path)
+	if path == null or path.value_type != SimulationStatePath.ValueType.NOTIFICATIONS:
+		_fault(
+			&"context.unknown_write_path",
+			"Rule %s wrote unknown state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	var before_notifications: Array[NotificationState] = path.read_notifications(_candidate_state)
+	var write_diagnostic: SimulationDiagnostic = path.write_notifications(_candidate_state, notifications)
+	if write_diagnostic != null:
+		_fault(
+			&"context.write_failed",
+			"Rule %s could not write state path %s. %s"
+			% [rule_id, state_path, write_diagnostic.message],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false, true, before_notifications.size())
+		return false
+	_trace._append_write(
+		rule_id,
+		state_path,
+		true,
+		true,
+		before_notifications.size(),
+		true,
+		notifications.size()
+	)
+	return true
+
+
+func read_resource_dictionary(state_path: StringName) -> Dictionary:
+	var resources: Dictionary = {}
+	var rule_id: StringName = _current_rule_id()
+	if not _require_current_rule(state_path):
+		_trace._append_read(rule_id, state_path, false)
+		return resources
+	if not _declared_reads.has(state_path):
+		_fault(
+			&"context.undeclared_read",
+			"Rule %s read undeclared state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return resources
+	var path: SimulationStatePath = _state_path_registry.get_path(state_path)
+	if path == null or path.value_type != SimulationStatePath.ValueType.RESOURCE_DICTIONARY:
+		_fault(
+			&"context.unknown_read_path",
+			"Rule %s read unknown state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return resources
+	resources = path.read_resource_dictionary(_candidate_state)
+	_trace._append_read(rule_id, state_path, true, true, resources.size())
+	return resources
+
+
+func write_resource_dictionary(state_path: StringName, resources: Dictionary) -> bool:
+	var rule_id: StringName = _current_rule_id()
+	if not _require_current_rule(state_path):
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	if not _declared_writes.has(state_path):
+		_fault(
+			&"context.undeclared_write",
+			"Rule %s wrote undeclared state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	var path: SimulationStatePath = _state_path_registry.get_path(state_path)
+	if path == null or path.value_type != SimulationStatePath.ValueType.RESOURCE_DICTIONARY:
+		_fault(
+			&"context.unknown_write_path",
+			"Rule %s wrote unknown state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	var before_resources: Dictionary = path.read_resource_dictionary(_candidate_state)
+	var write_diagnostic: SimulationDiagnostic = path.write_resource_dictionary(_candidate_state, resources)
+	if write_diagnostic != null:
+		_fault(
+			&"context.write_failed",
+			"Rule %s could not write state path %s. %s"
+			% [rule_id, state_path, write_diagnostic.message],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false, true, before_resources.size())
+		return false
+	_trace._append_write(
+		rule_id,
+		state_path,
+		true,
+		true,
+		before_resources.size(),
+		true,
+		resources.size()
+	)
+	return true
+
+
+func get_project_definition(project_id: StringName) -> ProjectDefinition:
+	if not _require_current_rule():
+		return null
+	if _content_registry == null:
+		_fault(
+			&"context.missing_content_registry",
+			"Rule %s required Project content without a content registry." % _current_rule_id()
+		)
+		return null
+	var definition: ProjectDefinition = _content_registry.get_project_definition(project_id)
+	if definition == null:
+		_fault(
+			&"context.unknown_project_definition",
+			"Rule %s requested unknown Project definition %s." % [_current_rule_id(), project_id]
+		)
+		return null
+	return definition
 
 
 func record_condition(condition_id: StringName, result: bool) -> bool:

@@ -159,7 +159,11 @@ func _verify_one_month_step(core: SimulationCore, state: GameState) -> void:
 		== [
 			OpenMonthStepRule.RULE_ID,
 			ConsumePendingCommandBatchRule.RULE_ID,
+			PostCommittedProjectCostsRule.RULE_ID,
+			AdvanceActiveProjectsRule.RULE_ID,
+			ResolveProjectCompletionsRule.RULE_ID,
 			CreateQuarterBoundaryAttentionRule.RULE_ID,
+			CreateProjectCompletionNotificationRule.RULE_ID,
 			CloseMonthStepRule.RULE_ID,
 		],
 		"The Month Step pipeline did not use canonical Rule phase order."
@@ -273,7 +277,7 @@ func _verify_advance_matches_month_step_pipeline(core: SimulationCore, state: Ga
 		"advance_until_attention_required did not use the same Month Step pipeline as step_month."
 	)
 	_expect(
-		_rule_order(advanced.trace).size() == 12,
+		_rule_order(advanced.trace).size() == 24,
 		"advance_until_attention_required did not run three Month Step pipelines."
 	)
 

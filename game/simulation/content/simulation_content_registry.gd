@@ -12,6 +12,7 @@ var _scenario_id: StringName
 var _content_version: int
 var _content_ids: Dictionary[StringName, bool] = {}
 var _command_type_ids: Dictionary[StringName, bool] = {}
+var _project_definitions: Dictionary[StringName, ProjectDefinition] = {}
 var _attention_event_response_validators: Dictionary[StringName, AttentionEventResponseValidator] = {}
 var _diagnostics: Array[SimulationDiagnostic] = []
 var _is_sealed: bool = false
@@ -65,6 +66,38 @@ func register_command_type(command_type_id: StringName) -> bool:
 		)
 		return false
 	_command_type_ids[command_type_id] = true
+	return true
+
+
+func register_project_definition(definition: ProjectDefinition) -> bool:
+	if _is_sealed:
+		_add_error(&"content_registry.sealed", "The content registry is sealed.")
+		return false
+	if definition == null:
+		_add_error(
+			&"content_registry.missing_project_definition",
+			"The Project definition is missing."
+		)
+		return false
+	if not StableIdentifier.is_valid(definition.stable_id):
+		_add_error(
+			&"content_registry.invalid_project_id",
+			"Project identifier %s is invalid." % definition.stable_id
+		)
+		return false
+	if not _content_ids.has(definition.stable_id):
+		_add_error(
+			&"content_registry.unknown_project_id",
+			"Project identifier %s is not registered content." % definition.stable_id
+		)
+		return false
+	if _project_definitions.has(definition.stable_id):
+		_add_error(
+			&"content_registry.duplicate_project_id",
+			"Project identifier %s is duplicated." % definition.stable_id
+		)
+		return false
+	_project_definitions[definition.stable_id] = definition
 	return true
 
 
@@ -126,6 +159,21 @@ func build_content_catalog() -> Dictionary[StringName, bool]:
 
 func has_command_type(command_type_id: StringName) -> bool:
 	return _command_type_ids.has(command_type_id)
+
+
+func has_project_definition(project_id: StringName) -> bool:
+	return _project_definitions.has(project_id)
+
+
+func get_project_definition(project_id: StringName) -> ProjectDefinition:
+	return _project_definitions.get(project_id)
+
+
+func get_project_ids() -> Array[StringName]:
+	var project_ids: Array[StringName] = []
+	project_ids.assign(_project_definitions.keys())
+	project_ids.sort()
+	return project_ids
 
 
 func get_command_type_ids() -> Array[StringName]:

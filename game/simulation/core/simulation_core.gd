@@ -321,6 +321,7 @@ func _evaluate_compiled_rules(
 		candidate_state,
 		_state_path_registry,
 		_event_registry,
+		_content_registry,
 		trace,
 		random_seed
 	)

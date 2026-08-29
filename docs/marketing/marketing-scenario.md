@@ -66,8 +66,6 @@ The Company must have 40 persons.
 
 The Company must have two project teams.
 
-One active Project must reserve one project team.
-
 The Company must have 70 compute-unit-months of Compute Capacity.
 
 The Company must receive this Compute Capacity from `contract.compute.standard`.
@@ -176,9 +174,15 @@ The complete Plan must pass validation before a Project starts.
 
 Plan validation must include all Project start Commands in the Plan.
 
-The Plan must not reserve more project teams than the Company has.
+Each active Project must reserve one project team while it is active.
 
-The Plan must not reserve more Compute Capacity than the Company has.
+Free project teams must equal the Company project-team count minus the reserved project teams of active Projects.
+
+The Plan must not reserve more project teams than the Company has as free project teams.
+
+Free Compute Capacity must equal the Company Compute Capacity minus the reserved Compute Capacity of active Projects.
+
+The Plan must not reserve more Compute Capacity than the Company has as free Compute Capacity.
 
 The Plan must not contain more Project start costs than the current Cash balance can pay.
 
@@ -250,9 +254,9 @@ The first burst compute contract cost must occur in the completion Month Step.
 
 The completed contract must remain active at the ending Quarter Boundary.
 
-### Application Project
+### Coding Agent Project
 
-The Application Project identifier must be `project.application.coding_agent`.
+The Coding Agent Project identifier must be `project.application.coding_agent`.
 
 The Project must cost 40 MUSD when it starts.
 

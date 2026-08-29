@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MarketingScenarioDefinition" load_steps=31 format=3]
+[gd_resource type="Resource" script_class="MarketingScenarioDefinition" load_steps=35 format=3]
 
 [ext_resource type="Script" path="res://simulation/content/marketing_scenario_definition.gd" id="1_scenario"]
 [ext_resource type="Script" path="res://simulation/state/game_state.gd" id="2_game"]
@@ -14,6 +14,7 @@
 [ext_resource type="Script" path="res://simulation/state/market_state.gd" id="12_market"]
 [ext_resource type="Script" path="res://simulation/state/cash_ledger_state.gd" id="13_ledger"]
 [ext_resource type="Script" path="res://simulation/state/runtime_id_counters_state.gd" id="15_counters"]
+[ext_resource type="Script" path="res://simulation/content/project_definition.gd" id="16_project"]
 
 [sub_resource type="Resource" id="Resource_player_evaluations"]
 script = ExtResource("8_evaluation")
@@ -154,6 +155,54 @@ notifications = []
 random_generator_state = null
 runtime_id_counters = SubResource("Resource_runtime_id_counters")
 
+[sub_resource type="Resource" id="Resource_project_research"]
+script = ExtResource("16_project")
+stable_id = &"project.research.frontier_model"
+specification_reference = "docs/marketing/marketing-scenario.md"
+schema_version = 2
+start_cost_musd = 65
+duration_month_steps = 3
+reserved_project_teams = 1
+reserved_compute_unit_months = 30
+prerequisite_project_ids = Array[StringName]([])
+required_payload_keys = Array[StringName]([&"project_id", &"model_display_name", &"model_version_label", &"release_strategy_id"])
+completion_effect_id = &"project_completion.research_model"
+completed_model_id = &"model.player.research_output"
+completed_model_coding_evaluation_points = 84
+completed_model_reasoning_evaluation_points = 79
+completed_model_efficiency_evaluation_points = 80
+completed_model_inference_compute_unit_months_per_contract = 2
+
+[sub_resource type="Resource" id="Resource_project_scale"]
+script = ExtResource("16_project")
+stable_id = &"project.scale.burst_compute"
+specification_reference = "docs/marketing/marketing-scenario.md"
+schema_version = 2
+start_cost_musd = 30
+duration_month_steps = 1
+reserved_project_teams = 1
+reserved_compute_unit_months = 0
+prerequisite_project_ids = Array[StringName]([])
+required_payload_keys = Array[StringName]([&"project_id"])
+completion_effect_id = &"project_completion.burst_compute"
+completed_contract_id = &"contract.compute.burst"
+completed_contract_compute_unit_months = 60
+
+[sub_resource type="Resource" id="Resource_project_coding_agent"]
+script = ExtResource("16_project")
+stable_id = &"project.application.coding_agent"
+specification_reference = "docs/marketing/marketing-scenario.md"
+schema_version = 2
+start_cost_musd = 40
+duration_month_steps = 2
+reserved_project_teams = 1
+reserved_compute_unit_months = 10
+prerequisite_project_ids = Array[StringName]([])
+required_payload_keys = Array[StringName]([&"project_id", &"supporting_model_id"])
+completion_effect_id = &"project_completion.coding_agent"
+completed_application_id = &"application.player.coding_agent"
+completed_application_price_musd_per_contract_month = 1
+
 [resource]
 script = ExtResource("1_scenario")
 schema_version = 2
@@ -165,5 +214,6 @@ difficulty_profile_id = &"difficulty.standard"
 specification_reference = "docs/marketing/marketing-scenario.md"
 starting_game_state = SubResource("Resource_starting_game_state")
 available_project_ids = Array[StringName]([&"project.research.frontier_model", &"project.scale.burst_compute", &"project.application.coding_agent"])
+project_definitions = Array[ExtResource("16_project")]([SubResource("Resource_project_research"), SubResource("Resource_project_scale"), SubResource("Resource_project_coding_agent")])
 command_type_ids = Array[StringName]([&"command.project.start"])
-content_reference_ids = Array[StringName]([&"difficulty.standard", &"calendar_state.planning", &"contract.compute.standard", &"contract_state.active", &"model_release_state.released", &"release_strategy.commercial_api", &"site_plot_state.compact_lab", &"site_plot_state.no_link", &"site_plot_state.product_studio", &"competitor_stage.northstar.announced", &"command.project.start", &"project.research.frontier_model", &"project.scale.burst_compute", &"project.application.coding_agent", &"attention_event.quarter_boundary"])
+content_reference_ids = Array[StringName]([&"difficulty.standard", &"calendar_state.planning", &"contract.compute.standard", &"contract.compute.burst", &"contract_state.active", &"model_release_state.released", &"release_strategy.commercial_api", &"site_plot_state.compact_lab", &"site_plot_state.no_link", &"site_plot_state.product_studio", &"competitor_stage.northstar.announced", &"command.project.start", &"project.research.frontier_model", &"project.scale.burst_compute", &"project.application.coding_agent", &"project_status.active", &"project_status.completed", &"application_status.active", &"application.player.coding_agent", &"attention_event.quarter_boundary", &"notification.project.completed", &"cash_category.project.start"])

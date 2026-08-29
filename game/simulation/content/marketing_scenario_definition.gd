@@ -10,6 +10,7 @@ extends Resource
 @export var specification_reference: String = ""
 @export var starting_game_state: GameState
 @export var available_project_ids: Array[StringName] = []
+@export var project_definitions: Array[ProjectDefinition] = []
 @export var command_type_ids: Array[StringName] = []
 @export var content_reference_ids: Array[StringName] = []
 
@@ -31,6 +32,8 @@ func build_content_registry() -> SimulationContentRegistry:
 		registry.register_content(identifier)
 	for command_type_id: StringName in command_type_ids:
 		registry.register_command_type(command_type_id)
+	for project_definition: ProjectDefinition in project_definitions:
+		registry.register_project_definition(project_definition)
 	registry.register_attention_event_response_validator(
 		AcknowledgmentAttentionEventResponseValidator.new(
 			CreateQuarterBoundaryAttentionRule.EVENT_TYPE_ID

@@ -31,7 +31,7 @@ func evaluate(context: SimulationContext) -> SimulationRuleEvaluation:
 				CanonicalSimulationStatePaths.PENDING_COMMAND_BATCH
 			)
 		)
-	if not context.write_pending_command_batch(null):
+	if not context.write_pending_command_batch(batch):
 		return _failed_from_context(context)
 	return SimulationRuleEvaluation.fired()
 

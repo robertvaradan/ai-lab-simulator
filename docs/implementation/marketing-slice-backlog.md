@@ -42,7 +42,7 @@ Required output:
 - Define the starting Company State.
 - Define the starting World State.
 - Define the Research Project.
-- Define the Third-Party Compute Project.
+- Define the Scale Project.
 - Define the Coding Agent Project.
 - Define the projected Competitor evaluations.
 - Define the actual Competitor release evaluations.
@@ -206,7 +206,7 @@ Verification:
 
 ### MS1-06: Implement the three Marketing Scenario Projects
 
-Status: `OPEN`
+Status: `DONE`
 
 Dependencies: `MS1-05`.
 
@@ -214,20 +214,22 @@ References:
 
 - `docs/marketing/marketing-scenario.md`
 - `docs/gameplay/progression.md`
+- `docs/simulation/time-model.md`
 
 Required output:
 
-- Implement the Research Project.
-- Implement the Third-Party Compute Project.
-- Implement the Coding Agent Project.
+- Implement typed Project definitions for the Research Project, the Scale Project, and the Coding Agent Project.
 - Implement Project Command payload validation.
-- Implement Project cost, capacity, prerequisite, and duplicate-start Plan validation.
+- Implement Project cost, free project-team, free Compute Capacity, prerequisite, and duplicate-start Plan validation.
+- Implement Month Step Rules for committed costs and reservations, active Project advancement, and Project completions.
+- Reduce remaining Project duration in the start Month Step.
 
 Verification:
 
 - Each Project must use its declared cost, duration, prerequisites, and effects.
 - Each Project must produce a different strategic result.
 - Valid hybrid Plans must remain available.
+- The project-team limit must reject a Plan that starts all three Projects.
 
 ### MS1-07: Implement Competitor forecasts and release
 

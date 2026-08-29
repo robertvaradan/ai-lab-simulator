@@ -25,8 +25,9 @@ CASH_LEDGER_TEST="$GAME_ROOT/tests/simulation/cash_ledger_test.gd"
 SIMULATION_CORE_TEST="$GAME_ROOT/tests/simulation/simulation_core_test.gd"
 PLAN_COMMITMENT_TEST="$GAME_ROOT/tests/simulation/plan_commitment_test.gd"
 MONTH_STEP_TEST="$GAME_ROOT/tests/simulation/month_step_test.gd"
+PROJECT_TEST="$GAME_ROOT/tests/simulation/project_lifecycle_test.gd"
 
-for test_script in "$STATE_TEST" "$PUBLICATION_TEST" "$CASH_LEDGER_TEST" "$SIMULATION_CORE_TEST" "$PLAN_COMMITMENT_TEST" "$MONTH_STEP_TEST"; do
+for test_script in "$STATE_TEST" "$PUBLICATION_TEST" "$CASH_LEDGER_TEST" "$SIMULATION_CORE_TEST" "$PLAN_COMMITMENT_TEST" "$MONTH_STEP_TEST" "$PROJECT_TEST"; do
 	if [[ ! -f "$test_script" ]]; then
 		echo "Required Simulation Core test script is missing: $test_script" >&2
 		exit 1
@@ -42,7 +43,7 @@ report_if_script_error() {
 	fi
 }
 
-echo '[1/7] Importing the Godot 4.7 project'
+echo '[1/8] Importing the Godot 4.7 project'
 set +e
 IMPORT_OUTPUT="$("$GODOT_BIN" --headless --editor --path "$GAME_ROOT" --import --quit 2>&1)"
 IMPORT_CODE=$?
@@ -75,22 +76,25 @@ invoke_simulation_test() {
 	fi
 }
 
-echo '[2/7] Running Game State and snapshot tests'
+echo '[2/8] Running Game State and snapshot tests'
 invoke_simulation_test 'res://tests/simulation/game_state_test.gd' 'GAME_STATE_TEST_SUCCESS'
 
-echo '[3/7] Running committed Game State publication tests'
+echo '[3/8] Running committed Game State publication tests'
 invoke_simulation_test 'res://tests/simulation/game_state_publication_test.gd' 'GAME_STATE_PUBLICATION_TEST_SUCCESS'
 
-echo '[4/7] Running Cash Ledger tests'
+echo '[4/8] Running Cash Ledger tests'
 invoke_simulation_test 'res://tests/simulation/cash_ledger_test.gd' 'CASH_LEDGER_TEST_SUCCESS'
 
-echo '[5/7] Running Rule registry, Simulation Context, and Simulation Core tests'
+echo '[5/8] Running Rule registry, Simulation Context, and Simulation Core tests'
 invoke_simulation_test 'res://tests/simulation/simulation_core_test.gd' 'SIMULATION_CORE_TEST_SUCCESS'
 
-echo '[6/7] Running Plan validation and commitment tests'
+echo '[6/8] Running Plan validation and commitment tests'
 invoke_simulation_test 'res://tests/simulation/plan_commitment_test.gd' 'PLAN_COMMITMENT_TEST_SUCCESS'
 
-echo '[7/7] Running Month Step and Quarter Boundary tests'
+echo '[7/8] Running Month Step and Quarter Boundary tests'
 invoke_simulation_test 'res://tests/simulation/month_step_test.gd' 'MONTH_STEP_TEST_SUCCESS'
+
+echo '[8/8] Running Marketing Scenario Project tests'
+invoke_simulation_test 'res://tests/simulation/project_lifecycle_test.gd' 'PROJECT_LIFECYCLE_TEST_SUCCESS'
 
 echo "SIMULATION_TEST_COMMAND_SUCCESS godot=$GODOT_VERSION runtime=standard_non_dotnet"
