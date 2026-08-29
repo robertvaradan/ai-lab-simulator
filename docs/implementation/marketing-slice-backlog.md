@@ -233,7 +233,7 @@ Verification:
 
 ### MS1-07: Implement Competitor forecasts and release
 
-Status: `BLOCKED`
+Status: `DONE`
 
 Dependencies: `MS1-05` and `MS1-06`.
 
@@ -241,6 +241,7 @@ References:
 
 - `docs/gameplay/progression.md`
 - `docs/marketing/marketing-scenario.md`
+- `docs/simulation/time-model.md`
 
 Required output:
 
@@ -248,6 +249,7 @@ Required output:
 - Implement the Projected Evaluation Ranges.
 - Implement the Quarter Boundary release.
 - Implement the actual evaluation results.
+- Write the technical frontier and the Coding Agent customer expectation from the release event.
 
 Verification:
 
@@ -257,7 +259,7 @@ Verification:
 
 ### MS1-08: Implement Market effects and Model position
 
-Status: `BLOCKED`
+Status: `OPEN`
 
 Dependencies: `MS1-06` and `MS1-07`.
 
@@ -268,8 +270,7 @@ References:
 
 Required output:
 
-- Implement the technical frontier change.
-- Implement Model technical competitiveness.
+- Derive Model technical competitiveness from the current technical frontier.
 - Implement Model market relevance.
 - Implement Application customer demand and Revenue effects.
 

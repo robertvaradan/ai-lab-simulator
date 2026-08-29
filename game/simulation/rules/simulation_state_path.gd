@@ -11,6 +11,12 @@ enum Accessor {
 	COMPANY_MODELS,
 	COMPANY_APPLICATIONS,
 	COMPANY_CONTRACTS,
+	WORLD_COMPETITORS,
+	WORLD_MODELS,
+	WORLD_MARKETS,
+	WORLD_TECHNICAL_FRONTIER_CODING,
+	WORLD_TECHNICAL_FRONTIER_REASONING,
+	WORLD_TECHNICAL_FRONTIER_EFFICIENCY,
 	CASH_LEDGER_TRANSACTIONS,
 	CALENDAR_MONTH_STEP_INDEX,
 	CALENDAR_QUARTER_INDEX,
@@ -117,6 +123,12 @@ func read_integer(state: GameState) -> SimulationIntegerResult:
 			if state.company == null:
 				return SimulationIntegerResult.failure(_access_error("The Company State is missing."))
 			return SimulationIntegerResult.success(state.company.compute_capacity_unit_months)
+		Accessor.WORLD_TECHNICAL_FRONTIER_CODING:
+			return _read_frontier_integer(state, &"coding")
+		Accessor.WORLD_TECHNICAL_FRONTIER_REASONING:
+			return _read_frontier_integer(state, &"reasoning")
+		Accessor.WORLD_TECHNICAL_FRONTIER_EFFICIENCY:
+			return _read_frontier_integer(state, &"efficiency")
 		_:
 			return SimulationIntegerResult.failure(
 				_access_error("State path %s does not contain an integer." % stable_id)
@@ -168,6 +180,12 @@ func write_integer(state: GameState, value: int) -> SimulationDiagnostic:
 			if state.company == null:
 				return _access_error("The Company State is missing.")
 			state.company.compute_capacity_unit_months = value
+		Accessor.WORLD_TECHNICAL_FRONTIER_CODING:
+			return _write_frontier_integer(state, &"coding", value)
+		Accessor.WORLD_TECHNICAL_FRONTIER_REASONING:
+			return _write_frontier_integer(state, &"reasoning", value)
+		Accessor.WORLD_TECHNICAL_FRONTIER_EFFICIENCY:
+			return _write_frontier_integer(state, &"efficiency", value)
 		_:
 			return _access_error("State path %s does not contain an integer." % stable_id)
 	return null
@@ -254,44 +272,88 @@ func write_notifications(
 
 func read_resource_dictionary(state: GameState) -> Dictionary:
 	var resources: Dictionary = {}
-	if state == null or state.company == null or value_type != ValueType.RESOURCE_DICTIONARY:
+	if state == null or value_type != ValueType.RESOURCE_DICTIONARY:
 		return resources
 	match accessor:
 		Accessor.COMPANY_PROJECTS:
+			if state.company == null:
+				return resources
 			resources.assign(state.company.projects)
 		Accessor.COMPANY_MODELS:
+			if state.company == null:
+				return resources
 			resources.assign(state.company.models)
 		Accessor.COMPANY_APPLICATIONS:
+			if state.company == null:
+				return resources
 			resources.assign(state.company.applications)
 		Accessor.COMPANY_CONTRACTS:
+			if state.company == null:
+				return resources
 			resources.assign(state.company.contracts)
+		Accessor.WORLD_COMPETITORS:
+			if state.world == null:
+				return resources
+			resources.assign(state.world.competitors)
+		Accessor.WORLD_MODELS:
+			if state.world == null:
+				return resources
+			resources.assign(state.world.models)
+		Accessor.WORLD_MARKETS:
+			if state.world == null:
+				return resources
+			resources.assign(state.world.markets)
 	return resources
 
 
 func write_resource_dictionary(state: GameState, resources: Dictionary) -> SimulationDiagnostic:
 	if state == null:
 		return _access_error("The Game State is missing.")
-	if state.company == null:
-		return _access_error("The Company State is missing.")
 	if value_type != ValueType.RESOURCE_DICTIONARY:
 		return _access_error("State path %s does not contain a resource dictionary." % stable_id)
 	match accessor:
 		Accessor.COMPANY_PROJECTS:
+			if state.company == null:
+				return _access_error("The Company State is missing.")
 			var projects: Dictionary[StringName, ProjectState] = {}
 			projects.assign(resources)
 			state.company.projects = projects
 		Accessor.COMPANY_MODELS:
+			if state.company == null:
+				return _access_error("The Company State is missing.")
 			var models: Dictionary[StringName, ModelState] = {}
 			models.assign(resources)
 			state.company.models = models
 		Accessor.COMPANY_APPLICATIONS:
+			if state.company == null:
+				return _access_error("The Company State is missing.")
 			var applications: Dictionary[StringName, ApplicationState] = {}
 			applications.assign(resources)
 			state.company.applications = applications
 		Accessor.COMPANY_CONTRACTS:
+			if state.company == null:
+				return _access_error("The Company State is missing.")
 			var contracts: Dictionary[StringName, ContractState] = {}
 			contracts.assign(resources)
 			state.company.contracts = contracts
+		Accessor.WORLD_COMPETITORS:
+			if state.world == null:
+				return _access_error("The World State is missing.")
+			var competitors: Dictionary[StringName, CompetitorState] = {}
+			competitors.assign(resources)
+			state.world.competitors = competitors
+		Accessor.WORLD_MODELS:
+			if state.world == null:
+				return _access_error("The World State is missing.")
+			var world_models: Dictionary[StringName, ModelState] = {}
+			world_models.assign(resources)
+			state.world.models = world_models
+		Accessor.WORLD_MARKETS:
+			if state.world == null:
+				return _access_error("The World State is missing.")
+			var markets: Dictionary[StringName, MarketState] = {}
+			markets.assign(resources)
+			state.world.markets = markets
 		_:
 			return _access_error("State path %s does not contain a resource dictionary." % stable_id)
 	return null
@@ -302,6 +364,8 @@ func is_valid_contract() -> bool:
 		Accessor.COMPANY_PUBLIC_TRUST_POINTS, Accessor.COMPANY_GOVERNMENT_TRUST_POINTS:
 			return value_type == ValueType.INTEGER
 		Accessor.COMPANY_PROJECT_TEAM_COUNT, Accessor.COMPANY_COMPUTE_CAPACITY:
+			return value_type == ValueType.INTEGER
+		Accessor.WORLD_TECHNICAL_FRONTIER_CODING, Accessor.WORLD_TECHNICAL_FRONTIER_REASONING, Accessor.WORLD_TECHNICAL_FRONTIER_EFFICIENCY:
 			return value_type == ValueType.INTEGER
 		Accessor.CALENDAR_MONTH_STEP_INDEX, Accessor.CALENDAR_QUARTER_INDEX:
 			return value_type == ValueType.INTEGER
@@ -317,8 +381,53 @@ func is_valid_contract() -> bool:
 			return value_type == ValueType.NOTIFICATIONS
 		Accessor.COMPANY_PROJECTS, Accessor.COMPANY_MODELS, Accessor.COMPANY_APPLICATIONS, Accessor.COMPANY_CONTRACTS:
 			return value_type == ValueType.RESOURCE_DICTIONARY
+		Accessor.WORLD_COMPETITORS, Accessor.WORLD_MODELS, Accessor.WORLD_MARKETS:
+			return value_type == ValueType.RESOURCE_DICTIONARY
 		_:
 			return false
+
+
+func _read_frontier_integer(state: GameState, dimension_id: StringName) -> SimulationIntegerResult:
+	if state.world == null:
+		return SimulationIntegerResult.failure(_access_error("The World State is missing."))
+	if state.world.technical_frontier == null:
+		return SimulationIntegerResult.failure(_access_error("The technical frontier is missing."))
+	match dimension_id:
+		&"coding":
+			return SimulationIntegerResult.success(state.world.technical_frontier.coding_evaluation_points)
+		&"reasoning":
+			return SimulationIntegerResult.success(
+				state.world.technical_frontier.reasoning_evaluation_points
+			)
+		&"efficiency":
+			return SimulationIntegerResult.success(
+				state.world.technical_frontier.efficiency_evaluation_points
+			)
+		_:
+			return SimulationIntegerResult.failure(
+				_access_error("State path %s does not contain an integer." % stable_id)
+			)
+
+
+func _write_frontier_integer(
+		state: GameState,
+		dimension_id: StringName,
+		value: int
+	) -> SimulationDiagnostic:
+	if state.world == null:
+		return _access_error("The World State is missing.")
+	if state.world.technical_frontier == null:
+		return _access_error("The technical frontier is missing.")
+	match dimension_id:
+		&"coding":
+			state.world.technical_frontier.coding_evaluation_points = value
+		&"reasoning":
+			state.world.technical_frontier.reasoning_evaluation_points = value
+		&"efficiency":
+			state.world.technical_frontier.efficiency_evaluation_points = value
+		_:
+			return _access_error("State path %s does not contain an integer." % stable_id)
+	return null
 
 
 func _access_error(message: String) -> SimulationDiagnostic:

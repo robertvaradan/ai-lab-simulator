@@ -90,7 +90,7 @@ A Competitor Stage must list its state effects.
 
 A Competitor Stage must not call the complete player planning system.
 
-A flagship Competitor Model release must resolve at a Quarter Boundary in the first implementation.
+A flagship Competitor Model release must resolve during the Advance Competitors phase of the Month Step that ends the applicable Quarter.
 
 The preceding Quarterly Report must identify a known flagship release quarter.
 
