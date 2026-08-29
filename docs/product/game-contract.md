@@ -40,11 +40,15 @@ Pan and zoom must use smoothing.
 
 The isometric camera must follow `docs/presentation/isometric-camera.md`.
 
-The Company Campus must use predetermined Site Plots.
+The campaign must follow `docs/presentation/world-map.md`.
 
-The player must be able to customize and upgrade the Company Campus.
+The campaign Worlds must be HQ, Data Center, and Government.
 
-The first Company Campus blockout must follow `docs/presentation/campus-authoring.md`.
+HQ must use predetermined Site Plots for the laboratory Site.
+
+The player must be able to customize and upgrade HQ.
+
+The first HQ campus blockout must follow `docs/presentation/campus-authoring.md`.
 
 The blockout must use native Godot primitive geometry.
 
@@ -84,7 +88,9 @@ A cylinder radius, cylinder height, sphere radius, and sphere height must land o
 
 A mesh node origin must keep each world-axis extent on the 0.2 m grid.
 
-The blockout must show the main laboratory, parking lot, perimeter roads, paths, walls, landscape, and site lights.
+The HQ blockout must show the laboratory plot, parking lot, perimeter roads, paths, walls, landscape, and site lights.
+
+HQ must not present an Application building.
 
 Grass surfaces must use a soft, even putting-green vegetation shader.
 
@@ -104,9 +110,9 @@ The game must not add low-value actions only to avoid an information-heavy inter
 
 ## World scope
 
-The initial Company Campus must represent a compact Silicon Valley territory.
+HQ must represent a compact Silicon Valley headquarters territory.
 
-Remote Sites and Institutions can appear as selectable locations.
+Data Center and Government must appear as selectable Worlds on the World map.
 
 The first implementation must not simulate a complete city.
 

@@ -42,9 +42,11 @@ The authored Marketing Scenario must follow `docs/marketing/marketing-scenario.m
 
 The Marketing Scenario must use the Standard difficulty profile.
 
-The Marketing Scenario must contain one compact Company Campus.
+The Marketing Scenario must contain one HQ Site.
 
-The Company Campus must contain predetermined Site Plots.
+The HQ Site must contain predetermined laboratory Site Plots.
+
+HQ, Data Center, and Government Worlds must follow `docs/presentation/world-map.md`.
 
 The Marketing Scenario must start with at least one released player Model.
 
@@ -73,6 +75,8 @@ The Marketing Scenario must reach one Quarter Boundary.
 The same initial state and Commands must produce the same result.
 
 The Scale Project must buy or reserve Third-Party Compute.
+
+Third-Party Compute presentation must use the Data Center World.
 
 The Marketing Slice must not require construction of an owned Data Center.
 
@@ -120,15 +124,17 @@ The graph view must highlight the Marketing Scenario trace.
 
 ## Required presentation infrastructure
 
-The slice must use the orthographic isometric Company Campus view.
+The slice must use the orthographic isometric HQ World view.
 
 The player can pan and zoom that view.
 
 The camera must not rotate.
 
-The slice must show at least one Site Plot change.
+The slice must show at least one laboratory Site Plot change.
 
 The slice must show a visible Research, Scale, or Application state change.
+
+An Application state change must not require an HQ Application building.
 
 The slice must include a final visual system for the main management interface.
 

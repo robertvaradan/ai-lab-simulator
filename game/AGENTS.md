@@ -15,7 +15,8 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - Use the standard, non-.NET Godot 4.7.2 build from the repository-root `AGENTS.md` contract and keep `project.godot` directly in this folder.
 - `scenes/init.tscn` is the default editor Run scene. It must load the Main Menu.
 - `scenes/main_menu.tscn` is the production Main Menu. Start must load the campaign scene.
-- `scenes/campaign.tscn` is the production campaign shell. It loads the Marketing Scenario, presents Path Select, then presents the campaign HUD. The world view must be `SdfRenderer` at the current Window size. Do not instance `campus_blockout.tscn` in the campaign scene.
+- `scenes/campaign.tscn` is the production campaign shell. It loads the Marketing Scenario and presents the campaign HUD. Follow `../docs/presentation/world-map.md` for HQ, Data Center, and Government Worlds. The HQ world view must be `SdfRenderer` at the current Window size. Do not instance `campus_blockout.tscn` in the campaign scene. Do not force Path Select.
+- HQ hosts Research and Application work. HQ must not present an Application building. Scale presentation belongs to the Data Center World.
 - Follow `../docs/gameplay/production-bootstrap.md` for the production entry flow.
 - `scenes/sdf_render_harness.tscn` is the automated SDF capture harness. It is not the production Run scene.
 - `scenes/marketing_play.tscn` is the Marketing Slice production play scene. It instances the campus blockout as a sibling of the management overlay and the campus visual presenter. Do not attach a script to the `CampusBlockout` root.
@@ -100,7 +101,7 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - `renderer/sdf/campus_sdf.glsl` owns analytic distance fields, state geometry, ray marching, normals, lighting, and material evaluation.
 - `renderer/sdf/sdf_renderer.gd` owns the main RenderingDevice resources and render-on-change compute dispatch. It must remain independent of HUD and capture code.
 - `scripts/sdf_render_harness.gd` owns presentation, keyboard input, deterministic capture, and output validation.
-- The contract states are `growth=0`, `overload=1`, and `scrutiny=2`. Each must alter real SDF geometry and remain visually distinguishable on the common campus.
+- The HQ contract states are `empty=0`, `growth=1`, `overload=2`, and `scrutiny=3`. Each must alter real SDF geometry and remain visually distinguishable on the HQ campus. `empty` must show land without laboratory buildings.
 - The main output texture must be created by the main RenderingDevice and exposed through `Texture2DRD`. A local RenderingDevice cannot satisfy this contract because its resources are not shareable with the main renderer.
 - This first renderer deliberately uses analytic CSG evaluated in the compute shader. Sparse brick caches, clipmaps, incremental dirty regions, physics meshes, and arbitrary runtime sculpting are later experiments, not implicit requirements.
 
@@ -118,7 +119,7 @@ From the repository root on macOS, run:
 ./scripts/render-test.sh
 ```
 
-Success requires the standard non-.NET Godot runtime, a clean Godot import, a real Forward+ RenderingDevice, `SDF_RENDERER_INITIALIZED`, three `SDF_DISPATCH_SUBMITTED` records, `SDF_RENDER_TEST_SUCCESS`, and non-empty 1920×1080 images under `game/evidence/sdf`. Windows must use D3D12. macOS must use Metal. Inspect every PNG after any visual, camera, material, shader, dispatch, texture, or presentation change.
+Success requires the standard non-.NET Godot runtime, a clean Godot import, a real Forward+ RenderingDevice, `SDF_RENDERER_INITIALIZED`, four `SDF_DISPATCH_SUBMITTED` records, `SDF_RENDER_TEST_SUCCESS`, and non-empty 1920×1080 images under `game/evidence/sdf`. Windows must use D3D12. macOS must use Metal. Inspect every PNG after any visual, camera, material, shader, dispatch, texture, or presentation change.
 
 Run the Company Campus blockout verification on Windows:
 

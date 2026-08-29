@@ -14,11 +14,15 @@ The player must start the production game from the editor Run action.
 
 The player must reach the Marketing Scenario through a Main Menu.
 
-The player must choose one opening path before the first Advance.
+The campaign host must present the campaign HUD after the Marketing Scenario loads.
+
+The host must not require an opening-path select gate.
 
 The player must inspect Company State, stage a Plan, and Advance Month Steps.
 
-The shell must present reserved surfaces for the skill tree, the tech tree, the Data Center view, and campaign failure.
+The shell must present reserved surfaces for the skill tree, the tech tree, Data Center World entry, and campaign failure.
+
+World navigation must follow `docs/presentation/world-map.md`.
 
 ## Scene flow
 
@@ -30,9 +34,9 @@ The Main Menu must present a Start control.
 
 The Start control must load `game/scenes/campaign.tscn`.
 
-The campaign host must load the Marketing Scenario before it presents Path Select.
+The campaign host must load the Marketing Scenario before it presents the campaign HUD.
 
-The campaign world view must use `SdfRenderer` and `campus_sdf.glsl`.
+The HQ World view must use `SdfRenderer` and `campus_sdf.glsl`.
 
 The campaign SDF output size must match the current Window size.
 
@@ -56,49 +60,50 @@ Missing Forward+ compute support must fail. The host must not substitute a mesh 
 
 The campaign host must not reuse `MarketingPlayOverlay`.
 
-## Opening path
+## Planning
 
-The campaign host must present Path Select after the Marketing Scenario loads.
+The campaign HUD must accept Advance without an opening-path choice.
 
-The player must select one opening path before the campaign HUD accepts Advance.
+The player must stage Project start Commands through Plan controls.
 
-The opening paths must be Research, Scale, and Applications.
+The first HQ construction Project must be `project.campus.build_laboratory`.
 
-Each opening path must stage exactly one Marketing Scenario Project start Command.
+Research, Scale, and Application Project starts must require completed `project.campus.build_laboratory`.
 
-Research must stage `project.research.frontier_model`.
-
-Scale must stage `project.scale.burst_compute`.
-
-Applications must stage `project.application.coding_agent`.
-
-The player can add a second available Project during later Planning.
+The player can stage more than one available Project when validation allows it.
 
 The Plan must still pass Simulation Core validation.
 
-## Laboratory
+An empty Plan must remain valid.
+
+## HQ laboratory
 
 The HUD must show the project-team count as laboratory capacity.
 
 Laboratory capacity level must equal the project-team count.
 
-The visible campus must be the authored compute SDF campus.
+The visible HQ World must be the authored compute SDF campus.
 
-The renderer state must follow Game State.
+Month 1 must present HQ as an empty plot.
+
+The SDF states must be `empty`, `growth`, `overload`, and `scrutiny`.
 
 The host must select one state in this order:
 
-1. `scrutiny` when the Northstar flagship Model is released
-2. `overload` when the burst compute contract is active
-3. `growth` in every other campaign state
+1. `empty` when `plot.campus.research` is `site_plot_state.empty_plot`
+2. `scrutiny` when the Northstar flagship Model is released
+3. `overload` when the burst compute contract is active
+4. `growth` in every other campaign state with a laboratory
 
-The HUD must still show compact or developed laboratory text from `CampusVisualMapping`.
+The HUD must show empty-plot, compact, or developed laboratory text from `CampusVisualMapping`.
 
-The Research Project start cost is the Cash cost that upgrades the visible laboratory.
+`project.campus.build_laboratory` completion must upgrade the visible laboratory from empty plot to compact laboratory.
 
 The Research Project must reserve one project team while it is active.
 
 The HUD must not write Site Plot state.
+
+HQ must not present an Application building.
 
 ## Month progression
 
@@ -122,7 +127,7 @@ The player can unlock one skill during Planning in each Month Step.
 
 A skill unlock must require its Cash cost and its prerequisite skills.
 
-A domain skill unlock must stage the matching opening-path Project when that Project is not already present.
+A domain skill unlock must stage the matching domain Project when that Project is not already present.
 
 A non-domain skill unlock must not write Game State.
 
@@ -146,17 +151,19 @@ The tech tree must disable a control when Cash is below the item cost.
 
 The complete production technology tree remains an open decision.
 
-## Data Center view
+## Data Center World entry
 
-The Data Center view is a reserved Scale slot.
+The Data Center control must open the Data Center World entry surface.
 
-The view must list active compute contracts from Game State.
+The Data Center World entry must list active compute contracts from Game State.
 
-The view must show Compute Capacity and monthly compute-contract cost.
+The Data Center World entry must show Compute Capacity and monthly compute-contract cost.
 
-The view must state that the Marketing Scenario does not construct an owned Data Center.
+The Data Center World entry must state that the Marketing Scenario does not construct an owned Data Center.
 
-The view must not simulate internal Data Center operation.
+The Data Center World must not simulate internal Data Center operation.
+
+The Data Center World must not appear as an HQ Site Plot.
 
 ## Fail state
 
@@ -188,7 +195,7 @@ The catalog must not add a Project to the Marketing Scenario.
 
 Automated tests must load the init, Main Menu, and campaign scenes.
 
-Automated tests must choose an opening path and Advance to the first Attention Boundary.
+Automated tests must stage a Plan and Advance to the first Attention Boundary.
 
 Automated tests must verify skill-tree Month Step gating.
 

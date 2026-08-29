@@ -56,7 +56,11 @@ Third-Party Compute must provide a fast Scale option.
 
 Third-Party Compute must create a high ongoing cost.
 
+Third-Party Compute presentation must use the Data Center World.
+
 Later Scale progression can unlock owned Data Centers.
+
+Owned Data Center presentation must use the Data Center World.
 
 Owned Data Centers must require more Cash than Third-Party Compute.
 

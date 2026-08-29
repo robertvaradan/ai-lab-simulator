@@ -33,7 +33,8 @@ This directory contains the canonical project specifications.
 ## Presentation specifications
 
 - [Isometric camera](presentation/isometric-camera.md) owns the orthographic gameplay camera.
-- [Campus authoring](presentation/campus-authoring.md) owns authored campus and laboratory scene rules.
+- [World map](presentation/world-map.md) owns campaign Worlds and World navigation.
+- [Campus authoring](presentation/campus-authoring.md) owns HQ Site campus and laboratory scene rules.
 - [Color palette](visual/color-palette.md) owns named world color roles and site-palette rules.
 
 ## Simulation specifications

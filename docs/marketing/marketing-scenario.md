@@ -92,29 +92,39 @@ The Company must have no unresolved Attention Event.
 
 The Company must have no Notification.
 
-### Company Campus
+### HQ Site
 
-The Site identifier must be `site.company.sf_campus`.
+The HQ Site identifier must be `site.company.sf_campus`.
 
-The Site must contain `plot.campus.research`.
+The HQ Site must contain `plot.campus.research`.
 
-The Site must contain `plot.campus.compute_link`.
+The HQ Site must not contain an Application Site Plot.
 
-The Site must contain `plot.campus.product`.
+The HQ Site must not contain a Data Center Site Plot.
 
-The starting research Site Plot state must be `site_plot_state.compact_lab`.
+The starting research Site Plot state must be `site_plot_state.empty_plot`.
 
-The starting compute-link Site Plot state must be `site_plot_state.no_link`.
+The first player construction step must start `project.campus.build_laboratory`.
 
-The starting product Site Plot state must be `site_plot_state.product_studio`.
+`project.campus.build_laboratory` must cost 10 MUSD.
 
-The Research Project state must control the visible state of `plot.campus.research`.
+`project.campus.build_laboratory` must last 1 Month Step.
 
-The Scale Project state and its completed contract must control the visible state of `plot.campus.compute_link`.
+`project.campus.build_laboratory` completion must set `plot.campus.research` to `site_plot_state.compact_lab`.
 
-The Application Project state and its completed Application must control the visible state of `plot.campus.product`.
+Research, Scale, and Application Project starts must require completed `project.campus.build_laboratory`.
+
+The Research Project state must control laboratory stage after the laboratory exists.
+
+Scale presentation must use the Data Center World.
+
+Application Projects must run at HQ.
+
+Application Projects must not create a physical HQ building.
 
 The presentation must not create a separate Site Plot state.
+
+World navigation must follow `docs/presentation/world-map.md`.
 
 ### Starting player Model
 
@@ -416,67 +426,63 @@ Project completions before that boundary must create Notifications.
 
 ## Baseline scenario runs
 
-A baseline scenario run must specify all Commands before Advance starts.
+A baseline scenario run must stage Plans in Month Step order.
 
-A baseline scenario run must use `advance_until_attention_required`.
+A baseline scenario run must use `advance_until_attention_required` after each committed Plan that continues the run.
 
 Each baseline scenario run must stop at the first Quarter Boundary.
 
+Each baseline scenario run must start `project.campus.build_laboratory` in Month Step 0.
+
+Each baseline scenario run must start its domain Project only after `project.campus.build_laboratory` completes.
+
+Baseline ending Cash values remain open until implementation recalculates them under the build-laboratory prerequisite.
+
 ### Research-first run
 
-The Research-first run must start only `project.research.frontier_model`.
+The Research-first run must start `project.campus.build_laboratory`, then `project.research.frontier_model`.
 
-The run must end with a Cash balance of 58 MUSD.
+The run must end with `plot.campus.research` in `site_plot_state.compact_lab`.
 
-The run must report a Project cost Cash change of -65 MUSD.
+The run must report a Project cost Cash change that includes the 10 MUSD laboratory cost and the 65 MUSD Research cost.
 
 The run must report a Company operating cost Cash change of -15 MUSD.
 
 The run must report a standard compute-contract cost Cash change of -12 MUSD.
 
-The run must end with `model.player.research_output` released.
-
-The new Model technical competitiveness values must be 2 evaluation points for coding, 1 evaluation point for reasoning, and 6 evaluation points for efficiency.
+The Research Project must remain active at the first Quarter Boundary.
 
 ### Scale-first run
 
-The Scale-first run must start only `project.scale.burst_compute`.
-
-The run must end with a Cash balance of 69 MUSD.
-
-The run must report a Project cost Cash change of -30 MUSD.
-
-The run must report a Company operating cost Cash change of -15 MUSD.
-
-The run must report a standard compute-contract cost Cash change of -12 MUSD.
-
-The run must report a burst compute-contract cost Cash change of -24 MUSD.
-
-The run must end with 130 compute-unit-months of Compute Capacity.
+The Scale-first run must start `project.campus.build_laboratory`, then `project.scale.burst_compute`.
 
 The run must end with `contract.compute.burst` active.
 
-### Application-first run
-
-The Application-first run must start only `project.application.coding_agent`.
-
-The run must end with a Cash balance of 101 MUSD.
-
-The run must report a Project cost Cash change of -40 MUSD.
+The run must report a Project cost Cash change that includes the 10 MUSD laboratory cost and the 30 MUSD Scale cost.
 
 The run must report a Company operating cost Cash change of -15 MUSD.
 
 The run must report a standard compute-contract cost Cash change of -12 MUSD.
 
-The run must report an Application Revenue Cash change of 18 MUSD.
+The run must report a burst compute-contract cost for each Month Step after the Scale Project completes.
 
-The run must end with `application.player.coding_agent` active.
+The run must end with 130 compute-unit-months of Compute Capacity.
+
+### Application-first run
+
+The Application-first run must start `project.campus.build_laboratory`, then `project.application.coding_agent`.
+
+The run must end with `application.player.coding_agent` active when Project duration allows that result before the first Quarter Boundary.
+
+The run must report a Project cost Cash change that includes the 10 MUSD laboratory cost and the 40 MUSD Application cost.
+
+The run must report a Company operating cost Cash change of -15 MUSD.
+
+The run must report a standard compute-contract cost Cash change of -12 MUSD.
 
 The Application must use `model.player.starting`.
 
-The Application must have six customer contracts.
-
-The ending monthly Revenue value must be 6 MUSD.
+Application presentation must not create an HQ Application building.
 
 ### Hybrid run
 

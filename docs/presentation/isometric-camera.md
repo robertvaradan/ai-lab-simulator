@@ -4,7 +4,9 @@ This document is the canonical isometric camera contract.
 
 ## Purpose
 
-The player must inspect the Company Campus from an orthographic isometric view.
+The player must inspect one entered World from an orthographic isometric view.
+
+World selection must follow `docs/presentation/world-map.md`.
 
 The player can pan the view.
 

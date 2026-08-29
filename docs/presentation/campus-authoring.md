@@ -1,10 +1,12 @@
 # Campus authoring
 
-This specification owns Company Campus scene authoring in Godot.
+This specification owns HQ Site scene authoring in Godot.
 
 ## Authority
 
-`docs/presentation/campus-authoring.md` owns authored campus and laboratory scene rules.
+`docs/presentation/campus-authoring.md` owns authored HQ campus and laboratory scene rules.
+
+`docs/presentation/world-map.md` owns campaign Worlds and World navigation.
 
 `docs/product/game-contract.md` owns the product campus promise.
 
@@ -28,15 +30,21 @@ A campus scene must not generate its geometry at runtime.
 
 ## Laboratory stages
 
+The laboratory is the HQ building where Research and Application work occur.
+
 The laboratory must use authored PackedScene stages.
 
-`game/scenes/lab_stage_1.tscn` owns the starting laboratory.
+`game/scenes/lab_stage_1.tscn` owns the first built laboratory.
 
 `game/scenes/lab_stage_2.tscn` owns the developed laboratory.
 
-The campus blockout must instance one laboratory stage scene.
+Month 1 must present HQ as an empty plot before the laboratory exists.
+
+The campus blockout must instance one laboratory stage scene when the laboratory exists.
 
 The campus blockout must not embed laboratory mesh nodes inline.
+
+The campus blockout must not present an Application building.
 
 Stage 2 must preserve the developed laboratory mass from the authored TSCN PoC.
 
@@ -48,7 +56,7 @@ Stage 1 must omit the research wing and the right wing.
 
 ## Site composition
 
-`game/scenes/campus_blockout.tscn` owns the Company Campus site.
+`game/scenes/campus_blockout.tscn` owns the HQ Site.
 
 The campus blockout must contain the site ground, roads, parking, paths, walls, landscape, lights, environment, and camera.
 

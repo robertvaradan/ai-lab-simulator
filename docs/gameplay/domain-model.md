@@ -96,23 +96,43 @@ A Scale Project belongs to Scale.
 
 An Application Project belongs to Applications.
 
-## Site and Site Plot
+## World, Site, and Site Plot
 
-A Site is a visible location that the Company or another Institution uses.
+A World is a selectable campaign location on the World map.
+
+The campaign Worlds are HQ, Data Center, and Government.
+
+World navigation must follow `docs/presentation/world-map.md`.
+
+A Site is a visible location inside one World.
 
 A Site Plot is a predetermined upgrade location in a Site.
 
 A Site Plot can contain one compatible Site Upgrade.
 
-A Data Center is a Site or Site Upgrade that supplies Compute Capacity.
+HQ is the Company headquarters World.
 
-A Data Center must not create a separate management game in the first implementation.
+HQ must host Research Projects and Application Projects.
+
+HQ must not present an Application as a Site building.
+
+Data Center is a separate World that supplies Compute Capacity presentation.
+
+Data Center must not appear as an HQ Site Plot.
+
+Data Center must not simulate internal Data Center operation in the first implementation.
+
+Government is a separate World for government and regulation presentation.
+
+Government must not appear as an HQ Site Plot.
 
 Third-Party Compute is Compute Capacity that an external provider supplies.
 
 Third-Party Compute must have a higher ongoing cost than equivalent owned capacity.
 
 Third-Party Compute can provide capacity before the Company owns a Data Center.
+
+Third-Party Compute presentation must use the Data Center World.
 
 ## Competitor
 
