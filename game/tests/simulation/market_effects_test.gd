@@ -544,16 +544,16 @@ func _event_index(trace: SimulationTrace, event_id: StringName) -> int:
 
 func _revenue_payload_int(trace: SimulationTrace, key: StringName) -> int:
 	var payload: Dictionary[StringName, Variant] = _revenue_payload(trace)
-	if payload.is_empty():
+	if payload.is_empty() or not payload.has(key):
 		return -1
-	return int(payload.get(key, -1))
+	return str(payload[key]).to_int()
 
 
 func _revenue_payload_name(trace: SimulationTrace, key: StringName) -> StringName:
 	var payload: Dictionary[StringName, Variant] = _revenue_payload(trace)
-	if payload.is_empty():
+	if payload.is_empty() or not payload.has(key):
 		return &""
-	return StringName(str(payload.get(key, "")))
+	return StringName(str(payload[key]))
 
 
 func _revenue_payload(trace: SimulationTrace) -> Dictionary[StringName, Variant]:
