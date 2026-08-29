@@ -10,7 +10,7 @@ const STATE_NAMES: Array[StringName] = [&"growth", &"overload", &"scrutiny"]
 const WORKGROUP_SIZE := Vector2i(8, 8)
 const DEFAULT_CAMERA := Vector3(0.78, 0.62, 8.1)
 
-@export var output_size := Vector2i(640, 360)
+@export var output_size: Vector2i = Vector2i(640, 360)
 
 var output_texture := Texture2DRD.new()
 
@@ -28,11 +28,11 @@ var _elapsed_seconds := 0.0
 
 
 func _ready() -> void:
-	if output_size.x <= 0 or output_size.y <= 0:
-		_report_failure("SDF output dimensions must be positive; received %s." % output_size)
-		return
-	if output_size.x % WORKGROUP_SIZE.x != 0 or output_size.y % WORKGROUP_SIZE.y != 0:
-		_report_failure("SDF output dimensions %s must be divisible by workgroup size %s." % [output_size, WORKGROUP_SIZE])
+	if not _is_valid_output_size(output_size):
+		_report_failure(
+			"SDF output dimensions %s must be positive and divisible by workgroup size %s."
+			% [output_size, WORKGROUP_SIZE]
+		)
 		return
 	RenderingServer.call_on_render_thread(_initialize_renderer)
 
@@ -66,6 +66,24 @@ func request_render() -> void:
 	_dirty = true
 
 
+func set_output_size(size: Vector2i) -> void:
+	if size == output_size:
+		return
+	if not _is_valid_output_size(size):
+		_report_failure(
+			"SDF output dimensions %s must be positive and divisible by workgroup size %s."
+			% [size, WORKGROUP_SIZE]
+		)
+		return
+	output_size = size
+	if not _initialized or _failed:
+		return
+	if _published:
+		output_texture.texture_rd_rid = RID()
+		_published = false
+	RenderingServer.call_on_render_thread(_rebuild_output)
+
+
 func _initialize_renderer() -> void:
 	_rd = RenderingServer.get_rendering_device()
 	if _rd == null:
@@ -82,6 +100,42 @@ func _initialize_renderer() -> void:
 		call_deferred("_report_failure", "Godot could not create the SDF compute pipeline RID.")
 		return
 
+	if not _create_output_targets():
+		return
+
+	_initialized = true
+	print("SDF_RENDERER_INITIALIZED api=RenderingDevice resolution=%dx%d workgroup=%dx%d shader=%s" % [
+		output_size.x,
+		output_size.y,
+		WORKGROUP_SIZE.x,
+		WORKGROUP_SIZE.y,
+		SHADER_RESOURCE.resource_path,
+	])
+
+
+func _rebuild_output() -> void:
+	if _rd == null or _failed:
+		return
+	_initialized = false
+	if _uniform_set_rid.is_valid():
+		_rd.free_rid(_uniform_set_rid)
+		_uniform_set_rid = RID()
+	if _output_rid.is_valid():
+		_rd.free_rid(_output_rid)
+		_output_rid = RID()
+	if not _create_output_targets():
+		return
+	_initialized = true
+	_dirty = true
+	print("SDF_RENDERER_RESIZED api=RenderingDevice resolution=%dx%d workgroup=%dx%d" % [
+		output_size.x,
+		output_size.y,
+		WORKGROUP_SIZE.x,
+		WORKGROUP_SIZE.y,
+	])
+
+
+func _create_output_targets() -> bool:
 	var texture_format := RDTextureFormat.new()
 	texture_format.texture_type = RenderingDevice.TEXTURE_TYPE_2D
 	texture_format.format = RenderingDevice.DATA_FORMAT_R8G8B8A8_UNORM
@@ -98,7 +152,7 @@ func _initialize_renderer() -> void:
 	_output_rid = _rd.texture_create(texture_format, texture_view, [])
 	if not _output_rid.is_valid():
 		call_deferred("_report_failure", "Godot could not create the SDF output texture RID.")
-		return
+		return false
 
 	var output_uniform := RDUniform.new()
 	output_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_IMAGE
@@ -107,16 +161,16 @@ func _initialize_renderer() -> void:
 	_uniform_set_rid = _rd.uniform_set_create([output_uniform], _shader_rid, 0)
 	if not _uniform_set_rid.is_valid():
 		call_deferred("_report_failure", "Godot could not create the SDF output uniform set RID.")
-		return
+		return false
+	return true
 
-	_initialized = true
-	print("SDF_RENDERER_INITIALIZED api=RenderingDevice resolution=%dx%d workgroup=%dx%d shader=%s" % [
-		output_size.x,
-		output_size.y,
-		WORKGROUP_SIZE.x,
-		WORKGROUP_SIZE.y,
-		SHADER_RESOURCE.resource_path,
-	])
+
+func _is_valid_output_size(size: Vector2i) -> bool:
+	if size.x <= 0 or size.y <= 0:
+		return false
+	if size.x % WORKGROUP_SIZE.x != 0 or size.y % WORKGROUP_SIZE.y != 0:
+		return false
+	return true
 
 
 func _dispatch(state_index: int, elapsed_seconds: float) -> void:

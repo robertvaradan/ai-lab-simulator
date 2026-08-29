@@ -43,8 +43,12 @@ func _verify_scenes() -> void:
 
 func _verify_sdf_contract() -> void:
 	_expect(
-		SdfCampusPresenter.OUTPUT_SIZE == Vector2i(1920, 1080),
-		"The campaign SDF output size is not 1920x1080."
+		SdfCampusPresenter.align_output_size(Vector2i(1920, 1080)) == Vector2i(1920, 1080),
+		"A workgroup-aligned Window size must stay unchanged."
+	)
+	_expect(
+		SdfCampusPresenter.align_output_size(Vector2i(1513, 980)) == Vector2i(1512, 976),
+		"The campaign SDF size must reduce to a workgroup multiple."
 	)
 	var starting: SimulationLabSessionResult = SimulationLabSession.create_marketing_scenario()
 	_expect(starting.succeeded(), "The starting laboratory session did not start.")

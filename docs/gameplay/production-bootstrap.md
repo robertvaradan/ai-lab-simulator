@@ -34,7 +34,15 @@ The campaign host must load the Marketing Scenario before it presents Path Selec
 
 The campaign world view must use `SdfRenderer` and `campus_sdf.glsl`.
 
-The campaign SDF output size must be 1920 by 1080.
+The campaign SDF output size must match the current Window size.
+
+The output size must be the Window size reduced to a multiple of the compute workgroup size.
+
+The presenter must rebuild the SDF output when the Window size changes.
+
+The presenter must disable Window content scale while the campaign is active.
+
+The presenter must restore the previous content-scale mode when the campaign exits.
 
 The campaign host must not instance `campus_blockout.tscn`.
 
