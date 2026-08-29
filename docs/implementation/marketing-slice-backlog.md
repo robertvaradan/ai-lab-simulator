@@ -332,7 +332,7 @@ Verification:
 
 ### MS2-01: Implement the minimal Simulation Laboratory
 
-Status: `OPEN`
+Status: `DONE`
 
 Dependencies: `MS1-10`.
 
