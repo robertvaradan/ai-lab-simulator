@@ -399,7 +399,7 @@ Verification:
 
 ### MS3-01: Connect the production game to the Simulation Core
 
-Status: `OPEN`
+Status: `DONE`
 
 Dependencies: `MS1-10`.
 
@@ -421,7 +421,7 @@ Verification:
 
 ### MS3-02: Implement the representative management interface
 
-Status: `BLOCKED`
+Status: `OPEN`
 
 Dependencies: `MS3-01`.
 
@@ -443,7 +443,7 @@ Verification:
 
 ### MS3-03: Implement representative world states
 
-Status: `BLOCKED`
+Status: `OPEN`
 
 Dependencies: `MS3-01`.
 
