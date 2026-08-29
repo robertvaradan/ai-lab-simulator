@@ -188,6 +188,10 @@ func get_compiled_graph() -> CompiledRuleGraph:
 	return _compiled_graph
 
 
+func get_content_registry() -> SimulationContentRegistry:
+	return _content_registry
+
+
 func validate_plan(state: GameState, plan: Plan) -> PlanValidationResult:
 	var result: PlanValidationResult = PlanValidationResult.new()
 	var input_validation: GameStateValidationResult = _validate_state(state)
@@ -367,6 +371,8 @@ func _apply_month_step(
 		random_seed: int
 	) -> Array[SimulationDiagnostic]:
 	var before_month_index: int = candidate_state.calendar.current_month_step_index
+	var previous_cash_balance_musd: int = candidate_state.cash_ledger.calculate_balance_musd()
+	var trace_start_index: int = trace.get_records().size()
 	var rule_diagnostics: Array[SimulationDiagnostic] = _evaluate_compiled_rules(
 		candidate_state,
 		trace,
@@ -394,7 +400,15 @@ func _apply_month_step(
 				"Month Step %d did not create a Quarter Boundary Attention Event." % after_month_index
 			),
 		]
-	return []
+	return SimulationInvariantChecker.check_after_month_step(
+		candidate_state,
+		trace,
+		_compiled_graph.ordered_rules,
+		_content_registry,
+		before_month_index,
+		previous_cash_balance_musd,
+		trace_start_index
+	)
 
 
 func _month_step_success_result(

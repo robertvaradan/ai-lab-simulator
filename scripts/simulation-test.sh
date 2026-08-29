@@ -29,8 +29,9 @@ PROJECT_TEST="$GAME_ROOT/tests/simulation/project_lifecycle_test.gd"
 COMPETITOR_TEST="$GAME_ROOT/tests/simulation/competitor_release_test.gd"
 MARKET_EFFECTS_TEST="$GAME_ROOT/tests/simulation/market_effects_test.gd"
 QUARTERLY_REPORT_TEST="$GAME_ROOT/tests/simulation/quarterly_report_test.gd"
+INVARIANTS_REPLAY_TEST="$GAME_ROOT/tests/simulation/invariants_replay_test.gd"
 
-for test_script in "$STATE_TEST" "$PUBLICATION_TEST" "$CASH_LEDGER_TEST" "$SIMULATION_CORE_TEST" "$PLAN_COMMITMENT_TEST" "$MONTH_STEP_TEST" "$PROJECT_TEST" "$COMPETITOR_TEST" "$MARKET_EFFECTS_TEST" "$QUARTERLY_REPORT_TEST"; do
+for test_script in "$STATE_TEST" "$PUBLICATION_TEST" "$CASH_LEDGER_TEST" "$SIMULATION_CORE_TEST" "$PLAN_COMMITMENT_TEST" "$MONTH_STEP_TEST" "$PROJECT_TEST" "$COMPETITOR_TEST" "$MARKET_EFFECTS_TEST" "$QUARTERLY_REPORT_TEST" "$INVARIANTS_REPLAY_TEST"; do
 	if [[ ! -f "$test_script" ]]; then
 		echo "Required Simulation Core test script is missing: $test_script" >&2
 		exit 1
@@ -46,7 +47,7 @@ report_if_script_error() {
 	fi
 }
 
-echo '[1/11] Importing the Godot 4.7 project'
+echo '[1/12] Importing the Godot 4.7 project'
 set +e
 IMPORT_OUTPUT="$("$GODOT_BIN" --headless --editor --path "$GAME_ROOT" --import --quit 2>&1)"
 IMPORT_CODE=$?
@@ -79,34 +80,37 @@ invoke_simulation_test() {
 	fi
 }
 
-echo '[2/11] Running Game State and snapshot tests'
+echo '[2/12] Running Game State and snapshot tests'
 invoke_simulation_test 'res://tests/simulation/game_state_test.gd' 'GAME_STATE_TEST_SUCCESS'
 
-echo '[3/11] Running committed Game State publication tests'
+echo '[3/12] Running committed Game State publication tests'
 invoke_simulation_test 'res://tests/simulation/game_state_publication_test.gd' 'GAME_STATE_PUBLICATION_TEST_SUCCESS'
 
-echo '[4/11] Running Cash Ledger tests'
+echo '[4/12] Running Cash Ledger tests'
 invoke_simulation_test 'res://tests/simulation/cash_ledger_test.gd' 'CASH_LEDGER_TEST_SUCCESS'
 
-echo '[5/11] Running Rule registry, Simulation Context, and Simulation Core tests'
+echo '[5/12] Running Rule registry, Simulation Context, and Simulation Core tests'
 invoke_simulation_test 'res://tests/simulation/simulation_core_test.gd' 'SIMULATION_CORE_TEST_SUCCESS'
 
-echo '[6/11] Running Plan validation and commitment tests'
+echo '[6/12] Running Plan validation and commitment tests'
 invoke_simulation_test 'res://tests/simulation/plan_commitment_test.gd' 'PLAN_COMMITMENT_TEST_SUCCESS'
 
-echo '[7/11] Running Month Step and Quarter Boundary tests'
+echo '[7/12] Running Month Step and Quarter Boundary tests'
 invoke_simulation_test 'res://tests/simulation/month_step_test.gd' 'MONTH_STEP_TEST_SUCCESS'
 
-echo '[8/11] Running Marketing Scenario Project tests'
+echo '[8/12] Running Marketing Scenario Project tests'
 invoke_simulation_test 'res://tests/simulation/project_lifecycle_test.gd' 'PROJECT_LIFECYCLE_TEST_SUCCESS'
 
-echo '[9/11] Running Competitor forecast and release tests'
+echo '[9/12] Running Competitor forecast and release tests'
 invoke_simulation_test 'res://tests/simulation/competitor_release_test.gd' 'COMPETITOR_RELEASE_TEST_SUCCESS'
 
-echo '[10/11] Running Market effects and Model position tests'
+echo '[10/12] Running Market effects and Model position tests'
 invoke_simulation_test 'res://tests/simulation/market_effects_test.gd' 'MARKET_EFFECTS_TEST_SUCCESS'
 
-echo '[11/11] Running Quarterly Report tests'
+echo '[11/12] Running Quarterly Report tests'
 invoke_simulation_test 'res://tests/simulation/quarterly_report_test.gd' 'QUARTERLY_REPORT_TEST_SUCCESS'
+
+echo '[12/12] Running Simulation Invariant and replay tests'
+invoke_simulation_test 'res://tests/simulation/invariants_replay_test.gd' 'INVARIANTS_REPLAY_TEST_SUCCESS'
 
 echo "SIMULATION_TEST_COMMAND_SUCCESS godot=$GODOT_VERSION runtime=standard_non_dotnet"
