@@ -1,7 +1,15 @@
 class_name DecisionHostView
 extends Control
 
-const PANEL_WIDTH_PX: float = 520.0
+const TITLE_FONT_SIZE: int = 32
+const HEADER_FONT_SIZE: int = 22
+const SECTION_FONT_SIZE: int = 20
+const BODY_FONT_SIZE: int = 18
+const LIST_FONT_SIZE: int = 16
+const TEXT_COLOR: Color = Color(0.96, 0.96, 0.94, 1.0)
+const MUTED_TEXT_COLOR: Color = Color(0.78, 0.80, 0.82, 1.0)
+const PANEL_COLOR: Color = Color(0.16, 0.17, 0.20, 1.0)
+const BACKGROUND_COLOR: Color = Color(0.09, 0.10, 0.12, 1.0)
 
 var _host: DecisionHost
 var _project_layout: VBoxContainer
@@ -14,6 +22,9 @@ var _diagnostics_label: Label
 var _ledger_label: Label
 var _projects_label: Label
 var _rules_label: Label
+var _rules_list: ItemList
+var _ledger_list: ItemList
+var _remaining_list: ItemList
 var _advance_button: Button
 var _project_checks: Dictionary[StringName, CheckBox] = {}
 var _model_name_edits: Dictionary[StringName, LineEdit] = {}
@@ -32,6 +43,7 @@ func bind_host(host: DecisionHost) -> void:
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	set_anchors_preset(Control.PRESET_FULL_RECT)
+	_apply_theme()
 	_build_chrome()
 
 
@@ -125,7 +137,7 @@ func present_state(
 	var cash_balance_musd: int = 0
 	if state.cash_ledger != null:
 		cash_balance_musd = state.cash_ledger.calculate_balance_musd()
-	_state_label.text = "Month Step %d\nQuarter %d\nCash %d MUSD" % [
+	_state_label.text = "Month Step %d    Quarter %d    Cash %d MUSD" % [
 		state.calendar.current_month_step_index,
 		state.calendar.current_quarter_index,
 		cash_balance_musd,
@@ -143,6 +155,9 @@ func present_state(
 	_ledger_label.text = ledger_text
 	_projects_label.text = project_text
 	_rules_label.text = rules_text
+	_fill_list(_rules_list, rules_text)
+	_fill_list(_ledger_list, ledger_text)
+	_fill_list(_remaining_list, project_text)
 	_last_inspect_text = "%s\n%s\n%s" % [rules_text, ledger_text, project_text]
 	if last_result == null:
 		_status_label.text = "Ready."
@@ -159,76 +174,88 @@ func present_state(
 
 
 func _build_chrome() -> void:
-	var panel: Panel = Panel.new()
-	panel.name = "DecisionPanel"
-	panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	panel.set_anchors_preset(Control.PRESET_LEFT_WIDE)
-	panel.offset_left = 16.0
-	panel.offset_top = 16.0
-	panel.offset_right = PANEL_WIDTH_PX
-	panel.offset_bottom = -16.0
-	add_child(panel)
-	var outer: VBoxContainer = VBoxContainer.new()
-	outer.set_anchors_preset(Control.PRESET_FULL_RECT)
-	outer.offset_left = 16.0
-	outer.offset_top = 16.0
-	outer.offset_right = -16.0
-	outer.offset_bottom = -16.0
-	outer.add_theme_constant_override("separation", 10)
-	panel.add_child(outer)
-	var scroll: ScrollContainer = ScrollContainer.new()
-	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	outer.add_child(scroll)
-	var layout: VBoxContainer = VBoxContainer.new()
-	layout.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	layout.add_theme_constant_override("separation", 10)
-	scroll.add_child(layout)
+	var background: ColorRect = ColorRect.new()
+	background.name = "Background"
+	background.color = BACKGROUND_COLOR
+	background.set_anchors_preset(Control.PRESET_FULL_RECT)
+	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(background)
+	var margin: MarginContainer = MarginContainer.new()
+	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	margin.add_theme_constant_override("margin_left", 24)
+	margin.add_theme_constant_override("margin_top", 20)
+	margin.add_theme_constant_override("margin_right", 24)
+	margin.add_theme_constant_override("margin_bottom", 20)
+	add_child(margin)
+	var root_layout: VBoxContainer = VBoxContainer.new()
+	root_layout.add_theme_constant_override("separation", 16)
+	margin.add_child(root_layout)
+	var header: VBoxContainer = VBoxContainer.new()
+	header.add_theme_constant_override("separation", 6)
+	root_layout.add_child(header)
 	var title: Label = Label.new()
 	title.text = "Decision Host"
-	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	layout.add_child(title)
+	_style_label(title, TITLE_FONT_SIZE, TEXT_COLOR)
+	header.add_child(title)
 	_status_label = Label.new()
 	_status_label.name = "StatusLabel"
-	_status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	layout.add_child(_status_label)
+	_style_label(_status_label, HEADER_FONT_SIZE, TEXT_COLOR)
+	header.add_child(_status_label)
 	_state_label = Label.new()
 	_state_label.name = "StateLabel"
-	_state_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	layout.add_child(_state_label)
-	var project_title: Label = Label.new()
-	project_title.text = "Projects"
-	layout.add_child(project_title)
+	_style_label(_state_label, HEADER_FONT_SIZE, MUTED_TEXT_COLOR)
+	header.add_child(_state_label)
+	var columns: HBoxContainer = HBoxContainer.new()
+	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	columns.add_theme_constant_override("separation", 16)
+	root_layout.add_child(columns)
+	var plan_column: VBoxContainer = _make_column("PlanColumn")
+	plan_column.add_child(_section_title("Projects"))
 	_project_layout = VBoxContainer.new()
 	_project_layout.name = "ProjectLayout"
-	_project_layout.add_theme_constant_override("separation", 8)
-	layout.add_child(_project_layout)
-	layout.add_child(_section_title("Projected Evaluation Ranges"))
-	_forecast_label = _make_body_label("ForecastLabel")
-	layout.add_child(_forecast_label)
-	layout.add_child(_section_title("Attention Events"))
-	_attention_label = _make_body_label("AttentionLabel")
-	layout.add_child(_attention_label)
-	layout.add_child(_section_title("Quarterly Report"))
-	_report_label = _make_body_label("ReportLabel")
-	layout.add_child(_report_label)
-	layout.add_child(_section_title("Advance Diagnostics"))
-	_diagnostics_label = _make_body_label("DiagnosticsLabel")
-	layout.add_child(_diagnostics_label)
-	layout.add_child(_section_title("Rule Evaluations"))
-	_rules_label = _make_body_label("RulesLabel")
-	layout.add_child(_rules_label)
-	layout.add_child(_section_title("Cash Ledger"))
-	_ledger_label = _make_body_label("LedgerLabel")
-	layout.add_child(_ledger_label)
-	layout.add_child(_section_title("Project Remaining Duration"))
-	_projects_label = _make_body_label("ProjectRemainingLabel")
-	layout.add_child(_projects_label)
+	_project_layout.add_theme_constant_override("separation", 12)
+	plan_column.add_child(_project_layout)
 	_advance_button = Button.new()
 	_advance_button.name = "AdvanceButton"
 	_advance_button.text = "Advance"
+	_advance_button.custom_minimum_size = Vector2(0.0, 52.0)
 	_advance_button.pressed.connect(_on_advance_pressed)
-	outer.add_child(_advance_button)
+	plan_column.add_child(_advance_button)
+	columns.add_child(_wrap_column(plan_column))
+	var result_column: VBoxContainer = _make_column("ResultColumn")
+	result_column.add_child(_section_title("Projected Evaluation Ranges"))
+	_forecast_label = _make_body_label("ForecastLabel")
+	result_column.add_child(_forecast_label)
+	result_column.add_child(_section_title("Attention Events"))
+	_attention_label = _make_body_label("AttentionLabel")
+	result_column.add_child(_attention_label)
+	result_column.add_child(_section_title("Quarterly Report"))
+	_report_label = _make_body_label("ReportLabel")
+	result_column.add_child(_report_label)
+	result_column.add_child(_section_title("Advance Diagnostics"))
+	_diagnostics_label = _make_body_label("DiagnosticsLabel")
+	result_column.add_child(_diagnostics_label)
+	columns.add_child(_wrap_column(result_column))
+	var inspect_column: VBoxContainer = _make_column("InspectColumn")
+	inspect_column.add_child(_section_title("Rule Evaluations"))
+	_rules_label = _make_body_label("RulesLabel")
+	_rules_label.visible = false
+	inspect_column.add_child(_rules_label)
+	_rules_list = _make_item_list("RulesList")
+	inspect_column.add_child(_rules_list)
+	inspect_column.add_child(_section_title("Cash Ledger"))
+	_ledger_label = _make_body_label("LedgerLabel")
+	_ledger_label.visible = false
+	inspect_column.add_child(_ledger_label)
+	_ledger_list = _make_item_list("LedgerList")
+	inspect_column.add_child(_ledger_list)
+	inspect_column.add_child(_section_title("Project Remaining Duration"))
+	_projects_label = _make_body_label("ProjectRemainingLabel")
+	_projects_label.visible = false
+	inspect_column.add_child(_projects_label)
+	_remaining_list = _make_item_list("RemainingList")
+	inspect_column.add_child(_remaining_list)
+	columns.add_child(_wrap_column(inspect_column))
 
 
 func _rebuild_project_controls() -> void:
@@ -250,7 +277,7 @@ func _rebuild_project_controls() -> void:
 		row.add_theme_constant_override("separation", 4)
 		var check: CheckBox = CheckBox.new()
 		check.name = "%sCheck" % String(project_id)
-		check.text = String(project_id)
+		check.text = _project_display_name(project_id)
 		row.add_child(check)
 		_project_checks[project_id] = check
 		if definition.required_payload_keys.has(DecisionHostCatalog.VISIBLE_MODEL_DISPLAY_NAME):
@@ -396,12 +423,12 @@ func _format_ledger(state: GameState) -> String:
 		if transaction == null:
 			continue
 		lines.append(
-			"%s month=%d %s %d MUSD"
+			"Month %d    %s    %d MUSD    %s"
 			% [
-				String(transaction.stable_id),
 				transaction.month_step_index,
-				String(transaction.category_id),
+				_short_id(transaction.category_id),
 				transaction.amount_musd,
+				String(transaction.stable_id),
 			]
 		)
 	if lines.is_empty():
@@ -421,8 +448,8 @@ func _format_project_remaining(state: GameState) -> String:
 		if project == null:
 			continue
 		lines.append(
-			"%s remaining_month_steps=%d"
-			% [String(project_id), project.remaining_month_steps]
+			"%s    remaining_month_steps=%d"
+			% [_project_display_name(project_id), project.remaining_month_steps]
 		)
 	if lines.is_empty():
 		return "None."
@@ -441,7 +468,7 @@ func _format_rule_statuses(traces: Array[SimulationTrace]) -> String:
 				continue
 			var rule_record: RuleEvaluationTraceRecord = record
 			lines.append(
-				"%s %s" % [String(rule_record.rule_id), _rule_status_text(rule_record.status)]
+				"%s    %s" % [String(rule_record.rule_id), _rule_status_text(rule_record.status)]
 			)
 	if lines.is_empty():
 		return "None."
@@ -456,14 +483,102 @@ func _rule_status_text(status: SimulationRuleEvaluation.Status) -> String:
 	return "failed"
 
 
+func _apply_theme() -> void:
+	var host_theme: Theme = Theme.new()
+	host_theme.set_font_size("font_size", "Label", BODY_FONT_SIZE)
+	host_theme.set_font_size("font_size", "CheckBox", BODY_FONT_SIZE)
+	host_theme.set_font_size("font_size", "Button", HEADER_FONT_SIZE)
+	host_theme.set_font_size("font_size", "LineEdit", BODY_FONT_SIZE)
+	host_theme.set_font_size("font_size", "ItemList", LIST_FONT_SIZE)
+	host_theme.set_color("font_color", "Label", TEXT_COLOR)
+	host_theme.set_color("font_color", "CheckBox", TEXT_COLOR)
+	host_theme.set_color("font_hover_color", "CheckBox", Color(1.0, 1.0, 1.0, 1.0))
+	host_theme.set_color("font_pressed_color", "CheckBox", TEXT_COLOR)
+	host_theme.set_color("font_color", "ItemList", TEXT_COLOR)
+	theme = host_theme
+
+
+func _style_label(label: Label, font_size: int, color: Color) -> void:
+	label.add_theme_font_size_override("font_size", font_size)
+	label.add_theme_color_override("font_color", color)
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+
+
+func _make_column(column_name: String) -> VBoxContainer:
+	var column: VBoxContainer = VBoxContainer.new()
+	column.name = column_name
+	column.add_theme_constant_override("separation", 10)
+	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	column.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	return column
+
+
+func _wrap_column(column: VBoxContainer) -> PanelContainer:
+	var panel: PanelContainer = PanelContainer.new()
+	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var style: StyleBoxFlat = StyleBoxFlat.new()
+	style.bg_color = PANEL_COLOR
+	style.content_margin_left = 16.0
+	style.content_margin_top = 16.0
+	style.content_margin_right = 16.0
+	style.content_margin_bottom = 16.0
+	panel.add_theme_stylebox_override("panel", style)
+	var scroll: ScrollContainer = ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(column)
+	panel.add_child(scroll)
+	return panel
+
+
+func _make_item_list(list_name: String) -> ItemList:
+	var list: ItemList = ItemList.new()
+	list.name = list_name
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	list.custom_minimum_size = Vector2(0.0, 160.0)
+	list.auto_height = false
+	list.select_mode = ItemList.SELECT_SINGLE
+	return list
+
+
+func _fill_list(list: ItemList, text: String) -> void:
+	if list == null:
+		return
+	list.clear()
+	if text.is_empty():
+		return
+	for line: String in text.split("\n"):
+		list.add_item(line, null, false)
+
+
+func _project_display_name(project_id: StringName) -> String:
+	var text: String = String(project_id)
+	if text.begins_with("project."):
+		text = text.substr(8)
+	return text.replace("_", " ").replace(".", " · ")
+
+
+func _short_id(identifier: StringName) -> String:
+	var text: String = String(identifier)
+	var last_dot: int = text.rfind(".")
+	if last_dot < 0:
+		return text
+	return text.substr(last_dot + 1).replace("_", " ")
+
+
 func _section_title(text: String) -> Label:
 	var title: Label = Label.new()
 	title.text = text
+	_style_label(title, SECTION_FONT_SIZE, TEXT_COLOR)
 	return title
 
 
 func _make_body_label(node_name: String) -> Label:
 	var body: Label = Label.new()
 	body.name = node_name
-	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_style_label(body, BODY_FONT_SIZE, MUTED_TEXT_COLOR)
 	return body

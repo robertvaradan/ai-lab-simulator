@@ -52,6 +52,7 @@ func _parse_arguments() -> void:
 
 func _validate_viewport() -> void:
 	var window: Window = get_window()
+	window.mode = Window.MODE_WINDOWED
 	window.size = OUTPUT_RESOLUTION
 	get_viewport().msaa_3d = Viewport.MSAA_4X
 	if window.size != OUTPUT_RESOLUTION:

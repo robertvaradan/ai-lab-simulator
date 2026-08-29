@@ -71,6 +71,7 @@ func _parse_arguments() -> void:
 
 func _validate_viewport_contract() -> void:
 	var window: Window = get_window()
+	window.mode = Window.MODE_WINDOWED
 	if window.size != OUTPUT_RESOLUTION:
 		window.size = OUTPUT_RESOLUTION
 	if window.size == OUTPUT_RESOLUTION:
