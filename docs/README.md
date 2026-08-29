@@ -23,6 +23,7 @@ This directory contains the canonical project specifications.
 - [Progression](gameplay/progression.md) owns strategic domains, unlocks, and competitor pressure.
 - [Difficulty and loss](gameplay/difficulty-and-loss.md) owns difficulty profiles and campaign loss.
 - [Production bootstrap](gameplay/production-bootstrap.md) owns the production entry flow and the first playable campaign shell.
+- [Playthrough backlog](gameplay/playthrough-backlog.md) records defects found during production playthrough.
 
 ## Architecture specifications
 
