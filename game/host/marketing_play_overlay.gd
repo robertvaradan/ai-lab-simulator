@@ -146,13 +146,18 @@ func _build_panel() -> void:
 	panel.offset_right = PANEL_WIDTH_PX
 	panel.offset_bottom = -16.0
 	add_child(panel)
+	var outer: VBoxContainer = VBoxContainer.new()
+	outer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	outer.offset_left = 16.0
+	outer.offset_top = 16.0
+	outer.offset_right = -16.0
+	outer.offset_bottom = -16.0
+	outer.add_theme_constant_override("separation", 10)
+	panel.add_child(outer)
 	var scroll: ScrollContainer = ScrollContainer.new()
-	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
-	scroll.offset_left = 16.0
-	scroll.offset_top = 16.0
-	scroll.offset_right = -16.0
-	scroll.offset_bottom = -16.0
-	panel.add_child(scroll)
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	outer.add_child(scroll)
 	var layout: VBoxContainer = VBoxContainer.new()
 	layout.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	layout.add_theme_constant_override("separation", 10)
@@ -219,7 +224,7 @@ func _build_panel() -> void:
 	_advance_button.name = "AdvanceButton"
 	_advance_button.text = "Advance"
 	_advance_button.pressed.connect(_on_advance_pressed)
-	layout.add_child(_advance_button)
+	outer.add_child(_advance_button)
 
 
 func _on_advance_pressed() -> void:

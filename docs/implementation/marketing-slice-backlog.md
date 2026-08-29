@@ -443,7 +443,7 @@ Verification:
 
 ### MS3-03: Implement representative world states
 
-Status: `OPEN`
+Status: `DONE`
 
 Dependencies: `MS3-01`.
 

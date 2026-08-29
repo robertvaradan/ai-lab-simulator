@@ -8,6 +8,7 @@ var _core: SimulationCore
 var _game_state_service: GameStateService
 var _advance_action: SimulationAdvanceAction
 var _overlay: MarketingPlayOverlay
+var _presenter: CampusVisualPresenter
 var _last_result: SimulationOperationResult
 
 
@@ -56,6 +57,7 @@ func _ready() -> void:
 	_overlay = get_node_or_null("Overlay") as MarketingPlayOverlay
 	if _overlay != null:
 		_overlay.bind_host(self)
+	_presenter = get_node_or_null("CampusVisualPresenter") as CampusVisualPresenter
 	refresh_presentation()
 
 
@@ -77,6 +79,10 @@ func get_advance_action() -> SimulationAdvanceAction:
 
 func get_overlay() -> MarketingPlayOverlay:
 	return _overlay
+
+
+func get_presenter() -> CampusVisualPresenter:
+	return _presenter
 
 
 func get_last_result() -> SimulationOperationResult:
@@ -102,6 +108,8 @@ func advance_from_overlay() -> SimulationOperationResult:
 
 
 func refresh_presentation() -> void:
-	if _overlay == null:
-		return
-	_overlay.present_state(get_current_state(), _last_result, _definition)
+	var state: GameState = get_current_state()
+	if _overlay != null:
+		_overlay.present_state(state, _last_result, _definition)
+	if _presenter != null:
+		_presenter.present_state(state)
