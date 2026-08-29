@@ -14,6 +14,7 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 
 - Use the standard, non-.NET Godot 4.7.2 build from the repository-root `AGENTS.md` contract and keep `project.godot` directly in this folder.
 - `scenes/sdf_render_harness.tscn` is the normal runnable main scene and the automated capture harness.
+- `scenes/marketing_play.tscn` is the Marketing Slice production play scene. It instances the campus blockout as a sibling of the management overlay. Do not attach a script to the `CampusBlockout` root.
 - The primary render proof is a compute-shader SDF pipeline. Forward+ and the main `RenderingDevice` are required; missing compute support is fatal.
 - Keep renderer implementation under `renderer/sdf`. Keep HUD, input, capture orchestration, and gameplay state outside that directory.
 - Keep the gameplay isometric camera under `camera`.
