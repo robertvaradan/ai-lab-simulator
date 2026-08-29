@@ -52,6 +52,7 @@ static func validate(
 	_validate_pending_command_batch(state.pending_command_batch, known_content_ids, result)
 	_validate_attention_events(state.attention_events, known_content_ids, result)
 	_validate_notifications(state.notifications, known_content_ids, result)
+	_validate_quarterly_reports(state, known_content_ids, result)
 	_validate_random_generator(state.random_generator_state, result)
 	_validate_runtime_id_counters(state.runtime_id_counters, result)
 	_validate_plan_commitment_state(state, result)
@@ -430,6 +431,14 @@ static func _validate_notifications(
 				"Notification %s source entity identifier" % notification.stable_id,
 				result
 			)
+
+
+static func _validate_quarterly_reports(
+		state: GameState,
+		known_content_ids: Dictionary[StringName, bool],
+		result: GameStateValidationResult
+	) -> void:
+	QuarterlyReportValidator.validate(state, known_content_ids, result)
 
 
 static func _validate_random_generator(

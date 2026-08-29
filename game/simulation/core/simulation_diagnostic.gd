@@ -11,6 +11,8 @@ var code: StringName
 var message: String
 var rule_id: StringName
 var state_path: StringName
+var invariant_id: StringName
+var month_step_index: int
 
 
 func _init(
@@ -18,13 +20,17 @@ func _init(
 		p_code: StringName,
 		p_message: String,
 		p_rule_id: StringName = &"",
-		p_state_path: StringName = &""
+		p_state_path: StringName = &"",
+		p_invariant_id: StringName = &"",
+		p_month_step_index: int = -1
 	) -> void:
 	severity = p_severity
 	code = p_code
 	message = p_message
 	rule_id = p_rule_id
 	state_path = p_state_path
+	invariant_id = p_invariant_id
+	month_step_index = p_month_step_index
 
 
 func to_dictionary() -> Dictionary[StringName, Variant]:
@@ -34,4 +40,6 @@ func to_dictionary() -> Dictionary[StringName, Variant]:
 		&"message": message,
 		&"rule_id": rule_id,
 		&"state_path": state_path,
+		&"invariant_id": invariant_id,
+		&"month_step_index": month_step_index,
 	}

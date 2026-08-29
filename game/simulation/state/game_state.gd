@@ -13,6 +13,7 @@ extends Resource
 @export var pending_command_batch: PendingCommandBatchState
 @export var attention_events: Array[AttentionEventState] = []
 @export var notifications: Array[NotificationState] = []
+@export var quarterly_reports: Array[QuarterlyReportState] = []
 @export var random_generator_state: RandomGeneratorState
 @export var runtime_id_counters: RuntimeIdCountersState
 

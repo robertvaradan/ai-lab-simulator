@@ -285,7 +285,7 @@ Verification:
 
 ### MS1-09: Implement the Quarterly Report
 
-Status: `OPEN`
+Status: `DONE`
 
 Dependencies: `MS1-02`, `MS1-07`, and `MS1-08`.
 
@@ -307,7 +307,7 @@ Verification:
 
 ### MS1-10: Implement Simulation Invariants and replay tests
 
-Status: `BLOCKED`
+Status: `DONE`
 
 Dependencies: `MS1-02` through `MS1-09`.
 
@@ -332,7 +332,7 @@ Verification:
 
 ### MS2-01: Implement the minimal Simulation Laboratory
 
-Status: `BLOCKED`
+Status: `DONE`
 
 Dependencies: `MS1-10`.
 
@@ -356,7 +356,7 @@ Verification:
 
 ### MS2-02: Implement the Rule Graph compiler
 
-Status: `BLOCKED`
+Status: `DONE`
 
 Dependencies: `MS1-03` and `MS1-10`.
 
@@ -377,7 +377,7 @@ Verification:
 
 ### MS2-03: Implement the Rule Graph trace view
 
-Status: `BLOCKED`
+Status: `DONE`
 
 Dependencies: `MS2-01` and `MS2-02`.
 
@@ -399,7 +399,7 @@ Verification:
 
 ### MS3-01: Connect the production game to the Simulation Core
 
-Status: `BLOCKED`
+Status: `DONE`
 
 Dependencies: `MS1-10`.
 
@@ -421,7 +421,7 @@ Verification:
 
 ### MS3-02: Implement the representative management interface
 
-Status: `BLOCKED`
+Status: `DONE`
 
 Dependencies: `MS3-01`.
 
@@ -443,7 +443,7 @@ Verification:
 
 ### MS3-03: Implement representative world states
 
-Status: `BLOCKED`
+Status: `DONE`
 
 Dependencies: `MS3-01`.
 

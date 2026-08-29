@@ -88,6 +88,20 @@ static func validate(definition: MarketingScenarioDefinition) -> GameStateValida
 		catalog
 	)
 	result.errors.append_array(state_result.errors)
+	if not definition.starting_game_state.quarterly_reports.is_empty():
+		result.add_error("The Marketing Scenario starting Game State must not contain a Quarterly Report.")
+	_validate_content_in_catalog(
+		QuarterlyReportState.KIND_OPENING,
+		"Opening Quarterly Report kind",
+		catalog,
+		result
+	)
+	_validate_content_in_catalog(
+		QuarterlyReportState.KIND_ENDING,
+		"Ending Quarterly Report kind",
+		catalog,
+		result
+	)
 	return result
 
 
