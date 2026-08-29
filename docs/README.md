@@ -22,6 +22,7 @@ This directory contains the canonical project specifications.
 - [Domain model](gameplay/domain-model.md) owns approved game terms and relationships.
 - [Progression](gameplay/progression.md) owns strategic domains, unlocks, and competitor pressure.
 - [Difficulty and loss](gameplay/difficulty-and-loss.md) owns difficulty profiles and campaign loss.
+- [Production bootstrap](gameplay/production-bootstrap.md) owns the production entry flow and the first playable campaign shell.
 
 ## Architecture specifications
 

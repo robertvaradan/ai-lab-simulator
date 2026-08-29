@@ -12,6 +12,7 @@ An implementation must not invent an answer to an open decision.
 - Define the complete Research content graph.
 - Define the complete Scale content graph.
 - Define the complete Application content graph.
+- The production bootstrap skill tree and tech tree do not close these graphs.
 - Define Model capability dimensions outside the Marketing Scenario.
 - Define full Site Plot unlock requirements.
 - Define the Compute ownership threshold for the Hyperscaler archetype.

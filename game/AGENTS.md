@@ -13,7 +13,11 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 ## Runtime and project shape
 
 - Use the standard, non-.NET Godot 4.7.2 build from the repository-root `AGENTS.md` contract and keep `project.godot` directly in this folder.
-- `scenes/sdf_render_harness.tscn` is the normal runnable main scene and the automated capture harness.
+- `scenes/init.tscn` is the default editor Run scene. It must load the Main Menu.
+- `scenes/main_menu.tscn` is the production Main Menu. Start must load the campaign scene.
+- `scenes/campaign.tscn` is the production campaign shell. It loads the Marketing Scenario, presents Path Select, then presents the campaign HUD. The world view must be `SdfRenderer` at 1920×1080. Do not instance `campus_blockout.tscn` in the campaign scene.
+- Follow `../docs/gameplay/production-bootstrap.md` for the production entry flow.
+- `scenes/sdf_render_harness.tscn` is the automated SDF capture harness. It is not the production Run scene.
 - `scenes/marketing_play.tscn` is the Marketing Slice production play scene. It instances the campus blockout as a sibling of the management overlay and the campus visual presenter. Do not attach a script to the `CampusBlockout` root.
 - The management overlay stages Research, Scale, and Coding Agent start Commands from player selection. It does not start a Project that already exists.
 - `host/campus_visual_presenter.gd` maps Simulation Core state to laboratory stage, Third-Party Compute link, and Competitor release visuals. Do not write Site Plot state from the presenter.

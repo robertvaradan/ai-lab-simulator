@@ -37,8 +37,9 @@ MARKETING_PLAY_HOST_TEST="$GAME_ROOT/tests/host/marketing_play_host_test.gd"
 MARKETING_PLAY_MANAGEMENT_TEST="$GAME_ROOT/tests/host/marketing_play_management_test.gd"
 CAMPUS_VISUAL_PRESENTER_TEST="$GAME_ROOT/tests/host/campus_visual_presenter_test.gd"
 DECISION_HOST_TEST="$GAME_ROOT/tests/tools/decision_host_test.gd"
+PRODUCTION_BOOTSTRAP_TEST="$GAME_ROOT/tests/host/production_bootstrap_test.gd"
 
-for test_script in "$STATE_TEST" "$PUBLICATION_TEST" "$CASH_LEDGER_TEST" "$SIMULATION_CORE_TEST" "$PLAN_COMMITMENT_TEST" "$MONTH_STEP_TEST" "$PROJECT_TEST" "$COMPETITOR_TEST" "$MARKET_EFFECTS_TEST" "$QUARTERLY_REPORT_TEST" "$INVARIANTS_REPLAY_TEST" "$LAB_TEST" "$RULE_GRAPH_ARTIFACT_TEST" "$RULE_GRAPH_TRACE_VIEW_TEST" "$MARKETING_PLAY_HOST_TEST" "$MARKETING_PLAY_MANAGEMENT_TEST" "$CAMPUS_VISUAL_PRESENTER_TEST" "$DECISION_HOST_TEST"; do
+for test_script in "$STATE_TEST" "$PUBLICATION_TEST" "$CASH_LEDGER_TEST" "$SIMULATION_CORE_TEST" "$PLAN_COMMITMENT_TEST" "$MONTH_STEP_TEST" "$PROJECT_TEST" "$COMPETITOR_TEST" "$MARKET_EFFECTS_TEST" "$QUARTERLY_REPORT_TEST" "$INVARIANTS_REPLAY_TEST" "$LAB_TEST" "$RULE_GRAPH_ARTIFACT_TEST" "$RULE_GRAPH_TRACE_VIEW_TEST" "$MARKETING_PLAY_HOST_TEST" "$MARKETING_PLAY_MANAGEMENT_TEST" "$CAMPUS_VISUAL_PRESENTER_TEST" "$DECISION_HOST_TEST" "$PRODUCTION_BOOTSTRAP_TEST"; do
 	if [[ ! -f "$test_script" ]]; then
 		echo "Required Simulation Core test script is missing: $test_script" >&2
 		exit 1
@@ -54,7 +55,7 @@ report_if_script_error() {
 	fi
 }
 
-echo '[1/19] Importing the Godot 4.7 project'
+echo '[1/20] Importing the Godot 4.7 project'
 set +e
 IMPORT_OUTPUT="$("$GODOT_BIN" --headless --editor --path "$GAME_ROOT" --import --quit 2>&1)"
 IMPORT_CODE=$?
@@ -87,58 +88,61 @@ invoke_simulation_test() {
 	fi
 }
 
-echo '[2/19] Running Game State and snapshot tests'
+echo '[2/20] Running Game State and snapshot tests'
 invoke_simulation_test 'res://tests/simulation/game_state_test.gd' 'GAME_STATE_TEST_SUCCESS'
 
-echo '[3/19] Running committed Game State publication tests'
+echo '[3/20] Running committed Game State publication tests'
 invoke_simulation_test 'res://tests/simulation/game_state_publication_test.gd' 'GAME_STATE_PUBLICATION_TEST_SUCCESS'
 
-echo '[4/19] Running Cash Ledger tests'
+echo '[4/20] Running Cash Ledger tests'
 invoke_simulation_test 'res://tests/simulation/cash_ledger_test.gd' 'CASH_LEDGER_TEST_SUCCESS'
 
-echo '[5/19] Running Rule registry, Simulation Context, and Simulation Core tests'
+echo '[5/20] Running Rule registry, Simulation Context, and Simulation Core tests'
 invoke_simulation_test 'res://tests/simulation/simulation_core_test.gd' 'SIMULATION_CORE_TEST_SUCCESS'
 
-echo '[6/19] Running Plan validation and commitment tests'
+echo '[6/20] Running Plan validation and commitment tests'
 invoke_simulation_test 'res://tests/simulation/plan_commitment_test.gd' 'PLAN_COMMITMENT_TEST_SUCCESS'
 
-echo '[7/19] Running Month Step and Quarter Boundary tests'
+echo '[7/20] Running Month Step and Quarter Boundary tests'
 invoke_simulation_test 'res://tests/simulation/month_step_test.gd' 'MONTH_STEP_TEST_SUCCESS'
 
-echo '[8/19] Running Marketing Scenario Project tests'
+echo '[8/20] Running Marketing Scenario Project tests'
 invoke_simulation_test 'res://tests/simulation/project_lifecycle_test.gd' 'PROJECT_LIFECYCLE_TEST_SUCCESS'
 
-echo '[9/19] Running Competitor forecast and release tests'
+echo '[9/20] Running Competitor forecast and release tests'
 invoke_simulation_test 'res://tests/simulation/competitor_release_test.gd' 'COMPETITOR_RELEASE_TEST_SUCCESS'
 
-echo '[10/19] Running Market effects and Model position tests'
+echo '[10/20] Running Market effects and Model position tests'
 invoke_simulation_test 'res://tests/simulation/market_effects_test.gd' 'MARKET_EFFECTS_TEST_SUCCESS'
 
-echo '[11/19] Running Quarterly Report tests'
+echo '[11/20] Running Quarterly Report tests'
 invoke_simulation_test 'res://tests/simulation/quarterly_report_test.gd' 'QUARTERLY_REPORT_TEST_SUCCESS'
 
-echo '[12/19] Running Simulation Invariant and replay tests'
+echo '[12/20] Running Simulation Invariant and replay tests'
 invoke_simulation_test 'res://tests/simulation/invariants_replay_test.gd' 'INVARIANTS_REPLAY_TEST_SUCCESS'
 
-echo '[13/19] Running Simulation Laboratory tests'
+echo '[13/20] Running Simulation Laboratory tests'
 invoke_simulation_test 'res://tests/tools/simulation_lab_test.gd' 'SIMULATION_LAB_TEST_SUCCESS'
 
-echo '[14/19] Running Rule Graph artifact tests'
+echo '[14/20] Running Rule Graph artifact tests'
 invoke_simulation_test 'res://tests/tools/rule_graph_artifact_test.gd' 'RULE_GRAPH_ARTIFACT_TEST_SUCCESS'
 
-echo '[15/19] Running Rule Graph trace view tests'
+echo '[15/20] Running Rule Graph trace view tests'
 invoke_simulation_test 'res://tests/tools/rule_graph_trace_view_test.gd' 'RULE_GRAPH_TRACE_VIEW_TEST_SUCCESS'
 
-echo '[16/19] Running production Marketing play host tests'
+echo '[16/20] Running production Marketing play host tests'
 invoke_simulation_test 'res://tests/host/marketing_play_host_test.gd' 'MARKETING_PLAY_HOST_TEST_SUCCESS'
 
-echo '[17/19] Running production Marketing play management tests'
+echo '[17/20] Running production Marketing play management tests'
 invoke_simulation_test 'res://tests/host/marketing_play_management_test.gd' 'MARKETING_PLAY_MANAGEMENT_TEST_SUCCESS'
 
-echo '[18/19] Running campus visual presenter tests'
+echo '[18/20] Running campus visual presenter tests'
 invoke_simulation_test 'res://tests/host/campus_visual_presenter_test.gd' 'CAMPUS_VISUAL_PRESENTER_TEST_SUCCESS'
 
-echo '[19/19] Running Decision Host tests'
+echo '[19/20] Running Decision Host tests'
 invoke_simulation_test 'res://tests/tools/decision_host_test.gd' 'DECISION_HOST_TEST_SUCCESS'
+
+echo '[20/20] Running production bootstrap tests'
+invoke_simulation_test 'res://tests/host/production_bootstrap_test.gd' 'PRODUCTION_BOOTSTRAP_TEST_SUCCESS'
 
 echo "SIMULATION_TEST_COMMAND_SUCCESS godot=$GODOT_VERSION runtime=standard_non_dotnet"

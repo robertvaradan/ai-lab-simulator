@@ -26,7 +26,7 @@ Production exports must exclude the Decision Host.
 
 Production exports must include the same Simulation Core and content registry that the Decision Host uses.
 
-The default editor Run scene must remain the SDF harness.
+The default editor Run scene must be the production init scene.
 
 ## Host contract
 
