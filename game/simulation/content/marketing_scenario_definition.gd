@@ -12,6 +12,7 @@ extends Resource
 @export var available_project_ids: Array[StringName] = []
 @export var project_definitions: Array[ProjectDefinition] = []
 @export var competitor_definitions: Array[CompetitorDefinition] = []
+@export var contract_definitions: Array[ContractDefinition] = []
 @export var command_type_ids: Array[StringName] = []
 @export var content_reference_ids: Array[StringName] = []
 
@@ -37,6 +38,8 @@ func build_content_registry() -> SimulationContentRegistry:
 		registry.register_project_definition(project_definition)
 	for competitor_definition: CompetitorDefinition in competitor_definitions:
 		registry.register_competitor_definition(competitor_definition)
+	for contract_definition: ContractDefinition in contract_definitions:
+		registry.register_contract_definition(contract_definition)
 	registry.register_attention_event_response_validator(
 		AcknowledgmentAttentionEventResponseValidator.new(
 			CreateQuarterBoundaryAttentionRule.EVENT_TYPE_ID

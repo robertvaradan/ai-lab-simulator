@@ -163,6 +163,9 @@ func _verify_one_month_step(core: SimulationCore, state: GameState) -> void:
 			AdvanceActiveProjectsRule.RULE_ID,
 			ResolveProjectCompletionsRule.RULE_ID,
 			AdvanceCompetitorsRule.RULE_ID,
+			PostOperatingCostRule.RULE_ID,
+			PostComputeContractCostsRule.RULE_ID,
+			PostApplicationRevenueRule.RULE_ID,
 			CreateQuarterBoundaryAttentionRule.RULE_ID,
 			CreateProjectCompletionNotificationRule.RULE_ID,
 			CloseMonthStepRule.RULE_ID,
@@ -278,7 +281,7 @@ func _verify_advance_matches_month_step_pipeline(core: SimulationCore, state: Ga
 		"advance_until_attention_required did not use the same Month Step pipeline as step_month."
 	)
 	_expect(
-		_rule_order(advanced.trace).size() == 27,
+		_rule_order(advanced.trace).size() == 36,
 		"advance_until_attention_required did not run three Month Step pipelines."
 	)
 

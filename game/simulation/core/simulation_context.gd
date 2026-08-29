@@ -510,6 +510,25 @@ func get_competitor_definition(competitor_id: StringName) -> CompetitorDefinitio
 	return definition
 
 
+func get_contract_definition(contract_id: StringName) -> ContractDefinition:
+	if not _require_current_rule():
+		return null
+	if _content_registry == null:
+		_fault(
+			&"context.missing_content_registry",
+			"Rule %s required contract content without a content registry." % _current_rule_id()
+		)
+		return null
+	var definition: ContractDefinition = _content_registry.get_contract_definition(contract_id)
+	if definition == null:
+		_fault(
+			&"context.unknown_contract_definition",
+			"Rule %s requested unknown contract definition %s." % [_current_rule_id(), contract_id]
+		)
+		return null
+	return definition
+
+
 func record_condition(condition_id: StringName, result: bool) -> bool:
 	if not _require_current_rule():
 		return false

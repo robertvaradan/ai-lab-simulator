@@ -223,6 +223,7 @@ func _create_coding_agent(
 	application.price_musd_per_contract_month = (
 		definition.completed_application_price_musd_per_contract_month
 	)
+	application.active_customer_contract_count = 0
 	applications[application.stable_id] = application
 	return null
 

@@ -14,6 +14,7 @@ var _content_ids: Dictionary[StringName, bool] = {}
 var _command_type_ids: Dictionary[StringName, bool] = {}
 var _project_definitions: Dictionary[StringName, ProjectDefinition] = {}
 var _competitor_definitions: Dictionary[StringName, CompetitorDefinition] = {}
+var _contract_definitions: Dictionary[StringName, ContractDefinition] = {}
 var _attention_event_response_validators: Dictionary[StringName, AttentionEventResponseValidator] = {}
 var _diagnostics: Array[SimulationDiagnostic] = []
 var _is_sealed: bool = false
@@ -134,6 +135,38 @@ func register_competitor_definition(definition: CompetitorDefinition) -> bool:
 	return true
 
 
+func register_contract_definition(definition: ContractDefinition) -> bool:
+	if _is_sealed:
+		_add_error(&"content_registry.sealed", "The content registry is sealed.")
+		return false
+	if definition == null:
+		_add_error(
+			&"content_registry.missing_contract_definition",
+			"The contract definition is missing."
+		)
+		return false
+	if not StableIdentifier.is_valid(definition.stable_id):
+		_add_error(
+			&"content_registry.invalid_contract_id",
+			"Contract identifier %s is invalid." % definition.stable_id
+		)
+		return false
+	if not _content_ids.has(definition.stable_id):
+		_add_error(
+			&"content_registry.unknown_contract_id",
+			"Contract identifier %s is not registered content." % definition.stable_id
+		)
+		return false
+	if _contract_definitions.has(definition.stable_id):
+		_add_error(
+			&"content_registry.duplicate_contract_id",
+			"Contract identifier %s is duplicated." % definition.stable_id
+		)
+		return false
+	_contract_definitions[definition.stable_id] = definition
+	return true
+
+
 func register_attention_event_response_validator(
 		validator: AttentionEventResponseValidator
 	) -> bool:
@@ -222,6 +255,21 @@ func get_competitor_ids() -> Array[StringName]:
 	competitor_ids.assign(_competitor_definitions.keys())
 	competitor_ids.sort()
 	return competitor_ids
+
+
+func has_contract_definition(contract_id: StringName) -> bool:
+	return _contract_definitions.has(contract_id)
+
+
+func get_contract_definition(contract_id: StringName) -> ContractDefinition:
+	return _contract_definitions.get(contract_id)
+
+
+func get_contract_ids() -> Array[StringName]:
+	var contract_ids: Array[StringName] = []
+	contract_ids.assign(_contract_definitions.keys())
+	contract_ids.sort()
+	return contract_ids
 
 
 func get_command_type_ids() -> Array[StringName]:

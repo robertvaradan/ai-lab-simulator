@@ -96,6 +96,10 @@ Model pricing power must derive from market relevance and competing offers.
 
 Application customer demand must derive from Market Demand, the supporting Model, price, and applicable Company effects.
 
+The Application customer-contract count is the resolved demand for the current Month Step.
+
+The Application customer-contract count is not a cached derived value.
+
 ## Cash Ledger
 
 The Cash Ledger must be append-only during a campaign.

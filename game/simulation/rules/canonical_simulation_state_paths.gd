@@ -5,6 +5,9 @@ const COMPANY_PUBLIC_TRUST_POINTS: StringName = &"state.company.public_trust_poi
 const COMPANY_GOVERNMENT_TRUST_POINTS: StringName = &"state.company.government_trust_points"
 const COMPANY_PROJECT_TEAM_COUNT: StringName = &"state.company.project_team_count"
 const COMPANY_COMPUTE_CAPACITY: StringName = &"state.company.compute_capacity_unit_months"
+const COMPANY_FIXED_OPERATING_COST: StringName = (
+	&"state.company.fixed_operating_cost_musd_per_month_step"
+)
 const COMPANY_PROJECTS: StringName = &"state.company.projects"
 const COMPANY_MODELS: StringName = &"state.company.models"
 const COMPANY_APPLICATIONS: StringName = &"state.company.applications"
@@ -59,6 +62,13 @@ static func create_registry() -> SimulationStatePathRegistry:
 		SimulationStatePath.new(
 			COMPANY_COMPUTE_CAPACITY,
 			SimulationStatePath.Accessor.COMPANY_COMPUTE_CAPACITY,
+			SimulationStatePath.ValueType.INTEGER
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			COMPANY_FIXED_OPERATING_COST,
+			SimulationStatePath.Accessor.COMPANY_FIXED_OPERATING_COST,
 			SimulationStatePath.ValueType.INTEGER
 		)
 	)
