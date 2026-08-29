@@ -76,7 +76,8 @@ func _load_editable_campus() -> bool:
 	add_child(_campus_root)
 	var mesh_count: int = _campus_root.find_children("*", "MeshInstance3D", true, false).size()
 	var light_count: int = _campus_root.find_children("*", "Light3D", true, false).size()
-	var camera_count: int = _campus_root.find_children("*", "Camera3D", true, false).size()
+	var cameras: Array[Node] = _campus_root.find_children("*", "Camera3D", true, false)
+	var camera_count: int = cameras.size()
 	var environment_count: int = _campus_root.find_children("*", "WorldEnvironment", true, false).size()
 	if mesh_count == 0:
 		_fail("Editable campus scene must contain MeshInstance3D nodes.")
@@ -84,6 +85,12 @@ func _load_editable_campus() -> bool:
 	if camera_count != 1:
 		_fail("Editable campus scene must contain exactly one Camera3D, got %d." % camera_count)
 		return false
+	if not cameras[0] is IsometricCamera:
+		_fail("Editable campus scene camera must be an IsometricCamera.")
+		return false
+	var isometric_camera: IsometricCamera = cameras[0] as IsometricCamera
+	isometric_camera.input_enabled = false
+	isometric_camera.snap_to_targets()
 	if environment_count != 1:
 		_fail("Editable campus scene must contain exactly one WorldEnvironment, got %d." % environment_count)
 		return false

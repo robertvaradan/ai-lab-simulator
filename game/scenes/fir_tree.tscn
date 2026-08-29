@@ -1,11 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://d7m3p9qvstxk2"]
+[gd_scene format=3 uid="uid://c7747tm8m2tb"]
 
 [ext_resource type="Material" path="res://materials/tree_foliage_a.tres" id="1_foliage_a"]
 [ext_resource type="Material" path="res://materials/tree_foliage_b.tres" id="2_foliage_b"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_trunk"]
-albedo_color = Color(0.29411766, 0.22352941, 0.16862746, 1)
-roughness = 0.98
+[ext_resource type="Material" path="res://materials/trunk.tres" id="3_trunk"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_trunk"]
 top_radius = 0.2
@@ -35,24 +32,24 @@ height = 1.8
 radial_segments = 8
 rings = 1
 
-[node name="FirTree" type="Node3D"]
+[node name="FirTree" type="Node3D" unique_id=741005432]
 
-[node name="Trunk" type="MeshInstance3D" parent="."]
+[node name="Trunk" type="MeshInstance3D" parent="." unique_id=1348874776]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
-material_override = SubResource("StandardMaterial3D_trunk")
+material_override = ExtResource("3_trunk")
 mesh = SubResource("CylinderMesh_trunk")
 
-[node name="LowerCrown" type="MeshInstance3D" parent="."]
+[node name="LowerCrown" type="MeshInstance3D" parent="." unique_id=1582610678]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, 0)
 material_override = ExtResource("1_foliage_a")
 mesh = SubResource("CylinderMesh_lower")
 
-[node name="MiddleCrown" type="MeshInstance3D" parent="."]
+[node name="MiddleCrown" type="MeshInstance3D" parent="." unique_id=776277573]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
 material_override = ExtResource("2_foliage_b")
 mesh = SubResource("CylinderMesh_middle")
 
-[node name="UpperCrown" type="MeshInstance3D" parent="."]
+[node name="UpperCrown" type="MeshInstance3D" parent="." unique_id=919653319]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, 0)
 material_override = ExtResource("1_foliage_a")
 mesh = SubResource("CylinderMesh_upper")

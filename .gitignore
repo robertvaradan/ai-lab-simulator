@@ -4,11 +4,6 @@ game/.godot/
 # Repository-local toolchain binaries
 .tools/
 
-# Blender recovery and temporary files
-*.blend1
-*.blend2
-*.blend@
-
 # Render-test evidence is reproducible output
 game/evidence/**/*.png
 game/evidence/**/*.png.import

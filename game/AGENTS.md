@@ -16,9 +16,13 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - `scenes/sdf_render_harness.tscn` is the normal runnable main scene and the automated capture harness.
 - The primary render proof is a compute-shader SDF pipeline. Forward+ and the main `RenderingDevice` are required; missing compute support is fatal.
 - Keep renderer implementation under `renderer/sdf`. Keep HUD, input, capture orchestration, and gameplay state outside that directory.
-- The former mesh/GLB harness remains only as a comparison artifact. Do not silently invoke it when the SDF pipeline fails.
+- Keep the gameplay isometric camera under `camera`.
+- Do not load a GLB campus asset. Do not add a Blender export pipeline.
 - `scenes/campus_blockout.tscn` is the native Godot blockout for the first Company Campus composition.
-- The campus blockout must use `PrimitiveMesh` geometry. It must not load a Blender or GLB campus asset.
+- Follow `../docs/presentation/campus-authoring.md` for campus and laboratory scene authoring.
+- The campus blockout must use `PrimitiveMesh` geometry.
+- The campus blockout must instance one laboratory stage scene. Do not embed laboratory mesh nodes inline.
+- `scenes/lab_stage_1.tscn` owns the starting laboratory. `scenes/lab_stage_2.tscn` owns the developed laboratory.
 - Repeated round-crown trees must instance `scenes/round_tree.tscn`.
 - Repeated fir trees must instance `scenes/fir_tree.tscn`.
 - Do not duplicate round-crown or fir mesh nodes in `campus_blockout.tscn`.
@@ -27,11 +31,16 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - A rectangular frame must use `BoxOutlineMesh`. Do not author four box nodes for one outline.
 - A cylindrical frame must use `CylinderOutlineMesh`. Do not author a stack of cylinder nodes for one outline.
 - Follow `../docs/tools/editor-primitives.md` for editor primitive meshes and handles.
-- Keep campus vegetation shaders under `shaders`. Keep campus vegetation materials under `materials`.
+- Named campus colors must live in `visual/campus_palette.tres` as a `VisualPalette` Resource. Follow `../docs/visual/color-palette.md`.
+- Campus materials must live under `materials` and must use palette role colors. Do not inline role colors in `campus_blockout.tscn`.
+- Keep campus vegetation shaders under `shaders`.
 - Grass meshes must use `materials/grass.tres` or `materials/grass_cut.tres`.
 - Hedge meshes must use `materials/hedge.tres`.
 - Tree crown meshes must use `materials/tree_foliage_a.tres` or `materials/tree_foliage_b.tres`.
-- Grass, hedge, and tree crown materials must use triplanar procedural shading. Do not depend on mesh UVs for vegetation.
+- Tree trunks must use `materials/trunk.tres`.
+- A vegetation material must use one albedo color from one palette role.
+- A vegetation material must not interpolate albedo colors and must not add noise into albedo.
+- Vegetation depth must come from lighting and procedural triplanar normals. Do not depend on mesh UVs for vegetation.
 - Hedge and tree crowns must share `shaders/foliage.gdshader`.
 - `scenes/campus_blockout.tscn` must serialize its geometry, materials, lights, environment, and camera.
 - The `CampusBlockout` root must not have a script.
@@ -64,15 +73,18 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 ## Visual contract
 
 - Frame at exactly 1920×1080 (16:9). The SDF proof renders internally at 640×360 and scales once through a `Texture2DRD`; changing either resolution requires updating the shader, harness, script, documentation, and inspected evidence together.
-- Keep a fixed orthographic isometric/three-quarter gameplay camera. Camera changes require regenerating and inspecting all evidence images.
+- Keep an orthographic isometric gameplay camera. The camera must not rotate. The player can pan and zoom. Follow `../docs/presentation/isometric-camera.md`.
+- Keep camera implementation under `camera`. Automated campus capture must disable camera input and snap to the authored pose.
+- Keep the SDF proof camera fixed. A pose, material, shader, dispatch, texture, or presentation change requires regenerating and inspecting all evidence images.
 - Preserve the palette-lit architectural-diorama direction: strong silhouettes, simplified/faceted masses, window rhythms, roof profiles, cooling shapes, fences, and controlled emissive/status accents.
 - The world/map is the primary visual surface. UI in the harness is limited to title, renderer contract, state, description, and controls.
 - Keep the HUD on `CanvasLayer` layer 100 so world/UI ordering is explicit. World SDF geometry must never be changed or hidden to repair HUD layout.
 - Do not use painted textures in this proof. Shape, palette, normals, soft shadow, and ambient occlusion carry the look.
-- Campus grass must look soft, even, and velvety. Campus hedges and tree crowns must share foliage shading with deeper lit contrast.
-- Vegetation shading must use triplanar procedural noise. Do not require authored mesh UVs for grass, hedges, or tree crowns.
-- Use `../docs/concept-art/main-lab-site-context-v1.png` as the visual target for the first Company Campus blockout.
-- The blockout must preserve the central laboratory mass, teal glass facade, orange core, roof equipment, parking lot, perimeter roads, paths, walls, landscape, and site lights.
+- Campus grass must look soft, even, and velvety. Campus hedges and tree crowns must share foliage shading with deeper lit contrast from normals and lighting.
+- Vegetation shading must use one palette albedo and procedural triplanar normals. Do not require authored mesh UVs for grass, hedges, or tree crowns.
+- Use `../docs/concept-art/main-lab-site-context-v1.png` as the visual target for the developed Company Campus site.
+- Use `../docs/concept-art/main-lab-concept-v1.png` as the visual target for laboratory stage 2.
+- The blockout must preserve parking, perimeter roads, paths, walls, landscape, and site lights around the instanced laboratory stage.
 
 ## Renderer and state contract
 
@@ -82,14 +94,6 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - The contract states are `growth=0`, `overload=1`, and `scrutiny=2`. Each must alter real SDF geometry and remain visually distinguishable on the common campus.
 - The main output texture must be created by the main RenderingDevice and exposed through `Texture2DRD`. A local RenderingDevice cannot satisfy this contract because its resources are not shareable with the main renderer.
 - This first renderer deliberately uses analytic CSG evaluated in the compute shader. Sparse brick caches, clipmaps, incremental dirty regions, physics meshes, and arbitrary runtime sculpting are later experiments, not implicit requirements.
-
-## Mesh asset library
-
-- `../model-pipeline/source/campus_modular_kit.blend` is the one authoring file. Open it with `scripts/open-campus-kit`. Publish it with `scripts/export-campus-kit`.
-- `../model-pipeline/manifest/assets.json` lists the export collections and GLB paths.
-- Files under `assets/generated` are owned by Blender export. Do not hand-edit them.
-- The comparison harness loads `res://assets/generated/asset_catalog.json`. The SDF renderer does not load or fall back to those assets.
-- The SDF render test does not regenerate Blender assets.
 
 ## Verification
 
@@ -140,6 +144,20 @@ Run the editor primitive tests on macOS:
 Success requires `BOX_OUTLINE_MESH_TEST_SUCCESS`.
 
 Success requires `CYLINDER_OUTLINE_MESH_TEST_SUCCESS`.
+
+Run the isometric camera tests on Windows:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\isometric-camera-test.ps1
+```
+
+Run the isometric camera tests on macOS:
+
+```bash
+./scripts/isometric-camera-test.sh
+```
+
+Success requires `ISOMETRIC_CAMERA_TEST_SUCCESS`.
 
 Gameplay verification must also follow `../docs/simulation/invariants.md` after Simulation Core implementation starts.
 

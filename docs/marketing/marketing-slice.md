@@ -120,7 +120,11 @@ The graph view must highlight the Marketing Scenario trace.
 
 ## Required presentation infrastructure
 
-The slice must use the fixed isometric Company Campus view.
+The slice must use the orthographic isometric Company Campus view.
+
+The player can pan and zoom that view.
+
+The camera must not rotate.
 
 The slice must show at least one Site Plot change.
 

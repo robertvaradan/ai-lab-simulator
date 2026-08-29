@@ -28,6 +28,12 @@ This directory contains the canonical project specifications.
 - [Services and dependency injection](architecture/services-and-dependency-injection.md) owns the service lifetime, provider, and injection contracts.
 - [Editor primitives](tools/editor-primitives.md) owns voxel-grid PrimitiveMesh types for scene authoring.
 
+## Presentation specifications
+
+- [Isometric camera](presentation/isometric-camera.md) owns the orthographic gameplay camera.
+- [Campus authoring](presentation/campus-authoring.md) owns authored campus and laboratory scene rules.
+- [Color palette](visual/color-palette.md) owns named world color roles and site-palette rules.
+
 ## Simulation specifications
 
 - [Simulation architecture](simulation/README.md) owns the shared Simulation Core boundary.

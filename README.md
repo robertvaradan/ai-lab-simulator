@@ -11,7 +11,7 @@ The working answer is **yes, at prototype scale**. The main scene now bypasses G
 This is intentionally not a reimplementation of a complete dynamic sparse-SDF engine. The first proof includes:
 
 - analytic CSG buildings and campus infrastructure;
-- fixed orthographic isometric camera;
+- a fixed orthographic isometric camera in the SDF proof;
 - palette materials, derived normals, soft shadows, ambient occlusion, and fog;
 - geometry-changing `growth`, `overload`, and `scrutiny` states;
 - render-on-change compute dispatch at 640×360, scaled to a 1920×1080 presentation;
@@ -29,7 +29,7 @@ Sparse brick caches, geometry clipmaps, incremental dirty-region updates, arbitr
 - bash on macOS
 - bash on Linux
 
-The canonical Windows executables are `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe` and `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64_console.exe`. The canonical macOS executable is `.tools/godot/4.7.2/Godot.app/Contents/MacOS/Godot`. The canonical Linux executable is `.tools/godot/4.7.2/Godot_v4.7.2-stable_linux.x86_64`. Each automation script resolves this location from the repository root for the current host. The scripts reject a missing binary, other versions, and Mono/.NET builds. The scripts do not search `PATH`, Downloads, Program Files, or `/Applications`. The SDF proof does not require Blender at runtime or during its render test. The Blender authoring file is the mesh-asset library. Open it with `scripts/open-campus-kit`. Publish it into the game with `scripts/export-campus-kit`. The SDF main scene does not load those meshes.
+The canonical Windows executables are `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe` and `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64_console.exe`. The canonical macOS executable is `.tools/godot/4.7.2/Godot.app/Contents/MacOS/Godot`. The canonical Linux executable is `.tools/godot/4.7.2/Godot_v4.7.2-stable_linux.x86_64`. Each automation script resolves this location from the repository root for the current host. The scripts reject a missing binary, other versions, and Mono/.NET builds. The scripts do not search `PATH`, Downloads, Program Files, or `/Applications`. Campus and laboratory geometry are authored Godot scenes. The project does not use a Blender export pipeline or GLB campus assets.
 
 Install the standard Godot build without administrator access.
 
@@ -129,6 +129,8 @@ The command must use the canonical standard Godot 4.7.2 automation executable.
 - `game/renderer/sdf/sdf_renderer.gd`: lightweight GPU resource and compute-dispatch adapter.
 - `game/scripts/sdf_render_harness.gd`: HUD, input, deterministic state capture, and test exit behavior.
 - `scripts/render-test.ps1`: exact end-to-end verification command.
-- `model-pipeline`: one Blender authoring file and per-collection GLB export; not used by the SDF main scene.
+- `game/scenes/campus_blockout.tscn`: authored Company Campus site.
+- `game/scenes/lab_stage_1.tscn`: starting laboratory PackedScene.
+- `game/scenes/lab_stage_2.tscn`: developed laboratory PackedScene.
 
 The renderer has no gameplay rules, HUD logic, asset generator, or mesh fallback. That boundary is deliberate so the visual experiment can be replaced or expanded without entangling the simulation.

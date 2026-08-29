@@ -1,0 +1,267 @@
+[gd_scene format=3 uid="uid://yqcuquepyj58"]
+
+[ext_resource type="Script" uid="uid://dcif18kjr3adx" path="res://primitives/box_outline_mesh.gd" id="1_fhb87"]
+[ext_resource type="Material" path="res://materials/charcoal.tres" id="charcoal"]
+[ext_resource type="Material" path="res://materials/concrete_light.tres" id="concrete_light"]
+[ext_resource type="Material" path="res://materials/cream.tres" id="cream"]
+[ext_resource type="Material" path="res://materials/cream_deep.tres" id="cream_deep"]
+[ext_resource type="Material" path="res://materials/glass.tres" id="glass"]
+[ext_resource type="Material" path="res://materials/metal_dark.tres" id="metal_dark"]
+[ext_resource type="Material" path="res://materials/orange.tres" id="orange"]
+[ext_resource type="Material" path="res://materials/orange_dark.tres" id="orange_dark"]
+[ext_resource type="Material" path="res://materials/warm.tres" id="warm"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_r18i6"]
+size = Vector3(12, 0.4, 12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sw2yc"]
+size = Vector3(9.4, 6, 8.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_874sh"]
+size = Vector3(9.8, 0.6, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_y0amr"]
+size = Vector3(7.6, 5.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2mlfw"]
+size = Vector3(0.2, 4.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_54e7h"]
+size = Vector3(0.2, 4.8, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nhf7u"]
+size = Vector3(7.6, 0.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lm78d"]
+size = Vector3(7.6, 0.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qmaey"]
+size = Vector3(7.6, 0.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vp841"]
+size = Vector3(7.6, 0.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_n7u4q"]
+size = Vector3(1.2, 5, 2.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7rv88"]
+size = Vector3(1.2, 5, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qm4xl"]
+size = Vector3(0.4, 5, 0.4)
+
+[sub_resource type="PrimitiveMesh" id="PrimitiveMesh_vi5ac"]
+resource_local_to_scene = false
+resource_name = ""
+lightmap_size_hint = Vector2i(0, 0)
+custom_aabb = AABB(0, 0, 0, 0, 0, 0)
+flip_faces = false
+add_uv2 = false
+uv2_padding = 2.0
+script = ExtResource("1_fhb87")
+size = Vector3(9, 0.4, 8.8)
+thickness = 0.4
+metadata/_custom_type_script = "uid://dcif18kjr3adx"
+
+[sub_resource type="PrimitiveMesh" id="PrimitiveMesh_fhb87"]
+resource_local_to_scene = false
+resource_name = ""
+lightmap_size_hint = Vector2i(0, 0)
+custom_aabb = AABB(0, 0, 0, 0, 0, 0)
+flip_faces = false
+add_uv2 = false
+uv2_padding = 2.0
+script = ExtResource("1_fhb87")
+size = Vector3(10.2, 1.2, 10)
+thickness = 0.4
+metadata/_custom_type_script = "uid://dcif18kjr3adx"
+
+[sub_resource type="BoxMesh" id="BoxMesh_42tpf"]
+size = Vector3(8.6, 0.2, 8.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1lvki"]
+size = Vector3(6.2000003, 0.2, 5.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xj433"]
+size = Vector3(1.2, 3, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pov7e"]
+size = Vector3(1, 2.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gbqs4"]
+size = Vector3(1.2, 0.4, 1.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0jvae"]
+size = Vector3(1.4, 5.6, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_642tu"]
+size = Vector3(0.4, 5.6, 8.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_a66x2"]
+size = Vector3(0.4, 5.6, 10.2)
+
+[node name="LabStage1" type="Node3D" unique_id=1280240132]
+
+[node name="Foundation" type="MeshInstance3D" parent="." unique_id=687043103]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 0.2, -3.6)
+material_override = ExtResource("concrete_light")
+mesh = SubResource("BoxMesh_r18i6")
+
+[node name="TowerBody" type="MeshInstance3D" parent="." unique_id=1222445114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.9, 3.4, -3.6)
+material_override = ExtResource("charcoal")
+mesh = SubResource("BoxMesh_sw2yc")
+
+[node name="TowerCreamBase" type="MeshInstance3D" parent="." unique_id=203712132]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.1, 0.7, 1.7)
+material_override = ExtResource("cream_deep")
+mesh = SubResource("BoxMesh_874sh")
+
+[node name="TowerFrontGlass" type="MeshInstance3D" parent="." unique_id=1608157779]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 3.4, 0.9)
+material_override = ExtResource("glass")
+mesh = SubResource("BoxMesh_y0amr")
+
+[node name="TowerFrontMullion_00" type="MeshInstance3D" parent="." unique_id=1558088408]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.3, 3.1, 1.3)
+sorting_offset = 2.0
+material_override = ExtResource("metal_dark")
+mesh = SubResource("BoxMesh_2mlfw")
+
+[node name="TowerFrontMullion_01" type="MeshInstance3D" parent="." unique_id=898767720]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.9, 3.1, 1.3)
+sorting_offset = 2.0
+material_override = ExtResource("metal_dark")
+mesh = SubResource("BoxMesh_2mlfw")
+
+[node name="TowerFrontMullion_02" type="MeshInstance3D" parent="." unique_id=500210348]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 3.1, 1.3)
+sorting_offset = 2.0
+material_override = ExtResource("metal_dark")
+mesh = SubResource("BoxMesh_2mlfw")
+
+[node name="TowerFrontMullion_03" type="MeshInstance3D" parent="." unique_id=1988297122]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, 3.1, 1.3)
+sorting_offset = 2.0
+material_override = ExtResource("metal_dark")
+mesh = SubResource("BoxMesh_2mlfw")
+
+[node name="TowerFrontMullion_04" type="MeshInstance3D" parent="." unique_id=1144026183]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 3.1, 1.3)
+sorting_offset = 2.0
+material_override = ExtResource("metal_dark")
+mesh = SubResource("BoxMesh_2mlfw")
+
+[node name="TowerFrontMullion_05" type="MeshInstance3D" parent="." unique_id=1188906266]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 3, 1.3)
+sorting_offset = 2.0
+material_override = ExtResource("metal_dark")
+mesh = SubResource("BoxMesh_54e7h")
+
+[node name="TowerFrontBand_00" type="MeshInstance3D" parent="." unique_id=992743108]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 1.9, 1.3)
+sorting_offset = 2.0
+material_override = ExtResource("metal_dark")
+mesh = SubResource("BoxMesh_nhf7u")
+
+[node name="InteriorFloor_00" type="MeshInstance3D" parent="." unique_id=1998508329]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 2.3, 1)
+sorting_offset = -1.0
+material_override = ExtResource("warm")
+mesh = SubResource("BoxMesh_lm78d")
+
+[node name="TowerFrontBand_01" type="MeshInstance3D" parent="." unique_id=727163657]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 3.6, 1.3)
+sorting_offset = 2.0
+material_override = ExtResource("metal_dark")
+mesh = SubResource("BoxMesh_qmaey")
+
+[node name="InteriorFloor_01" type="MeshInstance3D" parent="." unique_id=2118799526]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 4.1, 1)
+sorting_offset = -1.0
+material_override = ExtResource("warm")
+mesh = SubResource("BoxMesh_lm78d")
+
+[node name="TowerFrontBand_02" type="MeshInstance3D" parent="." unique_id=926805979]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 5.3, 1.3)
+sorting_offset = 2.0
+material_override = ExtResource("metal_dark")
+mesh = SubResource("BoxMesh_vp841")
+
+[node name="InteriorFloor_02" type="MeshInstance3D" parent="." unique_id=956753878]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 5.9, 1)
+sorting_offset = -1.0
+material_override = ExtResource("warm")
+mesh = SubResource("BoxMesh_lm78d")
+
+[node name="OrangeCore" type="MeshInstance3D" parent="." unique_id=62657892]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 2.9, 0.2)
+material_override = ExtResource("orange_dark")
+mesh = SubResource("BoxMesh_n7u4q")
+
+[node name="OrangePierLeft" type="MeshInstance3D" parent="." unique_id=716200874]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 2.9, 1.6)
+material_override = ExtResource("orange")
+mesh = SubResource("BoxMesh_7rv88")
+
+[node name="OrangePierRight" type="MeshInstance3D" parent="." unique_id=1376740167]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 2.9, 1.6)
+material_override = ExtResource("orange")
+mesh = SubResource("BoxMesh_qm4xl")
+
+[node name="TowerRoofParapetBack" type="MeshInstance3D" parent="." unique_id=2004574825]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.9, 6.6, -3.6)
+material_override = ExtResource("cream")
+mesh = SubResource("PrimitiveMesh_vi5ac")
+
+[node name="TowerRoofParapetBack2" type="MeshInstance3D" parent="." unique_id=348547539]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.9, 6, -3.6)
+material_override = ExtResource("cream")
+mesh = SubResource("PrimitiveMesh_fhb87")
+
+[node name="TowerRoofInset" type="MeshInstance3D" parent="." unique_id=1225688246]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 6.5, -3.1000004)
+material_override = ExtResource("metal_dark")
+mesh = SubResource("BoxMesh_42tpf")
+
+[node name="TowerRoofDeck" type="MeshInstance3D" parent="." unique_id=1570820702]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.9, 6.7, -3.6)
+material_override = ExtResource("concrete_light")
+mesh = SubResource("BoxMesh_1lvki")
+
+[node name="EntryVestibule" type="MeshInstance3D" parent="." unique_id=2106209616]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 1.9, 2.1999998)
+material_override = ExtResource("orange_dark")
+mesh = SubResource("BoxMesh_xj433")
+
+[node name="EntryDoor" type="MeshInstance3D" parent="." unique_id=1316755429]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 1.5, 2.7)
+material_override = ExtResource("glass")
+mesh = SubResource("BoxMesh_pov7e")
+
+[node name="EntryCanopy" type="MeshInstance3D" parent="." unique_id=1806291720]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.19999999, 3.6, 2.5)
+material_override = ExtResource("metal_dark")
+mesh = SubResource("BoxMesh_gbqs4")
+
+[node name="EntryGlow" type="OmniLight3D" parent="." unique_id=199520999]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 1.8000001, 3.4)
+light_color = Color(0.93333334, 0.53333336, 0.27058825, 1)
+light_energy = 2.6
+light_size = 1.8
+omni_range = 7.0
+
+[node name="TowerCreamLeftPier" type="MeshInstance3D" parent="." unique_id=961157220]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.3, 3.2, 0.6)
+material_override = ExtResource("cream")
+mesh = SubResource("BoxMesh_0jvae")
+
+[node name="TowerCreamLeftWall" type="MeshInstance3D" parent="." unique_id=1868841086]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.8, 3.2, -4.4)
+material_override = ExtResource("cream")
+mesh = SubResource("BoxMesh_642tu")
+
+[node name="TowerCreamLeftWall2" type="MeshInstance3D" parent="." unique_id=1315887931]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -4.9, 3.2, -8.4)
+material_override = ExtResource("cream")
+mesh = SubResource("BoxMesh_a66x2")
