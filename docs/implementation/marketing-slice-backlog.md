@@ -377,7 +377,7 @@ Verification:
 
 ### MS2-03: Implement the Rule Graph trace view
 
-Status: `OPEN`
+Status: `DONE`
 
 Dependencies: `MS2-01` and `MS2-02`.
 

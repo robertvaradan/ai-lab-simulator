@@ -160,6 +160,27 @@ func replay_exported_operations() -> SimulationLabReplayResult:
 	return replay_operations(_exported_operations)
 
 
+func classify_trace_month(month_step_index: int, trace: SimulationTrace = null) -> RuleGraphTraceViewResult:
+	var selected_trace: SimulationTrace = trace
+	if selected_trace == null:
+		if _traces.is_empty():
+			var missing: RuleGraphTraceViewResult = RuleGraphTraceViewResult.new()
+			missing.diagnostics.append(
+				SimulationDiagnostic.new(
+					SimulationDiagnostic.Severity.ERROR,
+					&"simulation_lab.missing_trace",
+					"The laboratory session has no Simulation Trace to classify."
+				)
+			)
+			return missing
+		selected_trace = _traces[_traces.size() - 1]
+	return RuleGraphTraceClassifier.classify(
+		_core.get_compiled_graph().ordered_rules,
+		selected_trace,
+		month_step_index
+	)
+
+
 func replay_operations(operations: Array[Dictionary]) -> SimulationLabReplayResult:
 	var result: SimulationLabReplayResult = SimulationLabReplayResult.new()
 	var reconstructed: SimulationLabSessionResult = SimulationLabSession.create_marketing_scenario()
