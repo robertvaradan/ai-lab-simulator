@@ -76,7 +76,7 @@ The Scale Project must buy or reserve Third-Party Compute.
 
 The Marketing Slice must not require construction of an owned Data Center.
 
-The Application Project must create a Coding Agent.
+The Coding Agent Project must create a Coding Agent.
 
 The Coding Agent must use the released player Model that its Project start Command identifies.
 

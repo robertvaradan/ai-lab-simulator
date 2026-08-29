@@ -138,6 +138,45 @@ static func _validate_company(
 			known_content_ids,
 			result
 		)
+		_validate_nonnegative(
+			project.remaining_month_steps,
+			"Project %s remaining Month Steps" % project_id,
+			result
+		)
+		_validate_nonnegative(
+			project.reserved_project_teams,
+			"Project %s reserved project teams" % project_id,
+			result
+		)
+		_validate_nonnegative(
+			project.reserved_compute_unit_months,
+			"Project %s reserved Compute Capacity" % project_id,
+			result
+		)
+		if project.started_month_step_index < 1:
+			result.add_error("Project %s start Month Step index is invalid." % project_id)
+		if project.status_id == ProjectState.STATUS_COMPLETED:
+			if project.completed_month_step_index < project.started_month_step_index:
+				result.add_error("Project %s completion Month Step index is invalid." % project_id)
+			if project.remaining_month_steps != 0:
+				result.add_error("Completed Project %s still has remaining Month Steps." % project_id)
+			if project.reserved_project_teams != 0 or project.reserved_compute_unit_months != 0:
+				result.add_error("Completed Project %s still holds a reservation." % project_id)
+		elif project.status_id == ProjectState.STATUS_ACTIVE:
+			if project.completed_month_step_index != 0:
+				result.add_error("Active Project %s has a completion Month Step index." % project_id)
+			if project.remaining_month_steps < 1:
+				result.add_error("Active Project %s has no remaining Month Steps." % project_id)
+		_validate_payload_keys(
+			project.start_payload,
+			"Project %s start payload" % project_id,
+			result
+		)
+
+	if ProjectCapacity.reserved_project_teams(company.projects) > company.project_team_count:
+		result.add_error("Active Projects reserve more project teams than the Company has.")
+	if ProjectCapacity.reserved_compute_unit_months(company.projects) > company.compute_capacity_unit_months:
+		result.add_error("Active Projects reserve more Compute Capacity than the Company has.")
 
 	var model_ids: Array[StringName] = []
 	model_ids.assign(company.models.keys())
@@ -195,6 +234,24 @@ static func _validate_company(
 			application.status_id,
 			"Application %s status identifier" % application_id,
 			known_content_ids,
+			result
+		)
+		if application.supporting_model_id == &"":
+			result.add_error("Application %s supporting Model identifier is missing." % application_id)
+		else:
+			_validate_identifier(
+				application.supporting_model_id,
+				"Application %s supporting Model identifier" % application_id,
+				result
+			)
+			if not company.models.has(application.supporting_model_id):
+				result.add_error(
+					"Application %s supporting Model %s does not exist."
+					% [application_id, application.supporting_model_id]
+				)
+		_validate_nonnegative(
+			application.price_musd_per_contract_month,
+			"Application %s price" % application_id,
 			result
 		)
 
@@ -375,6 +432,12 @@ static func _validate_notifications(
 			known_content_ids,
 			result
 		)
+		if notification.source_entity_id != &"":
+			_validate_identifier(
+				notification.source_entity_id,
+				"Notification %s source entity identifier" % notification.stable_id,
+				result
+			)
 
 
 static func _validate_random_generator(
@@ -523,6 +586,19 @@ static func _validate_content_reference(
 	_validate_identifier(identifier, field_name, result)
 	if not known_content_ids.has(identifier):
 		result.add_error("%s %s does not exist in the content reference catalog." % [field_name, identifier])
+
+
+static func _validate_payload_keys(
+		payload: Dictionary[StringName, Variant],
+		owner_name: String,
+		result: GameStateValidationResult
+	) -> void:
+	var keys: Array[StringName] = []
+	keys.assign(payload.keys())
+	keys.sort()
+	for key: StringName in keys:
+		if not StableIdentifier.is_valid_entity_type(key):
+			result.add_error("%s key %s is invalid." % [owner_name, key])
 
 
 static func _validate_unique_content_references(

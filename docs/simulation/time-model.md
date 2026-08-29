@@ -79,6 +79,10 @@ The Open Month Step phase must increase `current_month_step_index` by one before
 
 The Open Month Step phase must set `current_quarter_index` from the new month index.
 
+The Advance active Projects phase must reduce remaining Project duration by one Month Step in the start Month Step.
+
+A Project with duration of one Month Step must complete in its start Month Step.
+
 Close the Month Step must not change the month index.
 
 Each Rule must execute in one declared phase.

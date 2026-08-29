@@ -82,6 +82,7 @@ static func _validate_commands(
 			&"plan.command_payload_invalid",
 			result
 		)
+	ProjectPlanValidator.validate_start_commands(state, commands, content_registry, result)
 
 
 static func _validate_attention_event_responses(

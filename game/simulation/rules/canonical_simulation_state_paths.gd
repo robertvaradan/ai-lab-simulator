@@ -3,12 +3,21 @@ extends RefCounted
 
 const COMPANY_PUBLIC_TRUST_POINTS: StringName = &"state.company.public_trust_points"
 const COMPANY_GOVERNMENT_TRUST_POINTS: StringName = &"state.company.government_trust_points"
+const COMPANY_PROJECT_TEAM_COUNT: StringName = &"state.company.project_team_count"
+const COMPANY_COMPUTE_CAPACITY: StringName = &"state.company.compute_capacity_unit_months"
+const COMPANY_PROJECTS: StringName = &"state.company.projects"
+const COMPANY_MODELS: StringName = &"state.company.models"
+const COMPANY_APPLICATIONS: StringName = &"state.company.applications"
+const COMPANY_CONTRACTS: StringName = &"state.company.contracts"
 const CASH_LEDGER_TRANSACTIONS: StringName = &"state.cash_ledger.transactions"
 const CALENDAR_MONTH_STEP_INDEX: StringName = &"state.calendar.current_month_step_index"
 const CALENDAR_QUARTER_INDEX: StringName = &"state.calendar.current_quarter_index"
 const PENDING_COMMAND_BATCH: StringName = &"state.pending_command_batch"
 const ATTENTION_EVENTS: StringName = &"state.attention_events"
+const NOTIFICATIONS: StringName = &"state.notifications"
 const RUNTIME_EVENT_SEQUENCE: StringName = &"state.runtime_id_counters.event"
+const RUNTIME_LEDGER_TRANSACTION_SEQUENCE: StringName = &"state.runtime_id_counters.ledger_transaction"
+const RUNTIME_NOTIFICATION_SEQUENCE: StringName = &"state.runtime_id_counters.notification"
 
 
 static func create_registry() -> SimulationStatePathRegistry:
@@ -25,6 +34,48 @@ static func create_registry() -> SimulationStatePathRegistry:
 			COMPANY_GOVERNMENT_TRUST_POINTS,
 			SimulationStatePath.Accessor.COMPANY_GOVERNMENT_TRUST_POINTS,
 			SimulationStatePath.ValueType.INTEGER
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			COMPANY_PROJECT_TEAM_COUNT,
+			SimulationStatePath.Accessor.COMPANY_PROJECT_TEAM_COUNT,
+			SimulationStatePath.ValueType.INTEGER
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			COMPANY_COMPUTE_CAPACITY,
+			SimulationStatePath.Accessor.COMPANY_COMPUTE_CAPACITY,
+			SimulationStatePath.ValueType.INTEGER
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			COMPANY_PROJECTS,
+			SimulationStatePath.Accessor.COMPANY_PROJECTS,
+			SimulationStatePath.ValueType.RESOURCE_DICTIONARY
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			COMPANY_MODELS,
+			SimulationStatePath.Accessor.COMPANY_MODELS,
+			SimulationStatePath.ValueType.RESOURCE_DICTIONARY
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			COMPANY_APPLICATIONS,
+			SimulationStatePath.Accessor.COMPANY_APPLICATIONS,
+			SimulationStatePath.ValueType.RESOURCE_DICTIONARY
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			COMPANY_CONTRACTS,
+			SimulationStatePath.Accessor.COMPANY_CONTRACTS,
+			SimulationStatePath.ValueType.RESOURCE_DICTIONARY
 		)
 	)
 	registry.register_path(
@@ -64,8 +115,29 @@ static func create_registry() -> SimulationStatePathRegistry:
 	)
 	registry.register_path(
 		SimulationStatePath.new(
+			NOTIFICATIONS,
+			SimulationStatePath.Accessor.NOTIFICATIONS,
+			SimulationStatePath.ValueType.NOTIFICATIONS
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
 			RUNTIME_EVENT_SEQUENCE,
 			SimulationStatePath.Accessor.RUNTIME_EVENT_SEQUENCE,
+			SimulationStatePath.ValueType.INTEGER
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			RUNTIME_LEDGER_TRANSACTION_SEQUENCE,
+			SimulationStatePath.Accessor.RUNTIME_LEDGER_TRANSACTION_SEQUENCE,
+			SimulationStatePath.ValueType.INTEGER
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			RUNTIME_NOTIFICATION_SEQUENCE,
+			SimulationStatePath.Accessor.RUNTIME_NOTIFICATION_SEQUENCE,
 			SimulationStatePath.ValueType.INTEGER
 		)
 	)

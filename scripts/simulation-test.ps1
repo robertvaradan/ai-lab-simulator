@@ -13,15 +13,16 @@ $cashLedgerTestScript = Join-Path (Join-Path (Join-Path $gameRoot 'tests') 'simu
 $simulationCoreTestScript = Join-Path (Join-Path (Join-Path $gameRoot 'tests') 'simulation') 'simulation_core_test.gd'
 $planCommitmentTestScript = Join-Path (Join-Path (Join-Path $gameRoot 'tests') 'simulation') 'plan_commitment_test.gd'
 $monthStepTestScript = Join-Path (Join-Path (Join-Path $gameRoot 'tests') 'simulation') 'month_step_test.gd'
+$projectTestScript = Join-Path (Join-Path (Join-Path $gameRoot 'tests') 'simulation') 'project_lifecycle_test.gd'
 
 $godotVersion = Assert-CanonicalGodotExecutable -GodotPath $godotBin
-foreach ($testScript in @($stateTestScript, $publicationTestScript, $cashLedgerTestScript, $simulationCoreTestScript, $planCommitmentTestScript, $monthStepTestScript)) {
+foreach ($testScript in @($stateTestScript, $publicationTestScript, $cashLedgerTestScript, $simulationCoreTestScript, $planCommitmentTestScript, $monthStepTestScript, $projectTestScript)) {
     if (-not (Test-Path -LiteralPath $testScript -PathType Leaf)) {
         throw "Required Simulation Core test script is missing: $testScript"
     }
 }
 
-Write-Output '[1/7] Importing the Godot 4.7 project'
+Write-Output '[1/8] Importing the Godot 4.7 project'
 $previousErrorActionPreference = $ErrorActionPreference
 $ErrorActionPreference = 'Continue'
 try {
@@ -70,22 +71,25 @@ function Invoke-SimulationTest {
     }
 }
 
-Write-Output '[2/7] Running Game State and snapshot tests'
+Write-Output '[2/8] Running Game State and snapshot tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/game_state_test.gd' -SuccessMarker 'GAME_STATE_TEST_SUCCESS'
 
-Write-Output '[3/7] Running committed Game State publication tests'
+Write-Output '[3/8] Running committed Game State publication tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/game_state_publication_test.gd' -SuccessMarker 'GAME_STATE_PUBLICATION_TEST_SUCCESS'
 
-Write-Output '[4/7] Running Cash Ledger tests'
+Write-Output '[4/8] Running Cash Ledger tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/cash_ledger_test.gd' -SuccessMarker 'CASH_LEDGER_TEST_SUCCESS'
 
-Write-Output '[5/7] Running Rule registry, Simulation Context, and Simulation Core tests'
+Write-Output '[5/8] Running Rule registry, Simulation Context, and Simulation Core tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/simulation_core_test.gd' -SuccessMarker 'SIMULATION_CORE_TEST_SUCCESS'
 
-Write-Output '[6/7] Running Plan validation and commitment tests'
+Write-Output '[6/8] Running Plan validation and commitment tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/plan_commitment_test.gd' -SuccessMarker 'PLAN_COMMITMENT_TEST_SUCCESS'
 
-Write-Output '[7/7] Running Month Step and Quarter Boundary tests'
+Write-Output '[7/8] Running Month Step and Quarter Boundary tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/month_step_test.gd' -SuccessMarker 'MONTH_STEP_TEST_SUCCESS'
+
+Write-Output '[8/8] Running Marketing Scenario Project tests'
+Invoke-SimulationTest -ScriptPath 'res://tests/simulation/project_lifecycle_test.gd' -SuccessMarker 'PROJECT_LIFECYCLE_TEST_SUCCESS'
 
 Write-Output "SIMULATION_TEST_COMMAND_SUCCESS godot=$godotVersion runtime=standard_non_dotnet"
