@@ -24,10 +24,12 @@ Sparse brick caches, geometry clipmaps, incremental dirty-region updates, arbitr
 - Godot standard/non-.NET `4.7.2.stable.official.ed1daf0bf`
 - Windows: D3D12 Forward+ compute
 - macOS: Metal Forward+ compute
+- Linux: Vulkan Forward+ compute. Mesa lavapipe provides a software Vulkan device on a headless host.
 - PowerShell 7 or Windows PowerShell 5.1 on Windows
 - bash on macOS
+- bash on Linux
 
-The canonical Windows executables are `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe` and `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64_console.exe`. The canonical macOS executable is `.tools/godot/4.7.2/Godot.app/Contents/MacOS/Godot`. Each automation script resolves this location from the repository root for the current host. The scripts reject a missing binary, other versions, and Mono/.NET builds. The scripts do not search `PATH`, Downloads, Program Files, or `/Applications`. Campus and laboratory geometry are authored Godot scenes. The project does not use a Blender export pipeline or GLB campus assets.
+The canonical Windows executables are `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe` and `.tools\godot\4.7.2\Godot_v4.7.2-stable_win64_console.exe`. The canonical macOS executable is `.tools/godot/4.7.2/Godot.app/Contents/MacOS/Godot`. The canonical Linux executable is `.tools/godot/4.7.2/Godot_v4.7.2-stable_linux.x86_64`. Each automation script resolves this location from the repository root for the current host. The scripts reject a missing binary, other versions, and Mono/.NET builds. The scripts do not search `PATH`, Downloads, Program Files, or `/Applications`. Campus and laboratory geometry are authored Godot scenes. The project does not use a Blender export pipeline or GLB campus assets.
 
 Install the standard Godot build without administrator access.
 
@@ -43,6 +45,18 @@ macOS:
 ./scripts/install-godot-standard.sh
 ```
 
+Linux:
+
+```bash
+./scripts/install-godot-standard.sh
+```
+
+A Linux host needs a Vulkan device and a display for the windowed render test. On a Cloud Agent or other headless Linux host, run the one-command Cloud Agent setup first. It installs the system libraries, Mesa lavapipe, and Xvfb, and then installs Godot.
+
+```bash
+bash scripts/cloud-agent-setup.sh
+```
+
 ## One-command full render test
 
 From the repository root on Windows:
@@ -56,6 +70,14 @@ From the repository root on macOS:
 ```bash
 ./scripts/render-test.sh
 ```
+
+From the repository root on Linux:
+
+```bash
+./scripts/render-test.sh
+```
+
+A headless Linux host runs the windowed render step through an Xvfb virtual display automatically.
 
 The command verifies Godot 4.7, imports the compute shader, launches the real Forward+ renderer, dispatches all three states, captures 1920×1080 PNGs under `game/evidence/sdf`, validates the outputs, and exits nonzero on a broken contract.
 
