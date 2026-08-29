@@ -1,7 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://c8k2n4pqrwxy7"]
+[gd_scene format=3 uid="uid://c8k2n4pqrwxy7"]
 
-[ext_resource type="Material" path="res://materials/tree_foliage_a.tres" id="1_foliage_a"]
-[ext_resource type="Material" path="res://materials/tree_foliage_b.tres" id="2_foliage_b"]
+[ext_resource type="Material" uid="uid://dnb7jg5avt08r" path="res://materials/tree_foliage_a.tres" id="1_foliage_a"]
+[ext_resource type="Material" uid="uid://dg3cos0dhhc0u" path="res://materials/tree_foliage_b.tres" id="2_foliage_b"]
 [ext_resource type="Material" path="res://materials/trunk.tres" id="3_trunk"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_trunk"]
@@ -29,29 +29,29 @@ height = 1.6
 radial_segments = 8
 rings = 4
 
-[node name="RoundTree" type="Node3D"]
+[node name="RoundTree" type="Node3D" unique_id=819220560]
 
-[node name="Trunk" type="MeshInstance3D" parent="."]
+[node name="Trunk" type="MeshInstance3D" parent="." unique_id=1060079360]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 material_override = ExtResource("3_trunk")
 mesh = SubResource("CylinderMesh_trunk")
 
-[node name="CrownCenter" type="MeshInstance3D" parent="."]
+[node name="CrownCenter" type="MeshInstance3D" parent="." unique_id=733547149]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0)
 material_override = ExtResource("1_foliage_a")
 mesh = SubResource("SphereMesh_center")
 
-[node name="CrownLeft" type="MeshInstance3D" parent="."]
+[node name="CrownLeft" type="MeshInstance3D" parent="." unique_id=84310847]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 3.2, 0)
 material_override = ExtResource("2_foliage_b")
 mesh = SubResource("SphereMesh_left")
 
-[node name="CrownRight" type="MeshInstance3D" parent="."]
+[node name="CrownRight" type="MeshInstance3D" parent="." unique_id=841024885]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 3.2, 0)
 material_override = ExtResource("1_foliage_a")
 mesh = SubResource("SphereMesh_side")
 
-[node name="CrownTop" type="MeshInstance3D" parent="."]
+[node name="CrownTop" type="MeshInstance3D" parent="." unique_id=1925933708]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.2, 0)
 material_override = ExtResource("2_foliage_b")
 mesh = SubResource("SphereMesh_side")

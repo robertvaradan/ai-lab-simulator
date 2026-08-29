@@ -1,37 +1,23 @@
-[gd_scene load_steps=90 format=3]
+[gd_scene format=3 uid="uid://begtr2unngm2w"]
 
 [ext_resource type="Script" uid="uid://dcif18kjr3adx" path="res://primitives/box_outline_mesh.gd" id="1_fhb87"]
-
 [ext_resource type="Material" path="res://materials/charcoal.tres" id="charcoal"]
-
 [ext_resource type="Material" path="res://materials/concrete_light.tres" id="concrete_light"]
-
 [ext_resource type="Material" path="res://materials/cream.tres" id="cream"]
-
 [ext_resource type="Material" path="res://materials/cream_deep.tres" id="cream_deep"]
-
 [ext_resource type="Material" path="res://materials/cyan.tres" id="cyan"]
-
 [ext_resource type="Material" path="res://materials/glass.tres" id="glass"]
-
 [ext_resource type="Material" path="res://materials/glass_dark.tres" id="glass_dark"]
-
 [ext_resource type="Material" path="res://materials/glass_light.tres" id="glass_light"]
-
 [ext_resource type="Material" path="res://materials/glass_mid.tres" id="glass_mid"]
-
 [ext_resource type="Material" path="res://materials/metal_dark.tres" id="metal_dark"]
-
 [ext_resource type="Material" path="res://materials/orange.tres" id="orange"]
-
 [ext_resource type="Material" path="res://materials/orange_dark.tres" id="orange_dark"]
-
 [ext_resource type="Material" path="res://materials/roof.tres" id="roof"]
-
 [ext_resource type="Material" path="res://materials/warm.tres" id="warm"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_r18i6"]
-size = Vector3(28, 0.4, 18)
+size = Vector3(30.4, 0.4, 22)
 
 [sub_resource type="BoxMesh" id="BoxMesh_sw2yc"]
 size = Vector3(9.400001, 14, 8.8)
@@ -222,22 +208,22 @@ size = Vector3(7, 0.2, 0.2)
 size = Vector3(0.2, 5.4, 0.2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_hjrgv"]
-size = Vector3(3, 0.2, 2.4)
+size = Vector3(1.8, 0.4, 2.4)
 
-[sub_resource type="BoxMesh" id="BoxMesh_nfi5e"]
-size = Vector3(2.2, 0.2, 0.2)
-
-[sub_resource type="BoxMesh" id="BoxMesh_nji4a"]
-size = Vector3(2.2, 0.2, 0.2)
-
-[sub_resource type="BoxMesh" id="BoxMesh_fjeah"]
-size = Vector3(0.2, 0.2, 1.6)
-
-[sub_resource type="BoxMesh" id="BoxMesh_ofbl1"]
-size = Vector3(0.2, 0.2, 1.6)
+[sub_resource type="PrimitiveMesh" id="PrimitiveMesh_x6qjr"]
+resource_local_to_scene = false
+resource_name = ""
+lightmap_size_hint = Vector2i(0, 0)
+custom_aabb = AABB(0, 0, 0, 0, 0, 0)
+flip_faces = false
+add_uv2 = false
+uv2_padding = 2.0
+script = ExtResource("1_fhb87")
+size = Vector3(1.8, 0.2, 2.4)
+metadata/_custom_type_script = "uid://dcif18kjr3adx"
 
 [sub_resource type="BoxMesh" id="BoxMesh_4owdf"]
-size = Vector3(1.8, 0.2, 1.2)
+size = Vector3(1.2, 0.2, 1.8000001)
 
 [sub_resource type="BoxMesh" id="BoxMesh_s3hbp"]
 size = Vector3(1.2, 2.4, 0.2)
@@ -292,10 +278,10 @@ size = Vector3(0.4, 13.2, 8.400001)
 [sub_resource type="BoxMesh" id="BoxMesh_a66x2"]
 size = Vector3(0.4, 13.2, 10.2)
 
-[node name="LabStage2" type="Node3D"]
+[node name="LabStage2" type="Node3D" unique_id=1275146334]
 
 [node name="Foundation" type="MeshInstance3D" parent="." unique_id=687043103]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.2, -3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 0.2, -5)
 material_override = ExtResource("concrete_light")
 mesh = SubResource("BoxMesh_r18i6")
 
@@ -590,7 +576,7 @@ material_override = ExtResource("cream")
 mesh = SubResource("BoxMesh_7ts5b")
 
 [node name="WingSideFrameTop" type="MeshInstance3D" parent="RightWingOffset" unique_id=953653303]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 6.6, -0.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 6.6, -0.8000002)
 material_override = ExtResource("cream")
 mesh = SubResource("BoxMesh_bmklu")
 
@@ -693,32 +679,17 @@ material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_lbrta")
 
 [node name="SkylightBase" type="MeshInstance3D" parent="RightWingOffset" unique_id=1615718679]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.8, 7.1, -1.8000002)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.6, 7.1, -4.2)
 material_override = ExtResource("cream_deep")
 mesh = SubResource("BoxMesh_hjrgv")
 
 [node name="SkylightGlowFront" type="MeshInstance3D" parent="RightWingOffset" unique_id=1176789318]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.8, 7.3, -0.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.6, 7.3999996, -4.2)
 material_override = ExtResource("cyan")
-mesh = SubResource("BoxMesh_nfi5e")
-
-[node name="SkylightGlowBack" type="MeshInstance3D" parent="RightWingOffset" unique_id=355920309]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.8, 7.3, -2.6)
-material_override = ExtResource("cyan")
-mesh = SubResource("BoxMesh_nji4a")
-
-[node name="SkylightGlowLeft" type="MeshInstance3D" parent="RightWingOffset" unique_id=1835175075]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7, 7.3, -1.8)
-material_override = ExtResource("cyan")
-mesh = SubResource("BoxMesh_fjeah")
-
-[node name="SkylightGlowRight" type="MeshInstance3D" parent="RightWingOffset" unique_id=1329684400]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.9, 7.3, -1.8)
-material_override = ExtResource("cyan")
-mesh = SubResource("BoxMesh_ofbl1")
+mesh = SubResource("PrimitiveMesh_x6qjr")
 
 [node name="SkylightCenter" type="MeshInstance3D" parent="RightWingOffset" unique_id=1805281841]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.8, 7.3, -1.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.599999, 7.3999996, -4.2)
 material_override = ExtResource("glass_light")
 mesh = SubResource("BoxMesh_4owdf")
 
@@ -786,4 +757,3 @@ mesh = SubResource("BoxMesh_642tu")
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -4.8999996, 6.7999997, -8.400001)
 material_override = ExtResource("cream")
 mesh = SubResource("BoxMesh_a66x2")
-

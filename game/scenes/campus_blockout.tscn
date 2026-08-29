@@ -1,50 +1,28 @@
-[gd_scene load_steps=198 format=3 uid="uid://crs26831ytqku"]
+[gd_scene format=3 uid="uid://crs26831ytqku"]
 
 [ext_resource type="PackedScene" uid="uid://c8k2n4pqrwxy7" path="res://scenes/round_tree.tscn" id="2_round_tree"]
-
 [ext_resource type="PackedScene" uid="uid://c7747tm8m2tb" path="res://scenes/fir_tree.tscn" id="3_fir_tree"]
-
+[ext_resource type="PackedScene" uid="uid://yqcuquepyj58" path="res://scenes/lab_stage_1.tscn" id="4_lab_stage_1"]
 [ext_resource type="Script" uid="uid://cisocam8k2n4p" path="res://camera/isometric_camera.gd" id="7_iso_cam"]
-
 [ext_resource type="Material" path="res://materials/car_dark.tres" id="car_dark"]
-
 [ext_resource type="Material" path="res://materials/car_gray.tres" id="car_gray"]
-
 [ext_resource type="Material" path="res://materials/car_green.tres" id="car_green"]
-
 [ext_resource type="Material" path="res://materials/concrete.tres" id="concrete"]
-
 [ext_resource type="Material" path="res://materials/concrete_light.tres" id="concrete_light"]
-
 [ext_resource type="Material" path="res://materials/cyan.tres" id="cyan"]
-
 [ext_resource type="Material" path="res://materials/glass_dark.tres" id="glass_dark"]
-
 [ext_resource type="Material" uid="uid://bcm0478dpfjvh" path="res://materials/grass.tres" id="grass"]
-
 [ext_resource type="Material" path="res://materials/grass_cut.tres" id="grass_cut"]
-
 [ext_resource type="Material" path="res://materials/hedge.tres" id="hedge"]
-
 [ext_resource type="Material" path="res://materials/marking.tres" id="marking"]
-
 [ext_resource type="Material" path="res://materials/metal.tres" id="metal"]
-
 [ext_resource type="Material" path="res://materials/metal_dark.tres" id="metal_dark"]
-
 [ext_resource type="Material" path="res://materials/plinth.tres" id="plinth"]
-
 [ext_resource type="Material" path="res://materials/road.tres" id="road"]
-
 [ext_resource type="Material" path="res://materials/road_edge.tres" id="road_edge"]
-
 [ext_resource type="Material" path="res://materials/tire.tres" id="tire"]
-
 [ext_resource type="Material" path="res://materials/void.tres" id="void"]
-
 [ext_resource type="Material" path="res://materials/warm.tres" id="warm"]
-
-[ext_resource type="PackedScene" path="res://scenes/lab_stage_1.tscn" id="4_lab_stage_1"]
 
 [sub_resource type="Environment" id="Environment_8rkxl"]
 background_mode = 1
@@ -384,9 +362,6 @@ size = Vector3(2.8, 0.6, 2.4)
 
 [sub_resource type="BoxMesh" id="BoxMesh_45phh"]
 size = Vector3(2.4, 0.2, 2)
-
-[sub_resource type="BoxMesh" id="BoxMesh_5drq7"]
-size = Vector3(7, 0.2, 7.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_bqy86"]
 size = Vector3(6, 0.4, 6.4)
@@ -1278,11 +1253,6 @@ mesh = SubResource("BoxMesh_krbkm")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2, 0.5, 6.2)
 material_override = ExtResource("hedge")
 mesh = SubResource("BoxMesh_45phh")
-
-[node name="ActivityGrassCut" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=843233340]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.8, -0.5, -12)
-material_override = ExtResource("grass_cut")
-mesh = SubResource("BoxMesh_5drq7")
 
 [node name="ActivityPad" type="MeshInstance3D" parent="ParkingAndPaths" unique_id=1152355196]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.8, -0.3, -12)
