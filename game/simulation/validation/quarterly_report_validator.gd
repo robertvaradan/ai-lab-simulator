@@ -68,7 +68,8 @@ static func validate(
 		_validate_world_snapshot(report, known_content_ids, result)
 		_validate_previous_fields(report, previous_report, result)
 		if (
-			state.calendar != null
+			report.report_kind_id == QuarterlyReportState.KIND_ENDING
+			and state.calendar != null
 			and report.month_step_index == state.calendar.current_month_step_index
 		):
 			_validate_matches_current_state(report, state, result)
