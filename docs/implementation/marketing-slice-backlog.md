@@ -307,7 +307,7 @@ Verification:
 
 ### MS1-10: Implement Simulation Invariants and replay tests
 
-Status: `OPEN`
+Status: `DONE`
 
 Dependencies: `MS1-02` through `MS1-09`.
 
@@ -332,7 +332,7 @@ Verification:
 
 ### MS2-01: Implement the minimal Simulation Laboratory
 
-Status: `BLOCKED`
+Status: `OPEN`
 
 Dependencies: `MS1-10`.
 
@@ -356,7 +356,7 @@ Verification:
 
 ### MS2-02: Implement the Rule Graph compiler
 
-Status: `BLOCKED`
+Status: `OPEN`
 
 Dependencies: `MS1-03` and `MS1-10`.
 
@@ -399,7 +399,7 @@ Verification:
 
 ### MS3-01: Connect the production game to the Simulation Core
 
-Status: `BLOCKED`
+Status: `OPEN`
 
 Dependencies: `MS1-10`.
 
