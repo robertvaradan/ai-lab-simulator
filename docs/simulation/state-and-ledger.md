@@ -32,6 +32,16 @@ A Pending Command Batch must not execute more than once.
 
 The Game State must contain Attention Events and Notifications.
 
+The Game State can contain Quarterly Reports.
+
+A Quarterly Report must have a stable identifier.
+
+A Quarterly Report must not change Company State.
+
+A Quarterly Report must not change World State.
+
+A Quarterly Report must not change the Cash Ledger.
+
 Each Attention Event must have a stable identifier.
 
 Each Attention Event must have a typed input requirement.

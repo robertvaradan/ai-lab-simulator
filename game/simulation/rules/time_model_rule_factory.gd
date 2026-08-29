@@ -15,5 +15,6 @@ static func create_registry() -> SimulationRuleRegistry:
 	registry.register_rule(PostApplicationRevenueRule.new())
 	registry.register_rule(CreateQuarterBoundaryAttentionRule.new())
 	registry.register_rule(CreateProjectCompletionNotificationRule.new())
+	registry.register_rule(CreateQuarterlyReportRule.new())
 	registry.register_rule(CloseMonthStepRule.new())
 	return registry

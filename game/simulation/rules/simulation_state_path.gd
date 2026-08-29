@@ -24,9 +24,11 @@ enum Accessor {
 	PENDING_COMMAND_BATCH,
 	ATTENTION_EVENTS,
 	NOTIFICATIONS,
+	QUARTERLY_REPORTS,
 	RUNTIME_EVENT_SEQUENCE,
 	RUNTIME_LEDGER_TRANSACTION_SEQUENCE,
 	RUNTIME_NOTIFICATION_SEQUENCE,
+	RUNTIME_QUARTERLY_REPORT_SEQUENCE,
 }
 
 enum ValueType {
@@ -36,6 +38,7 @@ enum ValueType {
 	PENDING_COMMAND_BATCH,
 	ATTENTION_EVENTS,
 	NOTIFICATIONS,
+	QUARTERLY_REPORTS,
 	RESOURCE_DICTIONARY,
 }
 
@@ -108,6 +111,18 @@ func read_integer(state: GameState) -> SimulationIntegerResult:
 			return SimulationIntegerResult.success(
 				state.runtime_id_counters.next_sequence_by_entity_type[&"notification"]
 			)
+		Accessor.RUNTIME_QUARTERLY_REPORT_SEQUENCE:
+			if state.runtime_id_counters == null:
+				return SimulationIntegerResult.failure(
+					_access_error("Runtime identifier counters are missing.")
+				)
+			if not state.runtime_id_counters.next_sequence_by_entity_type.has(&"quarterly_report"):
+				return SimulationIntegerResult.failure(
+					_access_error("Runtime identifier counter quarterly_report is missing.")
+				)
+			return SimulationIntegerResult.success(
+				state.runtime_id_counters.next_sequence_by_entity_type[&"quarterly_report"]
+			)
 		Accessor.COMPANY_PUBLIC_TRUST_POINTS:
 			if state.company == null:
 				return SimulationIntegerResult.failure(_access_error("The Company State is missing."))
@@ -173,6 +188,13 @@ func write_integer(state: GameState, value: int) -> SimulationDiagnostic:
 			notification_counters.assign(state.runtime_id_counters.next_sequence_by_entity_type)
 			notification_counters[&"notification"] = value
 			state.runtime_id_counters.next_sequence_by_entity_type = notification_counters
+		Accessor.RUNTIME_QUARTERLY_REPORT_SEQUENCE:
+			if state.runtime_id_counters == null:
+				return _access_error("Runtime identifier counters are missing.")
+			var report_counters: Dictionary[StringName, int] = {}
+			report_counters.assign(state.runtime_id_counters.next_sequence_by_entity_type)
+			report_counters[&"quarterly_report"] = value
+			state.runtime_id_counters.next_sequence_by_entity_type = report_counters
 		Accessor.COMPANY_PUBLIC_TRUST_POINTS:
 			if state.company == null:
 				return _access_error("The Company State is missing.")
@@ -275,6 +297,28 @@ func write_notifications(
 	return null
 
 
+func read_quarterly_reports(state: GameState) -> Array[QuarterlyReportState]:
+	var reports: Array[QuarterlyReportState] = []
+	if state == null or accessor != Accessor.QUARTERLY_REPORTS:
+		return reports
+	reports.assign(state.quarterly_reports)
+	return reports
+
+
+func write_quarterly_reports(
+		state: GameState,
+		reports: Array[QuarterlyReportState]
+	) -> SimulationDiagnostic:
+	if state == null:
+		return _access_error("The Game State is missing.")
+	if accessor != Accessor.QUARTERLY_REPORTS:
+		return _access_error("State path %s does not contain Quarterly Reports." % stable_id)
+	var copied_reports: Array[QuarterlyReportState] = []
+	copied_reports.assign(reports)
+	state.quarterly_reports = copied_reports
+	return null
+
+
 func read_resource_dictionary(state: GameState) -> Dictionary:
 	var resources: Dictionary = {}
 	if state == null or value_type != ValueType.RESOURCE_DICTIONARY:
@@ -374,7 +418,7 @@ func is_valid_contract() -> bool:
 			return value_type == ValueType.INTEGER
 		Accessor.CALENDAR_MONTH_STEP_INDEX, Accessor.CALENDAR_QUARTER_INDEX:
 			return value_type == ValueType.INTEGER
-		Accessor.RUNTIME_EVENT_SEQUENCE, Accessor.RUNTIME_LEDGER_TRANSACTION_SEQUENCE, Accessor.RUNTIME_NOTIFICATION_SEQUENCE:
+		Accessor.RUNTIME_EVENT_SEQUENCE, Accessor.RUNTIME_LEDGER_TRANSACTION_SEQUENCE, Accessor.RUNTIME_NOTIFICATION_SEQUENCE, Accessor.RUNTIME_QUARTERLY_REPORT_SEQUENCE:
 			return value_type == ValueType.INTEGER
 		Accessor.CASH_LEDGER_TRANSACTIONS:
 			return value_type == ValueType.CASH_LEDGER
@@ -384,6 +428,8 @@ func is_valid_contract() -> bool:
 			return value_type == ValueType.ATTENTION_EVENTS
 		Accessor.NOTIFICATIONS:
 			return value_type == ValueType.NOTIFICATIONS
+		Accessor.QUARTERLY_REPORTS:
+			return value_type == ValueType.QUARTERLY_REPORTS
 		Accessor.COMPANY_PROJECTS, Accessor.COMPANY_MODELS, Accessor.COMPANY_APPLICATIONS, Accessor.COMPANY_CONTRACTS:
 			return value_type == ValueType.RESOURCE_DICTIONARY
 		Accessor.WORLD_COMPETITORS, Accessor.WORLD_MODELS, Accessor.WORLD_MARKETS:

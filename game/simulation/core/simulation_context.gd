@@ -340,6 +340,129 @@ func read_notifications() -> Array[NotificationState]:
 	return notifications
 
 
+func read_quarterly_reports() -> Array[QuarterlyReportState]:
+	var rule_id: StringName = _current_rule_id()
+	var state_path: StringName = CanonicalSimulationStatePaths.QUARTERLY_REPORTS
+	var reports: Array[QuarterlyReportState] = []
+	if not _require_current_rule(state_path):
+		_trace._append_read(rule_id, state_path, false)
+		return reports
+	if not _declared_reads.has(state_path):
+		_fault(
+			&"context.undeclared_read",
+			"Rule %s read undeclared state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return reports
+	var path: SimulationStatePath = _state_path_registry.get_path(state_path)
+	if path == null or path.value_type != SimulationStatePath.ValueType.QUARTERLY_REPORTS:
+		_fault(
+			&"context.unknown_read_path",
+			"Rule %s read unknown state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return reports
+	reports = path.read_quarterly_reports(_candidate_state)
+	_trace._append_read(rule_id, state_path, true, true, reports.size())
+	return reports
+
+
+func write_quarterly_reports(reports: Array[QuarterlyReportState]) -> bool:
+	var rule_id: StringName = _current_rule_id()
+	var state_path: StringName = CanonicalSimulationStatePaths.QUARTERLY_REPORTS
+	if not _require_current_rule(state_path):
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	if not _declared_writes.has(state_path):
+		_fault(
+			&"context.undeclared_write",
+			"Rule %s wrote undeclared state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	var path: SimulationStatePath = _state_path_registry.get_path(state_path)
+	if path == null or path.value_type != SimulationStatePath.ValueType.QUARTERLY_REPORTS:
+		_fault(
+			&"context.unknown_write_path",
+			"Rule %s wrote unknown state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false)
+		return false
+	var before_reports: Array[QuarterlyReportState] = path.read_quarterly_reports(_candidate_state)
+	var write_diagnostic: SimulationDiagnostic = path.write_quarterly_reports(_candidate_state, reports)
+	if write_diagnostic != null:
+		_fault(
+			&"context.write_failed",
+			"Rule %s could not write state path %s. %s"
+			% [rule_id, state_path, write_diagnostic.message],
+			state_path
+		)
+		_trace._append_write(rule_id, state_path, false, true, before_reports.size())
+		return false
+	_trace._append_write(
+		rule_id,
+		state_path,
+		true,
+		true,
+		before_reports.size(),
+		true,
+		reports.size()
+	)
+	return true
+
+
+func read_cash_ledger() -> CashLedgerState:
+	var rule_id: StringName = _current_rule_id()
+	var state_path: StringName = CanonicalSimulationStatePaths.CASH_LEDGER_TRANSACTIONS
+	if not _require_current_rule(state_path):
+		_trace._append_read(rule_id, state_path, false)
+		return null
+	if not _declared_reads.has(state_path):
+		_fault(
+			&"context.undeclared_read",
+			"Rule %s read undeclared state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return null
+	var path: SimulationStatePath = _state_path_registry.get_path(state_path)
+	if path == null or path.value_type != SimulationStatePath.ValueType.CASH_LEDGER:
+		_fault(
+			&"context.unknown_read_path",
+			"Rule %s read unknown state path %s." % [rule_id, state_path],
+			state_path
+		)
+		_trace._append_read(rule_id, state_path, false)
+		return null
+	var ledger: CashLedgerState = path.read_cash_ledger(_candidate_state)
+	_trace._append_read(
+		rule_id,
+		state_path,
+		true,
+		true,
+		0 if ledger == null else ledger.transactions.size()
+	)
+	return ledger
+
+
+func get_candidate_state_for_report() -> GameState:
+	if not _require_current_rule():
+		return null
+	if not _declared_writes.has(CanonicalSimulationStatePaths.QUARTERLY_REPORTS):
+		_fault(
+			&"context.undeclared_write",
+			"Rule %s requested candidate Game State for a Quarterly Report without a report write."
+			% _current_rule_id(),
+			CanonicalSimulationStatePaths.QUARTERLY_REPORTS
+		)
+		return null
+	return _candidate_state
+
+
 func write_notifications(notifications: Array[NotificationState]) -> bool:
 	var rule_id: StringName = _current_rule_id()
 	var state_path: StringName = CanonicalSimulationStatePaths.NOTIFICATIONS

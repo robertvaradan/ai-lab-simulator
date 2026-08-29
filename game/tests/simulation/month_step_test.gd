@@ -150,6 +150,10 @@ func _verify_one_month_step(core: SimulationCore, state: GameState) -> void:
 		"The first Month Step created an Attention Event."
 	)
 	_expect(
+		result.candidate_state.quarterly_reports.size() == 1,
+		"The first Month Step created an ending Quarterly Report."
+	)
+	_expect(
 		result.candidate_state.pending_command_batch == null,
 		"The first Month Step retained a Pending Command Batch."
 	)
@@ -168,6 +172,7 @@ func _verify_one_month_step(core: SimulationCore, state: GameState) -> void:
 			PostApplicationRevenueRule.RULE_ID,
 			CreateQuarterBoundaryAttentionRule.RULE_ID,
 			CreateProjectCompletionNotificationRule.RULE_ID,
+			CreateQuarterlyReportRule.RULE_ID,
 			CloseMonthStepRule.RULE_ID,
 		],
 		"The Month Step pipeline did not use canonical Rule phase order."
@@ -243,6 +248,16 @@ func _verify_three_month_steps_stop_at_quarter_boundary(core: SimulationCore, st
 			"The Quarter Boundary Attention Event identifier is incorrect."
 		)
 	_expect(
+		month_three.candidate_state.quarterly_reports.size() == 2,
+		"The Quarter Boundary did not create the ending Quarterly Report."
+	)
+	if month_three.candidate_state.quarterly_reports.size() == 2:
+		_expect(
+			month_three.candidate_state.quarterly_reports[1].stable_id
+			== StableIdentifier.format_runtime_identifier(&"quarterly_report", 1),
+			"The ending Quarterly Report identifier is incorrect."
+		)
+	_expect(
 		month_three.candidate_state.notifications.is_empty(),
 		"The Quarter Boundary created a Notification."
 	)
@@ -281,7 +296,7 @@ func _verify_advance_matches_month_step_pipeline(core: SimulationCore, state: Ga
 		"advance_until_attention_required did not use the same Month Step pipeline as step_month."
 	)
 	_expect(
-		_rule_order(advanced.trace).size() == 36,
+		_rule_order(advanced.trace).size() == 39,
 		"advance_until_attention_required did not run three Month Step pipelines."
 	)
 

@@ -35,6 +35,14 @@ static func create_state(definition: MarketingScenarioDefinition) -> GameStateLo
 		result.add_error("The duplicated Marketing Scenario starting state is not a Game State.")
 		return result
 	var duplicated_state: GameState = duplicated_resource
+	var opening_reports: Array[QuarterlyReportState] = []
+	opening_reports.append(
+		QuarterlyReportCompiler.compile_opening(
+			duplicated_state,
+			definition.competitor_definitions
+		)
+	)
+	duplicated_state.quarterly_reports = opening_reports
 	var state_validation: GameStateValidationResult = GameStateValidator.validate(
 		duplicated_state,
 		definition.stable_id,

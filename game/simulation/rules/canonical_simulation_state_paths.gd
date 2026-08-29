@@ -30,9 +30,13 @@ const CALENDAR_QUARTER_INDEX: StringName = &"state.calendar.current_quarter_inde
 const PENDING_COMMAND_BATCH: StringName = &"state.pending_command_batch"
 const ATTENTION_EVENTS: StringName = &"state.attention_events"
 const NOTIFICATIONS: StringName = &"state.notifications"
+const QUARTERLY_REPORTS: StringName = &"state.quarterly_reports"
 const RUNTIME_EVENT_SEQUENCE: StringName = &"state.runtime_id_counters.event"
 const RUNTIME_LEDGER_TRANSACTION_SEQUENCE: StringName = &"state.runtime_id_counters.ledger_transaction"
 const RUNTIME_NOTIFICATION_SEQUENCE: StringName = &"state.runtime_id_counters.notification"
+const RUNTIME_QUARTERLY_REPORT_SEQUENCE: StringName = (
+	&"state.runtime_id_counters.quarterly_report"
+)
 
 
 static func create_registry() -> SimulationStatePathRegistry:
@@ -186,6 +190,13 @@ static func create_registry() -> SimulationStatePathRegistry:
 	)
 	registry.register_path(
 		SimulationStatePath.new(
+			QUARTERLY_REPORTS,
+			SimulationStatePath.Accessor.QUARTERLY_REPORTS,
+			SimulationStatePath.ValueType.QUARTERLY_REPORTS
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
 			RUNTIME_EVENT_SEQUENCE,
 			SimulationStatePath.Accessor.RUNTIME_EVENT_SEQUENCE,
 			SimulationStatePath.ValueType.INTEGER
@@ -202,6 +213,13 @@ static func create_registry() -> SimulationStatePathRegistry:
 		SimulationStatePath.new(
 			RUNTIME_NOTIFICATION_SEQUENCE,
 			SimulationStatePath.Accessor.RUNTIME_NOTIFICATION_SEQUENCE,
+			SimulationStatePath.ValueType.INTEGER
+		)
+	)
+	registry.register_path(
+		SimulationStatePath.new(
+			RUNTIME_QUARTERLY_REPORT_SEQUENCE,
+			SimulationStatePath.Accessor.RUNTIME_QUARTERLY_REPORT_SEQUENCE,
 			SimulationStatePath.ValueType.INTEGER
 		)
 	)
