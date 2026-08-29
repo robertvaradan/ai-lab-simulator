@@ -229,6 +229,11 @@ static func _validate_company(
 			"Application %s price" % application_id,
 			result
 		)
+		_validate_nonnegative(
+			application.active_customer_contract_count,
+			"Application %s customer contract count" % application_id,
+			result
+		)
 
 	var contract_ids: Array[StringName] = []
 	contract_ids.assign(company.contracts.keys())

@@ -7,6 +7,7 @@ enum Accessor {
 	COMPANY_GOVERNMENT_TRUST_POINTS,
 	COMPANY_PROJECT_TEAM_COUNT,
 	COMPANY_COMPUTE_CAPACITY,
+	COMPANY_FIXED_OPERATING_COST,
 	COMPANY_PROJECTS,
 	COMPANY_MODELS,
 	COMPANY_APPLICATIONS,
@@ -123,6 +124,10 @@ func read_integer(state: GameState) -> SimulationIntegerResult:
 			if state.company == null:
 				return SimulationIntegerResult.failure(_access_error("The Company State is missing."))
 			return SimulationIntegerResult.success(state.company.compute_capacity_unit_months)
+		Accessor.COMPANY_FIXED_OPERATING_COST:
+			if state.company == null:
+				return SimulationIntegerResult.failure(_access_error("The Company State is missing."))
+			return SimulationIntegerResult.success(state.company.fixed_operating_cost_musd_per_month_step)
 		Accessor.WORLD_TECHNICAL_FRONTIER_CODING:
 			return _read_frontier_integer(state, &"coding")
 		Accessor.WORLD_TECHNICAL_FRONTIER_REASONING:
@@ -363,7 +368,7 @@ func is_valid_contract() -> bool:
 	match accessor:
 		Accessor.COMPANY_PUBLIC_TRUST_POINTS, Accessor.COMPANY_GOVERNMENT_TRUST_POINTS:
 			return value_type == ValueType.INTEGER
-		Accessor.COMPANY_PROJECT_TEAM_COUNT, Accessor.COMPANY_COMPUTE_CAPACITY:
+		Accessor.COMPANY_PROJECT_TEAM_COUNT, Accessor.COMPANY_COMPUTE_CAPACITY, Accessor.COMPANY_FIXED_OPERATING_COST:
 			return value_type == ValueType.INTEGER
 		Accessor.WORLD_TECHNICAL_FRONTIER_CODING, Accessor.WORLD_TECHNICAL_FRONTIER_REASONING, Accessor.WORLD_TECHNICAL_FRONTIER_EFFICIENCY:
 			return value_type == ValueType.INTEGER

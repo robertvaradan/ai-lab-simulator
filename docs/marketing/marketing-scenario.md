@@ -378,13 +378,27 @@ Application Revenue must equal customer contracts multiplied by Application pric
 
 Application compute use must equal customer contracts multiplied by the supporting Model compute cost.
 
+Application compute use must not reduce Company Compute Capacity.
+
+A Rule must not write technical competitiveness, market relevance, pricing power, or customer demand as Game State.
+
+The Revenue Rule must write the resolved customer-contract count on the Application.
+
+If Application price exceeds Model pricing power, the Revenue Rule must fault.
+
 The Simulation Trace must connect the Competitor release event to the changed customer expectation, market relevance, customer demand, and Revenue.
+
+The Revenue event payload must include the supporting Model, the current customer expectation, the resolved demand, and the Revenue amount.
+
+The Month Step must not contain a Resolve Market changes Rule in this Scenario.
 
 ## Month Step effects
 
 The fixed Company operating cost must create one ledger transaction in each Month Step.
 
 Each active compute contract cost must create one ledger transaction in each applicable Month Step.
+
+Operating cost, compute-contract cost, and Application Revenue must post during the Resolve contracts, Revenue, and operating costs phase.
 
 The Coding Agent must create one Revenue transaction in each Month Step in which it is active during the Revenue phase.
 

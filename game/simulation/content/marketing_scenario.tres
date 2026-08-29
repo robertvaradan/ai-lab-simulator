@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MarketingScenarioDefinition" load_steps=37 format=3]
+[gd_resource type="Resource" script_class="MarketingScenarioDefinition" load_steps=40 format=3]
 
 [ext_resource type="Script" path="res://simulation/content/marketing_scenario_definition.gd" id="1_scenario"]
 [ext_resource type="Script" path="res://simulation/state/game_state.gd" id="2_game"]
@@ -16,6 +16,7 @@
 [ext_resource type="Script" path="res://simulation/state/runtime_id_counters_state.gd" id="15_counters"]
 [ext_resource type="Script" path="res://simulation/content/project_definition.gd" id="16_project"]
 [ext_resource type="Script" path="res://simulation/content/competitor_definition.gd" id="17_competitor_def"]
+[ext_resource type="Script" path="res://simulation/content/contract_definition.gd" id="18_contract_def"]
 
 [sub_resource type="Resource" id="Resource_player_evaluations"]
 script = ExtResource("8_evaluation")
@@ -233,6 +234,22 @@ customer_expectation_market_id = &"market.coding_agent"
 released_customer_expectation_coding_evaluation_points = 80
 release_event_id = &"event.competitor.northstar_flagship_release"
 
+[sub_resource type="Resource" id="Resource_contract_standard"]
+script = ExtResource("18_contract_def")
+stable_id = &"contract.compute.standard"
+specification_reference = "docs/marketing/marketing-scenario.md"
+schema_version = 2
+monthly_cost_musd = 4
+ledger_category_id = &"cash_category.compute_contract.standard"
+
+[sub_resource type="Resource" id="Resource_contract_burst"]
+script = ExtResource("18_contract_def")
+stable_id = &"contract.compute.burst"
+specification_reference = "docs/marketing/marketing-scenario.md"
+schema_version = 2
+monthly_cost_musd = 8
+ledger_category_id = &"cash_category.compute_contract.burst"
+
 [resource]
 script = ExtResource("1_scenario")
 schema_version = 2
@@ -246,5 +263,6 @@ starting_game_state = SubResource("Resource_starting_game_state")
 available_project_ids = Array[StringName]([&"project.research.frontier_model", &"project.scale.burst_compute", &"project.application.coding_agent"])
 project_definitions = Array[ExtResource("16_project")]([SubResource("Resource_project_research"), SubResource("Resource_project_scale"), SubResource("Resource_project_coding_agent")])
 competitor_definitions = Array[ExtResource("17_competitor_def")]([SubResource("Resource_competitor_northstar")])
+contract_definitions = Array[ExtResource("18_contract_def")]([SubResource("Resource_contract_standard"), SubResource("Resource_contract_burst")])
 command_type_ids = Array[StringName]([&"command.project.start"])
-content_reference_ids = Array[StringName]([&"difficulty.standard", &"calendar_state.planning", &"contract.compute.standard", &"contract.compute.burst", &"contract_state.active", &"model_release_state.released", &"release_strategy.commercial_api", &"site_plot_state.compact_lab", &"site_plot_state.no_link", &"site_plot_state.product_studio", &"competitor.northstar", &"competitor_stage.northstar.announced", &"competitor_stage.northstar.flagship_released", &"command.project.start", &"project.research.frontier_model", &"project.scale.burst_compute", &"project.application.coding_agent", &"project_status.active", &"project_status.completed", &"application_status.active", &"application.player.coding_agent", &"attention_event.quarter_boundary", &"notification.project.completed", &"cash_category.project.start"])
+content_reference_ids = Array[StringName]([&"difficulty.standard", &"calendar_state.planning", &"contract.compute.standard", &"contract.compute.burst", &"contract_state.active", &"model_release_state.released", &"release_strategy.commercial_api", &"site_plot_state.compact_lab", &"site_plot_state.no_link", &"site_plot_state.product_studio", &"competitor.northstar", &"competitor_stage.northstar.announced", &"competitor_stage.northstar.flagship_released", &"command.project.start", &"project.research.frontier_model", &"project.scale.burst_compute", &"project.application.coding_agent", &"project_status.active", &"project_status.completed", &"application_status.active", &"application.player.coding_agent", &"attention_event.quarter_boundary", &"notification.project.completed", &"cash_category.project.start", &"cash_category.operating_cost", &"cash_category.compute_contract.standard", &"cash_category.compute_contract.burst", &"cash_category.application.revenue"])

@@ -142,8 +142,8 @@ func _verify_research_lifecycle(core: SimulationCore, state: GameState) -> void:
 	_expect(research.reserved_project_teams == 1, "The Research Project did not reserve one project team.")
 	_expect(research.reserved_compute_unit_months == 30, "The Research Project Compute reservation is incorrect.")
 	_expect(
-		after_month_one.cash_ledger.calculate_balance_musd() == 85,
-		"The Research Project start cost did not post 65 MUSD."
+		after_month_one.cash_ledger.calculate_balance_musd() == 76,
+		"The Research Project Month Step 1 Cash is incorrect."
 	)
 	_expect(
 		ProjectCapacity.free_project_teams(after_month_one.company) == 1,
@@ -184,8 +184,8 @@ func _verify_scale_lifecycle(core: SimulationCore, state: GameState) -> void:
 		"The Scale Project did not add 60 compute-unit-months."
 	)
 	_expect(
-		after_month_one.cash_ledger.calculate_balance_musd() == 120,
-		"The Scale Project start cost did not post 30 MUSD."
+		after_month_one.cash_ledger.calculate_balance_musd() == 103,
+		"The Scale Project Month Step 1 Cash is incorrect."
 	)
 	_expect(
 		ProjectCapacity.free_project_teams(after_month_one.company) == 2,
@@ -216,8 +216,8 @@ func _verify_coding_agent_lifecycle(core: SimulationCore, state: GameState) -> v
 	)
 	_expect(application.price_musd_per_contract_month == 1, "The Coding Agent price is incorrect.")
 	_expect(
-		after_month_two.cash_ledger.calculate_balance_musd() == 110,
-		"The Coding Agent Project start cost did not post 40 MUSD."
+		after_month_two.cash_ledger.calculate_balance_musd() == 104,
+		"The Coding Agent Project Month Step 2 Cash is incorrect."
 	)
 
 
@@ -248,8 +248,8 @@ func _verify_hybrid_lifecycle(core: SimulationCore, state: GameState) -> void:
 		"The hybrid Research Project did not create its Model."
 	)
 	_expect(
-		ended.cash_ledger.calculate_balance_musd() == 45,
-		"The hybrid Project start costs did not post 105 MUSD."
+		ended.cash_ledger.calculate_balance_musd() == 36,
+		"The hybrid Project ending Cash is incorrect."
 	)
 
 

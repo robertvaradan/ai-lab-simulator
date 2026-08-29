@@ -57,6 +57,7 @@ static func validate(definition: MarketingScenarioDefinition) -> GameStateValida
 
 	_validate_project_definitions(definition, available_project_ids, catalog, result)
 	_validate_competitor_definitions(definition, catalog, result)
+	_validate_contract_definitions(definition, catalog, result)
 
 	var command_types: Dictionary[StringName, bool] = {}
 	for command_type_id: StringName in definition.command_type_ids:
@@ -420,6 +421,86 @@ static func _validate_competitor_definitions(
 			result.add_error("Northstar released customer expectation is invalid.")
 		if competitor_definition.release_event_id != CompetitorDefinition.RELEASE_EVENT_ID:
 			result.add_error("Northstar release event identifier is invalid.")
+
+
+static func _validate_contract_definitions(
+		definition: MarketingScenarioDefinition,
+		catalog: Dictionary[StringName, bool],
+		result: GameStateValidationResult
+	) -> void:
+	if definition.contract_definitions.size() != 2:
+		result.add_error("The Marketing Scenario must contain exactly two compute-contract definitions.")
+	var defined_contract_ids: Dictionary[StringName, bool] = {}
+	for contract_definition: ContractDefinition in definition.contract_definitions:
+		if contract_definition == null:
+			result.add_error("A contract definition is missing.")
+			continue
+		if not StableIdentifier.is_valid(contract_definition.stable_id):
+			result.add_error(
+				"Contract definition identifier %s is invalid." % contract_definition.stable_id
+			)
+			continue
+		if defined_contract_ids.has(contract_definition.stable_id):
+			result.add_error(
+				"Contract definition identifier %s is duplicated." % contract_definition.stable_id
+			)
+		defined_contract_ids[contract_definition.stable_id] = true
+		if not catalog.has(contract_definition.stable_id):
+			result.add_error(
+				"Contract identifier %s does not exist in the content reference catalog."
+				% contract_definition.stable_id
+			)
+		if contract_definition.specification_reference != "docs/marketing/marketing-scenario.md":
+			result.add_error(
+				"Contract %s specification reference is invalid." % contract_definition.stable_id
+			)
+		if contract_definition.schema_version != GameStateValidator.CURRENT_SCHEMA_VERSION:
+			result.add_error(
+				"Contract %s schema version %d is incompatible with schema version %d."
+				% [
+					contract_definition.stable_id,
+					contract_definition.schema_version,
+					GameStateValidator.CURRENT_SCHEMA_VERSION,
+				]
+			)
+		_validate_content_in_catalog(
+			contract_definition.ledger_category_id,
+			"Contract %s ledger category" % contract_definition.stable_id,
+			catalog,
+			result
+		)
+		match contract_definition.stable_id:
+			&"contract.compute.standard":
+				if contract_definition.monthly_cost_musd != 4:
+					result.add_error("The standard compute contract monthly cost must be 4 MUSD.")
+				if contract_definition.ledger_category_id != &"cash_category.compute_contract.standard":
+					result.add_error("The standard compute contract ledger category is invalid.")
+			&"contract.compute.burst":
+				if contract_definition.monthly_cost_musd != 8:
+					result.add_error("The burst compute contract monthly cost must be 8 MUSD.")
+				if contract_definition.ledger_category_id != &"cash_category.compute_contract.burst":
+					result.add_error("The burst compute contract ledger category is invalid.")
+			_:
+				result.add_error(
+					"Contract definition %s is not a Marketing Scenario compute contract."
+					% contract_definition.stable_id
+				)
+	if not defined_contract_ids.has(&"contract.compute.standard"):
+		result.add_error("The standard compute contract definition is missing.")
+	if not defined_contract_ids.has(&"contract.compute.burst"):
+		result.add_error("The burst compute contract definition is missing.")
+	_validate_content_in_catalog(
+		&"cash_category.operating_cost",
+		"Operating cost ledger category",
+		catalog,
+		result
+	)
+	_validate_content_in_catalog(
+		&"cash_category.application.revenue",
+		"Application Revenue ledger category",
+		catalog,
+		result
+	)
 
 
 static func _validate_projected_range(

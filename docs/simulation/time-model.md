@@ -83,6 +83,8 @@ The Advance active Projects phase must reduce remaining Project duration by one 
 
 A Project with duration of one Month Step must complete in its start Month Step.
 
+The first marketing slice must not register a Rule in the Resolve Market changes phase.
+
 Close the Month Step must not change the month index.
 
 Each Rule must execute in one declared phase.

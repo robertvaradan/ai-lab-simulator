@@ -11,4 +11,7 @@ static func create_registry() -> SimulationEventRegistry:
 	registry.register_event(AdvanceActiveProjectsRule.EVENT_ID)
 	registry.register_event(ResolveProjectCompletionsRule.EVENT_ID)
 	registry.register_event(AdvanceCompetitorsRule.EVENT_ID)
+	registry.register_event(PostOperatingCostRule.EVENT_ID)
+	registry.register_event(PostComputeContractCostsRule.EVENT_ID)
+	registry.register_event(PostApplicationRevenueRule.EVENT_ID)
 	return registry

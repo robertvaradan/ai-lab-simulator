@@ -259,7 +259,7 @@ Verification:
 
 ### MS1-08: Implement Market effects and Model position
 
-Status: `OPEN`
+Status: `DONE`
 
 Dependencies: `MS1-06` and `MS1-07`.
 
@@ -267,12 +267,15 @@ References:
 
 - `docs/gameplay/progression.md`
 - `docs/simulation/state-and-ledger.md`
+- `docs/marketing/marketing-scenario.md`
+- `docs/simulation/time-model.md`
 
 Required output:
 
 - Derive Model technical competitiveness from the current technical frontier.
 - Implement Model market relevance.
 - Implement Application customer demand and Revenue effects.
+- Post Company operating cost, compute-contract cost, and Application Revenue in the Revenue phase.
 
 Verification:
 
@@ -282,7 +285,7 @@ Verification:
 
 ### MS1-09: Implement the Quarterly Report
 
-Status: `BLOCKED`
+Status: `OPEN`
 
 Dependencies: `MS1-02`, `MS1-07`, and `MS1-08`.
 

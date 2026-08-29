@@ -8,6 +8,7 @@ const STATUS_ACTIVE: StringName = &"application_status.active"
 @export var status_id: StringName = &""
 @export var supporting_model_id: StringName = &""
 @export var price_musd_per_contract_month: int = -1
+@export var active_customer_contract_count: int = 0
 
 
 func _init() -> void:
