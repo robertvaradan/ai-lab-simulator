@@ -4,6 +4,8 @@
 
 This specification owns Window content scale for canvas UI.
 
+`docs/presentation/ui-theme.md` owns the project Theme and the production UI fontfaces.
+
 `docs/gameplay/production-bootstrap.md` owns the production campaign shell.
 
 `docs/product/game-contract.md` owns the product presentation promise.

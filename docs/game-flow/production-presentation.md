@@ -27,6 +27,7 @@
 | skill-tree | Research-point skill tree | LEAF | COMPLETE | - | NO | docs/gameplay/skill-tree.md; docs/gameplay/production-bootstrap.md | game/host/skill_tree_view.gd; game/host/campaign_catalog.gd | game/tests/host/skill_tree_test.gd; game/tests/host/production_bootstrap_test.gd | The player spends research points on one Research, Scale, and Application tree. |
 | data-center-slot | Data Center World entry | LEAF | COMPLETE | - | NO | docs/gameplay/production-bootstrap.md; docs/presentation/world-map.md; docs/gameplay/domain-model.md | game/host/data_center_view.gd; game/host/world_map_view.gd | game/tests/host/production_bootstrap_test.gd | The Data Center World entry lists compute contracts from Game State. |
 | fail-state | Campaign fail-state view | LEAF | COMPLETE | - | NO | docs/gameplay/production-bootstrap.md; docs/gameplay/difficulty-and-loss.md | game/host/fail_state_view.gd | game/tests/host/production_bootstrap_test.gd | The fail-state view covers abandonment and the bootstrap Cash fail condition. |
+| ui-theme | Base canvas Theme | LEAF | COMPLETE | - | NO | docs/presentation/ui-theme.md | game/ui/base_theme.tres; game/ui/fonts/RopaSans-Regular.ttf; game/ui/fonts/RopaSans-Italic.ttf | game/tests/ui/base_theme_test.gd | The project Theme installs Ropa Sans Regular and Italic as the production UI fontfaces. |
 
 ## Edges
 
@@ -36,6 +37,7 @@
 | presentation-flow | world-map | navigates through |
 | presentation-flow | camera | also frames |
 | presentation-flow | sdf-campus | also captures |
+| presentation-flow | ui-theme | styles canvas with |
 | bootstrap-entry | campaign-shell | loads scenario then |
 | campaign-shell | world-map | can open |
 | campaign-shell | campus | presents HQ |

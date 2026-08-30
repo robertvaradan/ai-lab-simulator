@@ -18,6 +18,11 @@ config/features=PackedStringArray("4.7", "Forward Plus")
 
 UiScaleDriver="*res://app/ui_scale_driver.gd"
 
+[gui]
+
+theme/custom="res://ui/base_theme.tres"
+theme/custom_font="res://ui/fonts/RopaSans-Regular.ttf"
+
 [debug]
 
 gdscript/warnings/incompatible_ternary=2

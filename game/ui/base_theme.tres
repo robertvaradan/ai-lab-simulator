@@ -1,0 +1,17 @@
+[gd_resource type="Theme" format=3]
+
+[ext_resource type="FontFile" path="res://ui/fonts/RopaSans-Regular.ttf" id="1_52fkg"]
+[ext_resource type="FontFile" path="res://ui/fonts/RopaSans-Italic.ttf" id="2_2b18n"]
+
+[resource]
+default_font = ExtResource("1_52fkg")
+default_font_size = 16
+Button/fonts/font = ExtResource("1_52fkg")
+CheckBox/fonts/font = ExtResource("1_52fkg")
+Fonts/fonts/italic = ExtResource("2_2b18n")
+Fonts/fonts/regular = ExtResource("1_52fkg")
+ItemList/fonts/font = ExtResource("1_52fkg")
+Label/fonts/font = ExtResource("1_52fkg")
+LineEdit/fonts/font = ExtResource("1_52fkg")
+RichTextLabel/fonts/italics_font = ExtResource("2_2b18n")
+RichTextLabel/fonts/normal_font = ExtResource("1_52fkg")

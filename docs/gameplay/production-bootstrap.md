@@ -46,6 +46,8 @@ The campaign must keep Window content scale enabled for canvas UI.
 
 Window content scale must follow `docs/presentation/ui-scale.md`.
 
+The campaign canvas Theme must follow `docs/presentation/ui-theme.md`.
+
 The host must not set `CONTENT_SCALE_MODE_DISABLED`.
 
 `game/scenes/sdf_render_harness.tscn` must remain the SDF capture harness.

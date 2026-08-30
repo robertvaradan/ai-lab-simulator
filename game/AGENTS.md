@@ -19,6 +19,7 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - HQ hosts Research and Application work. HQ must not present an Application building. Scale presentation belongs to the Data Center World.
 - Follow `../docs/gameplay/production-bootstrap.md` for the production entry flow.
 - Follow `../docs/presentation/ui-scale.md` for Window content scale. Keep `CONTENT_SCALE_MODE_CANVAS_ITEMS` enabled. Do not disable content scale to present the SDF campus.
+- Follow `../docs/presentation/ui-theme.md` for the production canvas Theme. Keep `ui/base_theme.tres` as the project custom Theme. Use Ropa Sans Regular and Ropa Sans Italic. Do not add a second typeface.
 - `scenes/sdf_render_harness.tscn` is the automated SDF capture harness. It is not the production Run scene.
 - `scenes/marketing_play.tscn` is the Marketing Slice production play scene. It instances the campus blockout as a sibling of the management overlay and the campus visual presenter. Do not attach a script to the `CampusBlockout` root.
 - The management overlay stages Research, Scale, and Coding Agent start Commands from player selection. It does not start a Project that already exists.
@@ -169,6 +170,20 @@ Run the isometric camera tests on macOS:
 ```
 
 Success requires `ISOMETRIC_CAMERA_TEST_SUCCESS`.
+
+Run the UI theme tests on Windows:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\ui-theme-test.ps1
+```
+
+Run the UI theme tests on macOS:
+
+```bash
+./scripts/ui-theme-test.sh
+```
+
+Success requires `UI_THEME_TEST_SUCCESS`.
 
 Gameplay verification must also follow `../docs/simulation/invariants.md` after Simulation Core implementation starts.
 
