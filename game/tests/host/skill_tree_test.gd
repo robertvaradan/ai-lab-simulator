@@ -164,7 +164,8 @@ func _released_model(model_id: StringName, coding: int, reasoning: int, efficien
 func _make_host() -> CampaignHost:
 	var host: CampaignHost = CampaignHost.new()
 	host.name = "SkillTreeHost"
-	var overlay: CampaignHud = CampaignHud.new()
+	var packed: PackedScene = load("res://ui/campaign/campaign_panel_workspace.tscn") as PackedScene
+	var overlay: CampaignPanelWorkspace = packed.instantiate() as CampaignPanelWorkspace
 	overlay.name = "Overlay"
 	host.add_child(overlay)
 	return host

@@ -34,8 +34,12 @@ func _verify_scenes() -> void:
 	_expect(campaign_scene != null, "The campaign scene did not load.")
 	var campaign_text: String = FileAccess.get_file_as_string("res://scenes/campaign.tscn")
 	_expect(campaign_text.contains("campus_blockout.tscn"), "The campaign scene does not instance the campus blockout.")
+	_expect(campaign_text.contains("data_center_world.tscn"), "The campaign scene does not instance the Data Center World.")
+	_expect(campaign_text.contains("government_world.tscn"), "The campaign scene does not instance the Government World.")
 	_expect(campaign_text.contains("campus_visual_presenter.gd"), "The campaign scene does not use the campus visual presenter.")
 	_expect(not campaign_text.contains("sdf_campus_presenter.gd"), "The campaign scene still uses the SDF presenter.")
+	_verify_authored_world_scene("res://scenes/data_center_world.tscn", "DataCenterWorld")
+	_verify_authored_world_scene("res://scenes/government_world.tscn", "GovernmentWorld")
 	var menu: MainMenu = menu_scene.instantiate() as MainMenu
 	_expect(menu != null, "The Main Menu root is not MainMenu.")
 	root.add_child(menu)
@@ -67,12 +71,25 @@ func _verify_campaign_campus() -> void:
 	root.add_child(host)
 	var campus: Node3D = host.get_node_or_null("CampusBlockout") as Node3D
 	_expect(campus != null, "The campaign host has no campus blockout.")
+	var data_center_world: Node3D = host.get_node_or_null("DataCenterWorld") as Node3D
+	_expect(data_center_world != null, "The campaign host has no Data Center World.")
+	var government_world: Node3D = host.get_node_or_null("GovernmentWorld") as Node3D
+	_expect(government_world != null, "The campaign host has no Government World.")
 	var presenter: CampusVisualPresenter = host.get_presenter()
 	_expect(presenter != null, "The campaign host has no campus visual presenter.")
 	var camera: Camera3D = null
 	if campus != null:
 		camera = campus.get_node_or_null("GameplayCamera") as Camera3D
 	_expect(camera != null, "The campus blockout has no gameplay camera.")
+	if campus != null:
+		_expect(
+			campus.get_node_or_null("HqLaboratorySelectable") != null,
+			"The HQ campus has no laboratory selectable."
+		)
+		var competitor_marker: Node3D = campus.get_node_or_null("HqCompetitorSelectable") as Node3D
+		_expect(competitor_marker != null, "The HQ campus has no Competitor selectable.")
+		if competitor_marker != null:
+			_expect(not competitor_marker.visible, "The starting HQ campus showed the Competitor marker.")
 	if presenter != null:
 		_expect(
 			presenter.get_visible_laboratory_node_name() == "",
@@ -89,11 +106,39 @@ func _verify_campaign_campus() -> void:
 		_expect(not campus.visible, "The campus blockout stayed visible outside HQ.")
 	if camera != null:
 		_expect(not camera.current, "The campus camera stayed current outside HQ.")
+	if data_center_world != null:
+		_expect(data_center_world.visible, "The Data Center World stayed hidden after Data Center entry.")
+		var data_center_camera: Camera3D = data_center_world.get_node_or_null("GameplayCamera") as Camera3D
+		_expect(data_center_camera != null, "The Data Center World has no gameplay camera.")
+		if data_center_camera != null:
+			_expect(data_center_camera.current, "The Data Center camera stayed inactive after Data Center entry.")
+			_expect(
+				data_center_camera.projection == Camera3D.PROJECTION_ORTHOGONAL,
+				"The Data Center camera is not orthogonal."
+			)
+	if government_world != null:
+		_expect(not government_world.visible, "The Government World stayed visible in Data Center.")
 	host.enter_world(CampaignCatalog.WORLD_HQ)
 	if campus != null:
 		_expect(campus.visible, "The campus blockout stayed hidden after HQ entry.")
 	if camera != null:
 		_expect(camera.current, "The campus camera stayed inactive after HQ entry.")
+	if data_center_world != null:
+		_expect(not data_center_world.visible, "The Data Center World stayed visible after HQ entry.")
+	host.set_active_world(CampaignCatalog.WORLD_GOVERNMENT)
+	if government_world != null:
+		_expect(government_world.visible, "The Government World stayed hidden after Government entry.")
+		var government_camera: Camera3D = government_world.get_node_or_null("GameplayCamera") as Camera3D
+		_expect(government_camera != null, "The Government World has no gameplay camera.")
+		if government_camera != null:
+			_expect(government_camera.current, "The Government camera stayed inactive after Government entry.")
+			_expect(
+				government_camera.projection == Camera3D.PROJECTION_ORTHOGONAL,
+				"The Government camera is not orthogonal."
+			)
+	if campus != null:
+		_expect(not campus.visible, "The campus blockout stayed visible in Government.")
+	host.enter_world(CampaignCatalog.WORLD_HQ)
 	host.queue_free()
 
 
@@ -108,7 +153,7 @@ func _verify_host_ready(host: CampaignHost) -> void:
 	_expect(not host.get_hud().get_fail_state().visible, "The fail-state view is visible after the scenario loads.")
 	_expect(host.get_hud().get_lab_text().contains("Laboratory capacity level 2"), "The HUD does not show laboratory capacity.")
 	_expect(host.get_hud().get_lab_text().contains("authored campus blockout"), "The HUD does not name the authored campus blockout.")
-	_expect(not host.get_session().has_staged_project(CampaignCatalog.RESEARCH_PROJECT_ID), "The campaign host staged a Project before Plan controls.")
+	_expect(not host.get_draft().has_staged_project(CampaignCatalog.RESEARCH_PROJECT_ID), "The campaign host staged a Project before Plan controls.")
 	_expect(host.get_session().research_points == 0, "The campaign did not start with 0 research points.")
 	_expect(not host.get_session().has_skill(CampaignCatalog.SKILL_RESEARCH_METHODS), "Prototype Methods was unlocked before a skill unlock.")
 	_expect(not host.can_unlock_skill(CampaignCatalog.SKILL_RESEARCH_METHODS), "Prototype Methods was available with 0 research points.")
@@ -141,7 +186,7 @@ func _verify_project_stage_and_advance(host: CampaignHost) -> void:
 	)
 	host.set_project_staged(CampaignCatalog.RESEARCH_PROJECT_ID, true)
 	_expect(
-		host.get_session().has_staged_project(CampaignCatalog.RESEARCH_PROJECT_ID),
+		host.get_draft().has_staged_project(CampaignCatalog.RESEARCH_PROJECT_ID),
 		"set_project_staged did not stage the Research Project."
 	)
 	_expect(not host.get_session().has_skill(CampaignCatalog.SKILL_RESEARCH_METHODS), "Staging a Project unlocked Prototype Methods.")
@@ -189,6 +234,18 @@ func _verify_data_center(host: CampaignHost) -> void:
 	var body: String = host.get_hud().get_data_center().get_body_text()
 	_expect(body.contains("reserved Scale slot"), "The Data Center view does not name the reserved slot.")
 	_expect(body.contains("contract.compute.standard"), "The Data Center view does not list the standard compute contract.")
+	var card: CampaignContextCard = host.get_hud().get_context_card()
+	_expect(card != null, "The HUD has no Context Card.")
+	if card != null:
+		_expect(card.visible, "The Data Center Context Card did not open.")
+		_expect(
+			card.get_body_text().contains("reserved Scale slot"),
+			"The Data Center Context Card does not name the reserved slot."
+		)
+		_expect(
+			card.get_body_text().contains("contract.compute.standard"),
+			"The Data Center Context Card does not list the standard compute contract."
+		)
 
 
 func _verify_world_map(host: CampaignHost) -> void:
@@ -235,6 +292,18 @@ func _verify_world_map(host: CampaignHost) -> void:
 		host.get_hud().get_government().get_body_text().contains("Government is inactive."),
 		"The Government view does not state that Government is inactive."
 	)
+	var government_card: CampaignContextCard = host.get_hud().get_context_card()
+	_expect(government_card != null, "The HUD has no Context Card for Government.")
+	if government_card != null:
+		_expect(government_card.visible, "The Government Context Card did not open.")
+		_expect(
+			government_card.get_body_text().contains("regulation"),
+			"The Government Context Card does not name the reserved regulation slot."
+		)
+		_expect(
+			government_card.get_body_text().contains("Government is inactive."),
+			"The Government Context Card does not state that Government is inactive."
+		)
 	host.set_active_view(CampaignCatalog.VIEW_SKILL_TREE)
 	_expect(host.get_active_world_id() == CampaignCatalog.WORLD_HQ, "The skill tree did not force HQ.")
 	_expect(host.get_hud().get_skill_tree().visible, "The skill tree view did not open from Government.")
@@ -272,10 +341,45 @@ func _verify_fail_state(host: CampaignHost) -> void:
 	_expect(host.get_current_state().calendar.current_month_step_index == 3, "Advance after failure progressed time.")
 
 
+func _verify_authored_world_scene(scene_path: String, expected_root_name: String) -> void:
+	var packed: PackedScene = load(scene_path) as PackedScene
+	_expect(packed != null, "The World scene did not load: %s" % scene_path)
+	if packed == null:
+		return
+	var root: Node = packed.instantiate()
+	_expect(root != null, "The World scene root did not instantiate: %s" % scene_path)
+	if root == null:
+		return
+	_expect(root.name == expected_root_name, "The World scene root name is not %s." % expected_root_name)
+	var selectable: CampaignWorldSelectable = _find_world_selectable(root)
+	_expect(selectable != null, "The World scene has no CampaignWorldSelectable: %s" % scene_path)
+	var camera: Camera3D = root.get_node_or_null("GameplayCamera") as Camera3D
+	_expect(camera != null, "The World scene has no gameplay camera: %s" % scene_path)
+	if camera != null:
+		_expect(
+			camera.projection == Camera3D.PROJECTION_ORTHOGONAL,
+			"The World camera is not orthogonal: %s" % scene_path
+		)
+	root.queue_free()
+
+
+func _find_world_selectable(root: Node) -> CampaignWorldSelectable:
+	var root_selectable: CampaignWorldSelectable = root as CampaignWorldSelectable
+	if root_selectable != null:
+		return root_selectable
+	var nodes: Array[Node] = root.find_children("*", "Area3D", true, false)
+	for node: Node in nodes:
+		var selectable: CampaignWorldSelectable = node as CampaignWorldSelectable
+		if selectable != null:
+			return selectable
+	return null
+
+
 func _make_host() -> CampaignHost:
 	var host: CampaignHost = CampaignHost.new()
 	host.name = "CampaignHost"
-	var overlay: CampaignHud = CampaignHud.new()
+	var packed: PackedScene = load("res://ui/campaign/campaign_panel_workspace.tscn") as PackedScene
+	var overlay: CampaignPanelWorkspace = packed.instantiate() as CampaignPanelWorkspace
 	overlay.name = "Overlay"
 	host.add_child(overlay)
 	return host

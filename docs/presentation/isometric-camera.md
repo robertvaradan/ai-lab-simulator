@@ -126,13 +126,31 @@ The camera must snap to the target when the remaining error is below `0.0001`.
 
 ## Input control
 
-Gameplay must enable camera input.
+Gameplay must enable camera input in the World Input Context.
+
+UI and Modal Input Contexts must disable camera input.
+
+The left stick must pan the World camera.
+
+Triggers must zoom the World camera.
+
+Text entry must not move the camera.
 
 Automated campus capture must disable camera input.
 
 Automated campus capture must snap the camera to its targets.
 
 Automated campus capture must keep the authored camera pose.
+
+## Selection reframe
+
+World-object selection must reframe the camera over 300 ms.
+
+Context Card close must restore the prior camera framing.
+
+Reframe must change focus and orthogonal size only.
+
+Reframe must not rotate the camera.
 
 ## Invalid configuration
 

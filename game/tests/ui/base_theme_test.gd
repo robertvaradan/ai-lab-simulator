@@ -1,7 +1,23 @@
 extends SceneTree
 
 const TEST_SUCCESS: String = "UI_THEME_TEST_SUCCESS"
-const CASE_COUNT: int = 8
+const CASE_COUNT: int = 9
+const CAMPAIGN_BUTTON_VARIANTS: PackedStringArray = [
+	"PrimaryAction",
+	"SecondaryAction",
+	"DestructiveAction",
+	"SegmentedNav",
+	"SquareIconAction",
+	"CloseAction",
+]
+const CAMPAIGN_PANEL_VARIANTS: PackedStringArray = [
+	"StatusPanel",
+	"ContextCard",
+	"Workbench",
+	"Modal",
+	"DisabledState",
+	"FocusedState",
+]
 const THEME_PATH: String = "res://ui/base_theme.tres"
 const REGULAR_PATH: String = "res://ui/fonts/RopaSans-Regular.ttf"
 const ITALIC_PATH: String = "res://ui/fonts/RopaSans-Italic.ttf"
@@ -28,7 +44,29 @@ func _initialize() -> void:
 	_verify_rich_text_fonts()
 	_verify_project_settings()
 	_verify_inherited_label_font()
+	_verify_campaign_variants()
 	_finish()
+
+
+func _verify_campaign_variants() -> void:
+	var theme: Theme = load(THEME_PATH) as Theme
+	_expect(theme != null, "The project Theme did not load for Campaign variants.")
+	if theme == null:
+		return
+	for variant_name: String in CAMPAIGN_BUTTON_VARIANTS:
+		_expect(theme.get_type_variation_base(variant_name) == "Button", "%s is not a Button variation." % variant_name)
+		_expect(theme.has_stylebox("normal", variant_name), "%s has no normal style." % variant_name)
+		_expect(theme.has_stylebox("focus", variant_name), "%s has no focus style." % variant_name)
+		_expect(theme.get_font_size("font_size", variant_name) == 18, "%s font size is not 18." % variant_name)
+	for variant_name: String in CAMPAIGN_PANEL_VARIANTS:
+		_expect(
+			theme.get_type_variation_base(variant_name) == "PanelContainer",
+			"%s is not a PanelContainer variation." % variant_name
+		)
+		_expect(theme.has_stylebox("panel", variant_name), "%s has no panel style." % variant_name)
+	_expect(theme.has_color("orange", "CampaignColors"), "CampaignColors/orange is missing.")
+	_expect(theme.has_color("cyan", "CampaignColors"), "CampaignColors/cyan is missing.")
+	_expect(theme.has_color("cream", "CampaignColors"), "CampaignColors/cream is missing.")
 
 
 func _verify_files() -> void:

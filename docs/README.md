@@ -36,6 +36,7 @@ This directory contains the canonical project specifications.
 
 - [Isometric camera](presentation/isometric-camera.md) owns the orthographic gameplay camera.
 - [World map](presentation/world-map.md) owns campaign Worlds and World navigation.
+- [Panel system](presentation/panel-system.md) owns the Campaign Panel Workspace, UI visual system, and event presentation.
 - [UI scale](presentation/ui-scale.md) owns Window content scale for readable canvas UI.
 - [UI theme](presentation/ui-theme.md) owns the project Theme and the production UI fontfaces.
 - [Campus authoring](presentation/campus-authoring.md) owns HQ Site campus and laboratory scene rules.

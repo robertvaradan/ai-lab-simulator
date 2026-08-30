@@ -84,13 +84,29 @@ Data Center must not simulate internal Data Center operation in the first implem
 
 The Marketing Scenario must not require construction of an owned Data Center.
 
+Data Center must use a minimal authored PrimitiveMesh World scene.
+
+Data Center must use an orthographic isometric camera.
+
+Data Center must contain one selectable marker and one Context Card.
+
+The Data Center Context Card must show Compute Capacity, contracts, and monthly contract cost.
+
 ## Government World
 
 Government must host government and regulation presentation when that content exists.
 
 Government must not appear as an HQ Site Plot.
 
-Government World content remains open until the regulation system closes.
+Full Government regulation content remains open until the regulation system closes.
+
+Government must use a minimal authored PrimitiveMesh World scene.
+
+Government must use an orthographic isometric camera.
+
+Government must contain one selectable marker and one Context Card.
+
+The Government Context Card must show the active state and applicable Trust information.
 
 ## Camera and navigation
 
@@ -104,11 +120,15 @@ Entering a World must present that World view.
 
 Leaving a World must return to the World map or to another selected World.
 
+World-object selection must follow `docs/presentation/panel-system.md`.
+
 ## Relationship to other specifications
 
 `docs/presentation/campus-authoring.md` owns HQ geometry only.
 
-`docs/gameplay/production-bootstrap.md` owns the first playable shell that presents HQ and reserved Data Center entry.
+`docs/gameplay/production-bootstrap.md` owns the first playable shell that presents HQ, Data Center, and Government Worlds.
+
+`docs/presentation/panel-system.md` owns Context Cards and World-object selection.
 
 `docs/marketing/marketing-scenario.md` owns Marketing Scenario Site content.
 

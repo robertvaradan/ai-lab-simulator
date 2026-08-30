@@ -140,6 +140,41 @@ func snap_to_targets() -> void:
 	_apply_pose()
 
 
+func capture_framing() -> Dictionary:
+	var framing: Dictionary = {}
+	framing[&"focus"] = _target_focus
+	framing[&"size"] = _target_size
+	return framing
+
+
+func capture_framing_focus() -> Vector3:
+	return _target_focus
+
+
+func capture_framing_size() -> float:
+	return _target_size
+
+
+func animate_framing(focus: Vector3, size_value: float, duration_sec: float) -> void:
+	if not _rig_ready:
+		return
+	var clamped_size: float = clampf(size_value, min_size, max_size)
+	var clamped_focus: Vector3 = Vector3(
+		clampf(focus.x, pan_bounds.position.x, pan_bounds.end.x),
+		GROUND_PLANE_Y,
+		clampf(focus.z, pan_bounds.position.y, pan_bounds.end.y)
+	)
+	if duration_sec <= 0.0:
+		_target_focus = clamped_focus
+		_target_size = clamped_size
+		snap_to_targets()
+		return
+	var tween: Tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(self, "_target_focus", clamped_focus, duration_sec)
+	tween.tween_property(self, "_target_size", clamped_size, duration_sec)
+
+
 func advance(delta: float) -> void:
 	if delta < 0.0:
 		push_error("Isometric camera advance delta must not be negative.")
@@ -210,6 +245,8 @@ func _capture_rig() -> void:
 	_apply_pose()
 
 
+# Left stick pan uses camera_pan_left/right/forward/back from project.godot.
+# Trigger zoom uses camera_zoom_in/out from project.godot.
 func _read_keyboard_pan(delta: float) -> void:
 	if not input_enabled:
 		return

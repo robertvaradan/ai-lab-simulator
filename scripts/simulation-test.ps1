@@ -27,15 +27,16 @@ $campusVisualPresenterTestScript = Join-Path (Join-Path (Join-Path $gameRoot 'te
 $decisionHostTestScript = Join-Path (Join-Path (Join-Path $gameRoot 'tests') 'tools') 'decision_host_test.gd'
 $productionBootstrapTestScript = Join-Path (Join-Path (Join-Path $gameRoot 'tests') 'host') 'production_bootstrap_test.gd'
 $skillTreeTestScript = Join-Path (Join-Path (Join-Path $gameRoot 'tests') 'host') 'skill_tree_test.gd'
+$panelSystemTestScript = Join-Path (Join-Path (Join-Path $gameRoot 'tests') 'host') 'panel_system_test.gd'
 
 $godotVersion = Assert-CanonicalGodotExecutable -GodotPath $godotBin
-foreach ($testScript in @($stateTestScript, $publicationTestScript, $cashLedgerTestScript, $simulationCoreTestScript, $planCommitmentTestScript, $monthStepTestScript, $projectTestScript, $competitorTestScript, $marketEffectsTestScript, $quarterlyReportTestScript, $invariantsReplayTestScript, $labTestScript, $ruleGraphArtifactTestScript, $ruleGraphTraceViewTestScript, $marketingPlayHostTestScript, $marketingPlayManagementTestScript, $campusVisualPresenterTestScript, $decisionHostTestScript, $productionBootstrapTestScript, $skillTreeTestScript)) {
+foreach ($testScript in @($stateTestScript, $publicationTestScript, $cashLedgerTestScript, $simulationCoreTestScript, $planCommitmentTestScript, $monthStepTestScript, $projectTestScript, $competitorTestScript, $marketEffectsTestScript, $quarterlyReportTestScript, $invariantsReplayTestScript, $labTestScript, $ruleGraphArtifactTestScript, $ruleGraphTraceViewTestScript, $marketingPlayHostTestScript, $marketingPlayManagementTestScript, $campusVisualPresenterTestScript, $decisionHostTestScript, $productionBootstrapTestScript, $skillTreeTestScript, $panelSystemTestScript)) {
     if (-not (Test-Path -LiteralPath $testScript -PathType Leaf)) {
         throw "Required Simulation Core test script is missing: $testScript"
     }
 }
 
-Write-Output '[1/21] Importing the Godot 4.7 project'
+Write-Output '[1/22] Importing the Godot 4.7 project'
 $previousErrorActionPreference = $ErrorActionPreference
 $ErrorActionPreference = 'Continue'
 try {
@@ -84,64 +85,67 @@ function Invoke-SimulationTest {
     }
 }
 
-Write-Output '[2/21] Running Game State and snapshot tests'
+Write-Output '[2/22] Running Game State and snapshot tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/game_state_test.gd' -SuccessMarker 'GAME_STATE_TEST_SUCCESS'
 
-Write-Output '[3/21] Running committed Game State publication tests'
+Write-Output '[3/22] Running committed Game State publication tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/game_state_publication_test.gd' -SuccessMarker 'GAME_STATE_PUBLICATION_TEST_SUCCESS'
 
-Write-Output '[4/21] Running Cash Ledger tests'
+Write-Output '[4/22] Running Cash Ledger tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/cash_ledger_test.gd' -SuccessMarker 'CASH_LEDGER_TEST_SUCCESS'
 
-Write-Output '[5/21] Running Rule registry, Simulation Context, and Simulation Core tests'
+Write-Output '[5/22] Running Rule registry, Simulation Context, and Simulation Core tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/simulation_core_test.gd' -SuccessMarker 'SIMULATION_CORE_TEST_SUCCESS'
 
-Write-Output '[6/21] Running Plan validation and commitment tests'
+Write-Output '[6/22] Running Plan validation and commitment tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/plan_commitment_test.gd' -SuccessMarker 'PLAN_COMMITMENT_TEST_SUCCESS'
 
-Write-Output '[7/21] Running Month Step and Quarter Boundary tests'
+Write-Output '[7/22] Running Month Step and Quarter Boundary tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/month_step_test.gd' -SuccessMarker 'MONTH_STEP_TEST_SUCCESS'
 
-Write-Output '[8/21] Running Marketing Scenario Project tests'
+Write-Output '[8/22] Running Marketing Scenario Project tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/project_lifecycle_test.gd' -SuccessMarker 'PROJECT_LIFECYCLE_TEST_SUCCESS'
 
-Write-Output '[9/21] Running Competitor forecast and release tests'
+Write-Output '[9/22] Running Competitor forecast and release tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/competitor_release_test.gd' -SuccessMarker 'COMPETITOR_RELEASE_TEST_SUCCESS'
 
-Write-Output '[10/21] Running Market effects and Model position tests'
+Write-Output '[10/22] Running Market effects and Model position tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/market_effects_test.gd' -SuccessMarker 'MARKET_EFFECTS_TEST_SUCCESS'
 
-Write-Output '[11/21] Running Quarterly Report tests'
+Write-Output '[11/22] Running Quarterly Report tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/quarterly_report_test.gd' -SuccessMarker 'QUARTERLY_REPORT_TEST_SUCCESS'
 
-Write-Output '[12/21] Running Simulation Invariant and replay tests'
+Write-Output '[12/22] Running Simulation Invariant and replay tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/simulation/invariants_replay_test.gd' -SuccessMarker 'INVARIANTS_REPLAY_TEST_SUCCESS'
 
-Write-Output '[13/21] Running Simulation Laboratory tests'
+Write-Output '[13/22] Running Simulation Laboratory tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/tools/simulation_lab_test.gd' -SuccessMarker 'SIMULATION_LAB_TEST_SUCCESS'
 
-Write-Output '[14/21] Running Rule Graph artifact tests'
+Write-Output '[14/22] Running Rule Graph artifact tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/tools/rule_graph_artifact_test.gd' -SuccessMarker 'RULE_GRAPH_ARTIFACT_TEST_SUCCESS'
 
-Write-Output '[15/21] Running Rule Graph trace view tests'
+Write-Output '[15/22] Running Rule Graph trace view tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/tools/rule_graph_trace_view_test.gd' -SuccessMarker 'RULE_GRAPH_TRACE_VIEW_TEST_SUCCESS'
 
-Write-Output '[16/21] Running production Marketing play host tests'
+Write-Output '[16/22] Running production Marketing play host tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/host/marketing_play_host_test.gd' -SuccessMarker 'MARKETING_PLAY_HOST_TEST_SUCCESS'
 
-Write-Output '[17/21] Running production Marketing play management tests'
+Write-Output '[17/22] Running production Marketing play management tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/host/marketing_play_management_test.gd' -SuccessMarker 'MARKETING_PLAY_MANAGEMENT_TEST_SUCCESS'
 
-Write-Output '[18/21] Running campus visual presenter tests'
+Write-Output '[18/22] Running campus visual presenter tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/host/campus_visual_presenter_test.gd' -SuccessMarker 'CAMPUS_VISUAL_PRESENTER_TEST_SUCCESS'
 
-Write-Output '[19/21] Running Decision Host tests'
+Write-Output '[19/22] Running Decision Host tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/tools/decision_host_test.gd' -SuccessMarker 'DECISION_HOST_TEST_SUCCESS'
 
-Write-Output '[20/21] Running production bootstrap tests'
+Write-Output '[20/22] Running production bootstrap tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/host/production_bootstrap_test.gd' -SuccessMarker 'PRODUCTION_BOOTSTRAP_TEST_SUCCESS'
 
-Write-Output '[21/21] Running skill tree tests'
+Write-Output '[21/22] Running skill tree tests'
 Invoke-SimulationTest -ScriptPath 'res://tests/host/skill_tree_test.gd' -SuccessMarker 'SKILL_TREE_TEST_SUCCESS'
+
+Write-Output '[22/22] Running panel system tests'
+Invoke-SimulationTest -ScriptPath 'res://tests/host/panel_system_test.gd' -SuccessMarker 'PANEL_SYSTEM_TEST_SUCCESS'
 
 Write-Output "SIMULATION_TEST_COMMAND_SUCCESS godot=$godotVersion runtime=standard_non_dotnet"

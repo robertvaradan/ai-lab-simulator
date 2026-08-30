@@ -1,14 +1,22 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://host/campaign_host.gd" id="1_host"]
 [ext_resource type="PackedScene" uid="uid://crs26831ytqku" path="res://scenes/campus_blockout.tscn" id="2_campus"]
 [ext_resource type="Script" path="res://host/campus_visual_presenter.gd" id="3_presenter"]
-[ext_resource type="Script" path="res://host/campaign_hud.gd" id="4_hud"]
+[ext_resource type="PackedScene" path="res://ui/campaign/campaign_panel_workspace.tscn" id="4_workspace"]
+[ext_resource type="PackedScene" path="res://scenes/data_center_world.tscn" id="5_data_center"]
+[ext_resource type="PackedScene" path="res://scenes/government_world.tscn" id="6_government"]
 
 [node name="CampaignHost" type="Node"]
 script = ExtResource("1_host")
 
 [node name="CampusBlockout" parent="." instance=ExtResource("2_campus")]
+
+[node name="DataCenterWorld" parent="." instance=ExtResource("5_data_center")]
+visible = false
+
+[node name="GovernmentWorld" parent="." instance=ExtResource("6_government")]
+visible = false
 
 [node name="CampusVisualPresenter" type="Node" parent="."]
 script = ExtResource("3_presenter")
@@ -16,12 +24,4 @@ script = ExtResource("3_presenter")
 [node name="HudLayer" type="CanvasLayer" parent="."]
 layer = 100
 
-[node name="Overlay" type="Control" parent="HudLayer"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-script = ExtResource("4_hud")
+[node name="Overlay" parent="HudLayer" instance=ExtResource("4_workspace")]

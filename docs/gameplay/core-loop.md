@@ -105,3 +105,5 @@ The transition can show calendar movement, construction progress, Cash changes, 
 The transition must use results from the Simulation Core.
 
 The presentation layer must not create alternate results.
+
+Campaign event presentation must follow `docs/presentation/panel-system.md`.

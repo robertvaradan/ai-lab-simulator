@@ -7,6 +7,10 @@ const LAB_STAGE_1_NAME: String = "LabStage1"
 const LAB_STAGE_2_NAME: String = "LabStage2"
 const COMPUTE_LINK_NAME: String = "ThirdPartyComputeLink"
 const COMPETITOR_PANEL_NAME: String = "CompetitorPanel"
+const HQ_LABORATORY_SELECTABLE_PATH: String = "res://scenes/hq_laboratory_selectable.tscn"
+const HQ_LABORATORY_SELECTABLE_NAME: String = "HqLaboratorySelectable"
+const COMPETITOR_SELECTABLE_PATH: String = "res://scenes/hq_competitor_selectable.tscn"
+const COMPETITOR_SELECTABLE_NAME: String = "HqCompetitorSelectable"
 const PANEL_WIDTH_PX: float = 360.0
 
 var _compute_link: Node3D
@@ -18,16 +22,20 @@ var _last_mapping: CampusVisualMapping
 func _ready() -> void:
 	_build_compute_link()
 	_build_competitor_presentation()
+	_ensure_hq_selectables()
 
 
 func present_state(state: GameState) -> void:
 	_last_mapping = CampusVisualMapping.from_state(state)
+	_ensure_hq_selectables()
 	_apply_laboratory(_last_mapping)
+	_apply_competitor_marker(_last_mapping)
 	# Scale presentation belongs to the Data Center World. HQ must not show a Compute link mass.
 	if _compute_link != null:
 		_compute_link.visible = false
+	# Competitor presentation is a World selectable Context Card. Do not auto-show a fixed panel.
 	if _competitor_root != null:
-		_competitor_root.visible = _last_mapping.competitor_release_visible
+		_competitor_root.visible = false
 	if _competitor_label != null:
 		_competitor_label.text = _last_mapping.competitor_presentation_text
 
@@ -84,6 +92,62 @@ func _campus_node() -> Node:
 	if host == null:
 		return null
 	return host.get_node_or_null(CAMPUS_NODE_NAME)
+
+
+func _ensure_hq_selectables() -> void:
+	var campus: Node = _campus_node()
+	if campus == null:
+		return
+	_instance_campus_child(
+		campus,
+		HQ_LABORATORY_SELECTABLE_NAME,
+		HQ_LABORATORY_SELECTABLE_PATH,
+		"missing_hq_laboratory_selectable",
+		"The HQ laboratory selectable scene did not load: %s" % HQ_LABORATORY_SELECTABLE_PATH
+	)
+	_instance_campus_child(
+		campus,
+		COMPETITOR_SELECTABLE_NAME,
+		COMPETITOR_SELECTABLE_PATH,
+		"missing_hq_competitor_selectable",
+		"The HQ Competitor selectable scene did not load: %s" % COMPETITOR_SELECTABLE_PATH
+	)
+	var competitor: Node3D = campus.get_node_or_null(COMPETITOR_SELECTABLE_NAME) as Node3D
+	if competitor != null and _last_mapping == null:
+		competitor.visible = false
+
+
+func _instance_campus_child(
+		campus: Node,
+		node_name: String,
+		scene_path: String,
+		fail_code: String,
+		fail_message: String
+	) -> void:
+	if campus.get_node_or_null(node_name) != null:
+		return
+	var packed: PackedScene = load(scene_path) as PackedScene
+	if packed == null:
+		ServiceContract.fail(fail_code, fail_message)
+		return
+	var instanced: Node = packed.instantiate()
+	instanced.name = node_name
+	campus.add_child(instanced)
+
+
+func _apply_competitor_marker(mapping: CampusVisualMapping) -> void:
+	var campus: Node = _campus_node()
+	if campus == null:
+		return
+	var marker: Node3D = campus.get_node_or_null(COMPETITOR_SELECTABLE_NAME) as Node3D
+	if marker == null:
+		return
+	var show_marker: bool = mapping.competitor_release_visible
+	marker.visible = show_marker
+	var selectable: CampaignWorldSelectable = marker as CampaignWorldSelectable
+	if selectable != null:
+		selectable.input_ray_pickable = show_marker
+		selectable.collision_layer = 1 if show_marker else 0
 
 
 func _apply_laboratory(mapping: CampusVisualMapping) -> void:

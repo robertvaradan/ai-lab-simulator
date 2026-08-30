@@ -1,0 +1,54 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" uid="uid://b0l1rl5a8pa0n" path="res://ui/campaign/worlds/campaign_world_selectable.gd" id="1_selectable"]
+[ext_resource type="Script" uid="uid://dcif18kjr3adx" path="res://primitives/box_outline_mesh.gd" id="2_outline"]
+[ext_resource type="Material" path="res://materials/cyan.tres" id="cyan"]
+[ext_resource type="Material" path="res://materials/metal.tres" id="metal"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_pad"]
+size = Vector3(2.4, 0.4, 2.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_beacon"]
+size = Vector3(0.8, 4, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_marker"]
+size = Vector3(2.4, 4.4, 2.4)
+
+[sub_resource type="PrimitiveMesh" id="PrimitiveMesh_outline"]
+script = ExtResource("2_outline")
+size = Vector3(2.4, 4.4, 2.4)
+thickness = 0.2
+metadata/_custom_type_script = "uid://dcif18kjr3adx"
+
+[node name="HqCompetitorSelectable" type="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -12)
+collision_mask = 0
+input_ray_pickable = true
+monitoring = true
+monitorable = true
+script = ExtResource("1_selectable")
+entity_id = &"entity.competitor.northstar"
+context_card_type = &"context.competitor"
+selection_order = 1
+framing_target = Vector3(14, 0, -12)
+framing_size = 16.0
+
+[node name="Pad" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+material_override = ExtResource("metal")
+mesh = SubResource("BoxMesh_pad")
+
+[node name="Beacon" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0)
+material_override = ExtResource("cyan")
+mesh = SubResource("BoxMesh_beacon")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+shape = SubResource("BoxShape3D_marker")
+
+[node name="Outline" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+material_override = ExtResource("cyan")
+mesh = SubResource("PrimitiveMesh_outline")
+cast_shadow = 0

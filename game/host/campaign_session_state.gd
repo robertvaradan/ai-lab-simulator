@@ -1,7 +1,6 @@
 class_name CampaignSessionState
 extends RefCounted
 
-var staged_project_ids: Dictionary[StringName, bool] = {}
 var unlocked_skill_ids: Dictionary[StringName, bool] = {}
 var research_points: int = 0
 var awarded_research_project_ids: Dictionary[StringName, bool] = {}
@@ -18,7 +17,3 @@ func _init() -> void:
 
 func has_skill(skill_id: StringName) -> bool:
 	return unlocked_skill_ids.has(skill_id) and unlocked_skill_ids[skill_id]
-
-
-func has_staged_project(project_id: StringName) -> bool:
-	return staged_project_ids.has(project_id) and staged_project_ids[project_id]

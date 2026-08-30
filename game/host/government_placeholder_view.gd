@@ -5,9 +5,10 @@ var _body: Label
 
 
 func _ready() -> void:
-	mouse_filter = Control.MOUSE_FILTER_STOP
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	var panel: Panel = CampaignChrome.make_panel("GovernmentPanel")
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	panel.set_anchors_preset(Control.PRESET_CENTER)
 	panel.offset_left = -380.0
 	panel.offset_top = -240.0
@@ -15,6 +16,7 @@ func _ready() -> void:
 	panel.offset_bottom = 240.0
 	add_child(panel)
 	var layout: VBoxContainer = CampaignChrome.make_column("GovernmentLayout")
+	layout.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	panel.add_child(layout)
 	var title: Label = Label.new()
 	title.text = "Government"

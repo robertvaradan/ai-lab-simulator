@@ -10,6 +10,8 @@ This specification owns the project Theme and the production UI fontfaces.
 
 `docs/visual/color-palette.md` owns named world color roles.
 
+`docs/presentation/panel-system.md` owns Campaign Theme variants, Campaign body size, and Campaign control styles.
+
 `docs/gameplay/production-bootstrap.md` owns the production campaign shell.
 
 ## Purpose
@@ -18,7 +20,7 @@ Production canvas UI must use one Theme.
 
 Production canvas UI must use one typeface family.
 
-The Theme stub must install the fontfaces before later style work.
+The Theme must install the fontfaces and Campaign control variants.
 
 ## Theme resource
 
@@ -82,9 +84,23 @@ Do not redistribute the font files without that license text.
 
 World materials must keep palette roles from `docs/visual/color-palette.md`.
 
-The Theme stub must not move world color roles into the Theme.
+The Theme must use palette roles for Campaign chrome colors.
 
-Later Theme color work must not invent a second accent family.
+The Theme must not invent a second accent family.
+
+## Campaign Theme variants
+
+The Theme must define Campaign type variants from `docs/presentation/panel-system.md`.
+
+Campaign body text must use font size 18.
+
+Campaign interactive controls must keep a minimum height of 48 px.
+
+Campaign structural borders must use 1 px.
+
+Campaign focus indicators must use 2 px.
+
+The Theme must not add a second Theme resource for Campaign UI.
 
 ## Verification
 

@@ -44,8 +44,6 @@ An implementation must not invent an answer to an open decision.
 
 ## Presentation content
 
-- Define the final UI visual system.
-- Define the final event presentation format.
 - Define Government World content after the regulation system closes.
 - Define owned Data Center World geometry after owned Data Center content exists.
 - Define exact World map zoom and selection controls beyond the view-bar entry.

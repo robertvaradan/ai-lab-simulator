@@ -8,19 +8,21 @@ This specification does not replace the Marketing Slice.
 
 This specification does not close open progression-content decisions.
 
+`docs/presentation/panel-system.md` owns the Campaign Panel Workspace and event presentation.
+
 ## Purpose
 
 The player must start the production game from the editor Run action.
 
 The player must reach the Marketing Scenario through a Main Menu.
 
-The campaign host must present the campaign HUD after the Marketing Scenario loads.
+The campaign host must present the Campaign Panel Workspace after the Marketing Scenario loads.
 
 The host must not require an opening-path select gate.
 
 The player must inspect Company State, stage a Plan, and Advance Month Steps.
 
-The shell must present reserved surfaces for the skill tree, Data Center World entry, and campaign failure.
+The shell must present Company Overview, Plan with Skill Tree, event timeline, Data Center World, Government World, Pause, and campaign failure through the Panel Workspace.
 
 World navigation must follow `docs/presentation/world-map.md`.
 
@@ -48,6 +50,8 @@ Window content scale must follow `docs/presentation/ui-scale.md`.
 
 The campaign canvas Theme must follow `docs/presentation/ui-theme.md`.
 
+The Campaign Panel Workspace must follow `docs/presentation/panel-system.md`.
+
 The host must not set `CONTENT_SCALE_MODE_DISABLED`.
 
 `game/scenes/sdf_render_harness.tscn` must remain the SDF capture harness.
@@ -58,9 +62,11 @@ The campaign host must not reuse `MarketingPlayOverlay`.
 
 ## Planning
 
-The campaign HUD must accept Advance without an opening-path choice.
+The Panel Workspace must accept Advance without an opening-path choice.
 
-The player must stage Project start Commands through Plan controls.
+The player must stage Project start Commands through `CampaignDraftPlanState`.
+
+`CampaignHost.validate_draft_plan()` must build the candidate Plan and call Simulation Core validation.
 
 The first HQ construction Project must be `project.campus.build_laboratory`.
 
@@ -70,11 +76,13 @@ The player can stage more than one available Project when validation allows it.
 
 The Plan must still pass Simulation Core validation.
 
-An empty Plan must remain valid.
+An empty Plan must remain valid when no Attention Event requires a response.
+
+Advance must stay disabled while the draft Plan is invalid.
 
 ## HQ laboratory
 
-The HUD must show the project-team count as laboratory capacity.
+The HQ Context Card must show the project-team count as laboratory capacity.
 
 Laboratory capacity level must equal the project-team count.
 
@@ -86,7 +94,9 @@ The host must hide the campus blockout when the active World is not HQ.
 
 The host must disable the campus camera when the campus blockout is hidden.
 
-The HUD must show empty-plot, compact, or developed laboratory text from `CampusVisualMapping`.
+The HQ Context Card must show empty-plot, compact, or developed laboratory text from `CampusVisualMapping`.
+
+HQ must expose the research Site Plot or Laboratory as one selectable World object.
 
 `project.campus.build_laboratory` completion must show laboratory stage 1.
 
@@ -94,7 +104,7 @@ Frontier-model Research completion must show laboratory stage 2.
 
 The Research Project must reserve one project team while it is active.
 
-The HUD must not write Site Plot state.
+The Panel Workspace must not write Site Plot state.
 
 HQ must not present an Application building.
 
@@ -108,25 +118,29 @@ Advance must commit the staged Plan.
 
 Advance must stop at the first Attention Boundary.
 
-The HUD must present Month Step, Quarter, Cash, research points, project teams, and laboratory capacity.
+The Company status panel must present Month Step, Quarter, and Cash.
 
-The HUD must acknowledge open Attention Events in the next Plan.
+Company Overview must present research points, project teams, capacity, Projects, Models, contracts, and active Trust values.
+
+The event timeline must stage Attention Event acknowledgments when event detail receives focus.
 
 ## Skill tree
 
 The campaign skill tree must follow `docs/gameplay/skill-tree.md`.
 
+The Skill Tree must appear as a Plan Workbench tab.
+
 The campaign must not present a separate tech tree.
 
 ## Data Center World entry
 
-The Data Center control must open the Data Center World entry surface.
+The Data Center World must present a minimal authored 3D scene.
 
-The Data Center World entry must list active compute contracts from Game State.
+The Data Center Context Card must list active compute contracts from Game State.
 
-The Data Center World entry must show Compute Capacity and monthly compute-contract cost.
+The Data Center Context Card must show Compute Capacity and monthly compute-contract cost.
 
-The Data Center World entry must state that the Marketing Scenario does not construct an owned Data Center.
+The Data Center Context Card must state that the Marketing Scenario does not construct an owned Data Center.
 
 The Data Center World must not simulate internal Data Center operation.
 
@@ -134,7 +148,7 @@ The Data Center World must not appear as an HQ Site Plot.
 
 ## Fail state
 
-The player can abandon the campaign.
+The player can abandon the campaign from Pause.
 
 Abandonment must require explicit confirmation.
 
@@ -144,11 +158,11 @@ That Cash condition is the bootstrap fail condition.
 
 The bootstrap fail condition must not replace the canonical bankruptcy rule.
 
-The fail-state view must show the fail reason, Month Step, and Cash.
+The fail-state Modal must show the fail reason, Month Step, and Cash.
 
-The fail-state view must provide a control that returns to the Main Menu.
+The fail-state Modal must provide a control that returns to the Main Menu.
 
-The fail-state view must block further Advance.
+The fail-state Modal must block further Advance.
 
 ## Content catalog
 

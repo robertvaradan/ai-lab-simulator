@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" uid="uid://b0l1rl5a8pa0n" path="res://ui/campaign/worlds/campaign_world_selectable.gd" id="1_selectable"]
+[ext_resource type="Script" uid="uid://dcif18kjr3adx" path="res://primitives/box_outline_mesh.gd" id="2_outline"]
+[ext_resource type="Material" path="res://materials/cyan.tres" id="cyan"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lab"]
+size = Vector3(12.4, 8, 12.4)
+
+[sub_resource type="PrimitiveMesh" id="PrimitiveMesh_outline"]
+script = ExtResource("2_outline")
+size = Vector3(12.4, 0.4, 12.4)
+thickness = 0.2
+metadata/_custom_type_script = "uid://dcif18kjr3adx"
+
+[node name="HqLaboratorySelectable" type="Area3D"]
+collision_mask = 0
+input_ray_pickable = true
+monitoring = true
+monitorable = true
+script = ExtResource("1_selectable")
+entity_id = &"entity.hq.laboratory"
+context_card_type = &"context.laboratory"
+selection_order = 0
+framing_target = Vector3(0, 0, 0)
+framing_size = 18.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+shape = SubResource("BoxShape3D_lab")
+
+[node name="Outline" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+material_override = ExtResource("cyan")
+mesh = SubResource("PrimitiveMesh_outline")
+cast_shadow = 0

@@ -1,0 +1,123 @@
+[gd_scene load_steps=17 format=3]
+
+[ext_resource type="Script" uid="uid://cisocam8k2n4p" path="res://camera/isometric_camera.gd" id="1_iso_cam"]
+[ext_resource type="Script" uid="uid://b0l1rl5a8pa0n" path="res://ui/campaign/worlds/campaign_world_selectable.gd" id="2_selectable"]
+[ext_resource type="Script" uid="uid://dcif18kjr3adx" path="res://primitives/box_outline_mesh.gd" id="3_outline"]
+[ext_resource type="Material" path="res://materials/void.tres" id="void"]
+[ext_resource type="Material" path="res://materials/concrete.tres" id="concrete"]
+[ext_resource type="Material" path="res://materials/charcoal.tres" id="charcoal"]
+[ext_resource type="Material" path="res://materials/metal.tres" id="metal"]
+[ext_resource type="Material" path="res://materials/metal_dark.tres" id="metal_dark"]
+[ext_resource type="Material" path="res://materials/cyan.tres" id="cyan"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_void"]
+size = Vector3(40, 1.2, 36)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pad"]
+size = Vector3(24, 0.4, 20)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hall"]
+size = Vector3(16, 4, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_roof"]
+size = Vector3(16.4, 0.4, 10.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_accent"]
+size = Vector3(16, 0.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rack"]
+size = Vector3(2.4, 3.2, 1.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_marker"]
+size = Vector3(18, 6, 12)
+
+[sub_resource type="PrimitiveMesh" id="PrimitiveMesh_outline"]
+script = ExtResource("3_outline")
+size = Vector3(18, 6, 12)
+thickness = 0.2
+metadata/_custom_type_script = "uid://dcif18kjr3adx"
+
+[node name="DataCenterWorld" type="Node3D"]
+
+[node name="WarmKey" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.7431448, 0.5272821, -0.41195798, 0, 0.6156615, 0.7880107, 0.6691306, -0.5856061, 0.45752564, 0, 0, 0)
+light_color = Color(0.9490196, 0.8392157, 0.6901961, 1)
+light_energy = 1.02
+light_angular_distance = 3.5
+shadow_enabled = true
+directional_shadow_max_distance = 90.0
+
+[node name="CoolFill" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.6691307, -0.44723567, 0.59350187, 0, 0.79863554, 0.601815, -0.7431448, 0.40269288, -0.5343915, 0, 0, 0)
+light_color = Color(0.49803922, 0.7137255, 0.7647059, 1)
+light_energy = 0.36
+
+[node name="VoidBase" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.6, 0)
+material_override = ExtResource("void")
+mesh = SubResource("BoxMesh_void")
+
+[node name="SitePad" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+material_override = ExtResource("concrete")
+mesh = SubResource("BoxMesh_pad")
+
+[node name="HallMass" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0)
+material_override = ExtResource("charcoal")
+mesh = SubResource("BoxMesh_hall")
+
+[node name="HallRoof" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.6, 0)
+material_override = ExtResource("metal")
+mesh = SubResource("BoxMesh_roof")
+
+[node name="AccentStrip" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 5.2)
+material_override = ExtResource("cyan")
+mesh = SubResource("BoxMesh_accent")
+
+[node name="RackLeft" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2, 6.2)
+material_override = ExtResource("metal_dark")
+mesh = SubResource("BoxMesh_rack")
+
+[node name="RackRight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2, 6.2)
+material_override = ExtResource("metal_dark")
+mesh = SubResource("BoxMesh_rack")
+
+[node name="marker" type="Area3D" parent="."]
+collision_mask = 0
+input_ray_pickable = true
+monitoring = true
+monitorable = true
+script = ExtResource("2_selectable")
+entity_id = &"entity.data_center.marker"
+context_card_type = &"context.data_center"
+selection_order = 0
+framing_target = Vector3(0, 0, 0)
+framing_size = 20.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="marker"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0)
+shape = SubResource("BoxShape3D_marker")
+
+[node name="Outline" type="MeshInstance3D" parent="marker"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0)
+material_override = ExtResource("cyan")
+mesh = SubResource("PrimitiveMesh_outline")
+cast_shadow = 0
+
+[node name="GameplayCamera" type="Camera3D" parent="."]
+transform = Transform3D(0.7176851, -0.44383132, 0.5366021, 0, 0.77057284, 0.63735193, -0.69636774, -0.457418, 0.55302864, 46.4, 61, 50)
+projection = 1
+current = false
+size = 28.0
+near = 0.5
+far = 140.0
+script = ExtResource("1_iso_cam")
+min_size = 8.0
+max_size = 80.0
+pan_bounds = Rect2(-20, -20, 40, 40)
+input_enabled = false

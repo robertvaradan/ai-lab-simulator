@@ -168,10 +168,10 @@ func _verify_presenter_applies_mapping() -> void:
 	presenter.present_state(hybrid.get_state())
 	_expect(presenter.get_visible_laboratory_node_name() == "LabStage1", "The hybrid presenter did not keep laboratory stage 1.")
 	_expect(lab_stage_one.visible, "The hybrid presenter hid laboratory stage 1.")
-	_expect(presenter.is_competitor_presentation_visible(), "The hybrid presenter hid the Competitor release.")
+	_expect(not presenter.is_competitor_presentation_visible(), "The hybrid presenter auto-opened the Competitor panel.")
 	_expect(
 		presenter.get_competitor_presentation_text().contains("Coding 82"),
-		"The hybrid presenter did not show the actual Northstar coding evaluation."
+		"The hybrid presenter did not keep the Northstar coding evaluation text."
 	)
 	_expect(not presenter.is_compute_link_visible(), "The hybrid presenter showed the Compute link.")
 	var camera: Camera3D = Camera3D.new()
