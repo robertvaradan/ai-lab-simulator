@@ -5,8 +5,6 @@ var _renderer: SdfRenderer
 var _world_texture: TextureRect
 var _last_state_name: StringName = &""
 var _ready_texture: Texture2DRD
-var _previous_scale_mode: Window.ContentScaleMode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
-var _did_override_scale: bool = false
 
 
 func _ready() -> void:
@@ -14,9 +12,7 @@ func _ready() -> void:
 	if window == null:
 		ServiceContract.fail("missing_campaign_window", "The campaign SDF presenter requires a Window.")
 		return
-	_previous_scale_mode = window.content_scale_mode
-	window.content_scale_mode = Window.CONTENT_SCALE_MODE_DISABLED
-	_did_override_scale = true
+	UiScale.apply_to_window(window)
 	if not window.size_changed.is_connected(_on_window_size_changed):
 		window.size_changed.connect(_on_window_size_changed)
 	_world_texture = TextureRect.new()
@@ -29,7 +25,7 @@ func _ready() -> void:
 	add_child(_world_texture)
 	_renderer = SdfRenderer.new()
 	_renderer.name = "SdfRenderer"
-	_renderer.output_size = aligned_window_size(window)
+	_renderer.output_size = aligned_presentation_size(window)
 	_renderer.renderer_ready.connect(_on_renderer_ready)
 	_renderer.renderer_failed.connect(_on_renderer_failed)
 	add_child(_renderer)
@@ -39,9 +35,6 @@ func _exit_tree() -> void:
 	var window: Window = get_window()
 	if window != null and window.size_changed.is_connected(_on_window_size_changed):
 		window.size_changed.disconnect(_on_window_size_changed)
-	if _did_override_scale and window != null:
-		window.content_scale_mode = _previous_scale_mode
-		_did_override_scale = false
 
 
 func present_state(state: GameState) -> void:
@@ -63,7 +56,7 @@ func get_output_size() -> Vector2i:
 	var window: Window = get_window()
 	if window == null:
 		return Vector2i()
-	return aligned_window_size(window)
+	return aligned_presentation_size(window)
 
 
 func get_presented_state_name() -> StringName:
@@ -89,10 +82,14 @@ static func align_output_size(size: Vector2i) -> Vector2i:
 
 
 static func aligned_window_size(window: Window) -> Vector2i:
+	return aligned_presentation_size(window)
+
+
+static func aligned_presentation_size(window: Window) -> Vector2i:
 	if window == null:
 		ServiceContract.fail("missing_campaign_window", "The campaign SDF presenter requires a Window.")
 		return Vector2i()
-	return align_output_size(window.size)
+	return align_output_size(UiScale.presentation_size(window))
 
 
 static func state_name_from_game_state(state: GameState) -> StringName:
@@ -113,7 +110,8 @@ func _on_window_size_changed() -> void:
 	if window == null:
 		ServiceContract.fail("missing_campaign_window", "The campaign SDF presenter requires a Window.")
 		return
-	_renderer.set_output_size(aligned_window_size(window))
+	UiScale.apply_to_window(window)
+	_renderer.set_output_size(aligned_presentation_size(window))
 
 
 func _on_renderer_ready(output_texture: Texture2DRD) -> void:

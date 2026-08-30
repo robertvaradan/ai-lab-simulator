@@ -38,15 +38,17 @@ The campaign host must load the Marketing Scenario before it presents the campai
 
 The HQ World view must use `SdfRenderer` and `campus_sdf.glsl`.
 
-The campaign SDF output size must match the current Window size.
+The campaign SDF output size must match the current content presentation size.
 
-The output size must be the Window size reduced to a multiple of the compute workgroup size.
+The output size must be the content presentation size reduced to a multiple of the compute workgroup size.
 
 The presenter must rebuild the SDF output when the Window size changes.
 
-The presenter must disable Window content scale while the campaign is active.
+The campaign must keep Window content scale enabled for canvas UI.
 
-The presenter must restore the previous content-scale mode when the campaign exits.
+Window content scale must follow `docs/presentation/ui-scale.md`.
+
+The presenter must not set `CONTENT_SCALE_MODE_DISABLED`.
 
 The campaign host must not instance `campus_blockout.tscn`.
 

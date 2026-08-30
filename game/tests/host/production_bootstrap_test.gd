@@ -44,6 +44,14 @@ func _verify_scenes() -> void:
 
 func _verify_sdf_contract() -> void:
 	_expect(
+		is_equal_approx(UiScale.readable_content_scale_factor(Vector2i(1512, 982), Vector2i(1920, 1080)), 1920.0 / 1512.0),
+		"A Window smaller than the design viewport did not raise the content-scale factor."
+	)
+	_expect(
+		is_equal_approx(UiScale.readable_content_scale_factor(Vector2i(2560, 1440), Vector2i(1920, 1080)), 1.0),
+		"A Window larger than the design viewport changed the content-scale factor."
+	)
+	_expect(
 		SdfCampusPresenter.align_output_size(Vector2i(1920, 1080)) == Vector2i(1920, 1080),
 		"A workgroup-aligned Window size must stay unchanged."
 	)
@@ -104,6 +112,17 @@ func _verify_host_ready(host: CampaignHost) -> void:
 		host.get_current_state().calendar.current_month_step_index == 0,
 		"The campaign host did not load the starting Month Step."
 	)
+	var window: Window = host.get_window()
+	if window != null:
+		UiScale.apply_to_window(window)
+		_expect(
+			window.content_scale_mode == Window.CONTENT_SCALE_MODE_CANVAS_ITEMS,
+			"The campaign Window disabled canvas content scale."
+		)
+		_expect(
+			window.content_scale_aspect == Window.CONTENT_SCALE_ASPECT_EXPAND,
+			"The campaign Window content-scale aspect is incorrect."
+		)
 
 
 func _verify_project_stage_and_advance(host: CampaignHost) -> void:

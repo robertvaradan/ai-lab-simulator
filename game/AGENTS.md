@@ -18,6 +18,7 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - `scenes/campaign.tscn` is the production campaign shell. It loads the Marketing Scenario and presents the campaign HUD. Follow `../docs/presentation/world-map.md` for HQ, Data Center, and Government Worlds. The HQ world view must be `SdfRenderer` at the current Window size. Do not instance `campus_blockout.tscn` in the campaign scene. Do not force Path Select.
 - HQ hosts Research and Application work. HQ must not present an Application building. Scale presentation belongs to the Data Center World.
 - Follow `../docs/gameplay/production-bootstrap.md` for the production entry flow.
+- Follow `../docs/presentation/ui-scale.md` for Window content scale. Keep `CONTENT_SCALE_MODE_CANVAS_ITEMS` enabled. Do not disable content scale to present the SDF campus.
 - `scenes/sdf_render_harness.tscn` is the automated SDF capture harness. It is not the production Run scene.
 - `scenes/marketing_play.tscn` is the Marketing Slice production play scene. It instances the campus blockout as a sibling of the management overlay and the campus visual presenter. Do not attach a script to the `CampusBlockout` root.
 - The management overlay stages Research, Scale, and Coding Agent start Commands from player selection. It does not start a Project that already exists.
