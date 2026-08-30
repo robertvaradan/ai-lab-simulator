@@ -54,6 +54,8 @@ HQ must host Application Projects.
 
 HQ must present the Company laboratory Site.
 
+The HQ World view must present `game/scenes/campus_blockout.tscn`.
+
 The laboratory is the HQ building where Research and Application work occur.
 
 Month 1 must present HQ as an empty plot of land.

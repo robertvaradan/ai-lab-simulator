@@ -11,7 +11,8 @@ func _initialize() -> void:
 
 func _run_test() -> void:
 	_verify_scenes()
-	_verify_sdf_contract()
+	_verify_ui_scale_contract()
+	_verify_campaign_campus()
 	var host: CampaignHost = _make_host()
 	root.add_child(host)
 	_verify_host_ready(host)
@@ -32,8 +33,9 @@ func _verify_scenes() -> void:
 	var campaign_scene: PackedScene = load("res://scenes/campaign.tscn") as PackedScene
 	_expect(campaign_scene != null, "The campaign scene did not load.")
 	var campaign_text: String = FileAccess.get_file_as_string("res://scenes/campaign.tscn")
-	_expect(campaign_text.contains("sdf_campus_presenter.gd"), "The campaign scene does not use the SDF presenter.")
-	_expect(not campaign_text.contains("campus_blockout"), "The campaign scene instances the mesh campus blockout.")
+	_expect(campaign_text.contains("campus_blockout.tscn"), "The campaign scene does not instance the campus blockout.")
+	_expect(campaign_text.contains("campus_visual_presenter.gd"), "The campaign scene does not use the campus visual presenter.")
+	_expect(not campaign_text.contains("sdf_campus_presenter.gd"), "The campaign scene still uses the SDF presenter.")
 	var menu: MainMenu = menu_scene.instantiate() as MainMenu
 	_expect(menu != null, "The Main Menu root is not MainMenu.")
 	root.add_child(menu)
@@ -42,7 +44,7 @@ func _verify_scenes() -> void:
 	menu.queue_free()
 
 
-func _verify_sdf_contract() -> void:
+func _verify_ui_scale_contract() -> void:
 	_expect(
 		is_equal_approx(UiScale.readable_content_scale_factor(Vector2i(1512, 982), Vector2i(1920, 1080)), 1920.0 / 1512.0),
 		"A Window smaller than the design viewport did not raise the content-scale factor."
@@ -51,47 +53,48 @@ func _verify_sdf_contract() -> void:
 		is_equal_approx(UiScale.readable_content_scale_factor(Vector2i(2560, 1440), Vector2i(1920, 1080)), 1.0),
 		"A Window larger than the design viewport changed the content-scale factor."
 	)
-	_expect(
-		SdfCampusPresenter.align_output_size(Vector2i(1920, 1080)) == Vector2i(1920, 1080),
-		"A workgroup-aligned Window size must stay unchanged."
-	)
-	_expect(
-		SdfCampusPresenter.align_output_size(Vector2i(1513, 980)) == Vector2i(1512, 976),
-		"The campaign SDF size must reduce to a workgroup multiple."
-	)
-	var starting: SimulationLabSessionResult = SimulationLabSession.create_marketing_scenario()
-	_expect(starting.succeeded(), "The starting laboratory session did not start.")
-	if not starting.succeeded():
+
+
+func _verify_campaign_campus() -> void:
+	var packed: PackedScene = load("res://scenes/campaign.tscn") as PackedScene
+	_expect(packed != null, "The campaign scene did not load for campus verification.")
+	if packed == null:
 		return
-	_expect(
-		SdfCampusPresenter.state_name_from_game_state(starting.session.get_state()) == &"empty",
-		"The starting campaign SDF state is not empty."
-	)
-	var scale_session: SimulationLabSessionResult = SimulationLabSession.create_marketing_scenario()
-	_expect(scale_session.succeeded(), "The Scale laboratory session did not start.")
-	if not scale_session.succeeded():
+	var host: CampaignHost = packed.instantiate() as CampaignHost
+	_expect(host != null, "The campaign scene root is not CampaignHost.")
+	if host == null:
 		return
-	var lab: SimulationLabSession = scale_session.session
-	_complete_build_laboratory(lab)
-	lab.stage_command(_scale_command(lab.get_state(), 0))
-	lab.commit_staged_plan()
-	lab.step_month()
-	_expect(
-		SdfCampusPresenter.state_name_from_game_state(lab.get_state()) == &"overload",
-		"The burst compute contract did not select the overload SDF state."
-	)
-	var empty_session: SimulationLabSessionResult = SimulationLabSession.create_marketing_scenario()
-	_expect(empty_session.succeeded(), "The empty-plan laboratory session did not start.")
-	if not empty_session.succeeded():
-		return
-	var empty_lab: SimulationLabSession = empty_session.session
-	_complete_build_laboratory(empty_lab)
-	empty_lab.commit_staged_plan()
-	empty_lab.advance_until_attention_required()
-	_expect(
-		SdfCampusPresenter.state_name_from_game_state(empty_lab.get_state()) == &"scrutiny",
-		"The Northstar release did not select the scrutiny SDF state."
-	)
+	root.add_child(host)
+	var campus: Node3D = host.get_node_or_null("CampusBlockout") as Node3D
+	_expect(campus != null, "The campaign host has no campus blockout.")
+	var presenter: CampusVisualPresenter = host.get_presenter()
+	_expect(presenter != null, "The campaign host has no campus visual presenter.")
+	var camera: Camera3D = null
+	if campus != null:
+		camera = campus.get_node_or_null("GameplayCamera") as Camera3D
+	_expect(camera != null, "The campus blockout has no gameplay camera.")
+	if presenter != null:
+		_expect(
+			presenter.get_visible_laboratory_node_name() == "",
+			"Month 1 showed a laboratory stage on the campaign campus."
+		)
+	_complete_build_laboratory_on_host(host)
+	if presenter != null:
+		_expect(
+			presenter.get_visible_laboratory_node_name() == "LabStage1",
+			"Build Laboratory completion did not show laboratory stage 1."
+		)
+	host.set_active_world(CampaignCatalog.WORLD_DATA_CENTER)
+	if campus != null:
+		_expect(not campus.visible, "The campus blockout stayed visible outside HQ.")
+	if camera != null:
+		_expect(not camera.current, "The campus camera stayed current outside HQ.")
+	host.enter_world(CampaignCatalog.WORLD_HQ)
+	if campus != null:
+		_expect(campus.visible, "The campus blockout stayed hidden after HQ entry.")
+	if camera != null:
+		_expect(camera.current, "The campus camera stayed inactive after HQ entry.")
+	host.queue_free()
 
 
 func _verify_host_ready(host: CampaignHost) -> void:
@@ -104,7 +107,7 @@ func _verify_host_ready(host: CampaignHost) -> void:
 	_expect(not host.get_hud().get_advance_button().disabled, "Advance is disabled after the scenario loads.")
 	_expect(not host.get_hud().get_fail_state().visible, "The fail-state view is visible after the scenario loads.")
 	_expect(host.get_hud().get_lab_text().contains("Laboratory capacity level 2"), "The HUD does not show laboratory capacity.")
-	_expect(host.get_hud().get_lab_text().contains("authored SDF campus"), "The HUD does not name the authored SDF campus.")
+	_expect(host.get_hud().get_lab_text().contains("authored campus blockout"), "The HUD does not name the authored campus blockout.")
 	_expect(not host.get_session().has_staged_project(CampaignCatalog.RESEARCH_PROJECT_ID), "The campaign host staged a Project before Plan controls.")
 	_expect(not host.get_session().has_skill(CampaignCatalog.SKILL_RESEARCH_FOCUS), "Research Focus was unlocked before a skill unlock.")
 	_expect(not host.can_unlock_skill(CampaignCatalog.SKILL_OPS_REVIEW), "Operations Review was available in Month Step 0.")
@@ -269,12 +272,6 @@ func _make_host() -> CampaignHost:
 	return host
 
 
-func _complete_build_laboratory(lab: SimulationLabSession) -> void:
-	lab.stage_command(_build_lab_command(lab.get_state(), 0))
-	lab.commit_staged_plan()
-	lab.step_month()
-
-
 func _complete_build_laboratory_on_host(host: CampaignHost) -> void:
 	host.set_project_staged(CampaignCatalog.BUILD_LABORATORY_PROJECT_ID, true)
 	var plan: Plan = host.get_hud().build_plan(host.get_current_state())
@@ -291,38 +288,12 @@ func _complete_build_laboratory_on_host(host: CampaignHost) -> void:
 	host.refresh_presentation()
 
 
-func _build_lab_command(state: GameState, command_index: int) -> Command:
-	var command: Command = Command.new()
-	command.stable_id = StableIdentifier.format_runtime_identifier(
-		&"command",
-		state.runtime_id_counters.next_sequence_by_entity_type[&"command"] + command_index
-	)
-	command.command_type_id = ProjectPlanValidator.START_COMMAND_TYPE
-	var payload: Dictionary[StringName, Variant] = {}
-	payload[&"project_id"] = CampaignCatalog.BUILD_LABORATORY_PROJECT_ID
-	command.payload = payload
-	return command
-
-
-func _scale_command(state: GameState, command_index: int) -> Command:
-	var command: Command = Command.new()
-	command.stable_id = StableIdentifier.format_runtime_identifier(
-		&"command",
-		state.runtime_id_counters.next_sequence_by_entity_type[&"command"] + command_index
-	)
-	command.command_type_id = ProjectPlanValidator.START_COMMAND_TYPE
-	var payload: Dictionary[StringName, Variant] = {}
-	payload[&"project_id"] = CampaignCatalog.SCALE_PROJECT_ID
-	command.payload = payload
-	return command
-
-
 func _finish() -> void:
 	if _failure_count > 0:
 		printerr("PRODUCTION_BOOTSTRAP_TEST_FAILURE count=%d" % _failure_count)
 		quit(1)
 		return
-	print("%s cases=7" % TEST_SUCCESS)
+	print("%s cases=8" % TEST_SUCCESS)
 	quit(0)
 
 

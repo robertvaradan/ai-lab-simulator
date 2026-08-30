@@ -174,6 +174,17 @@ func _verify_presenter_applies_mapping() -> void:
 		"The hybrid presenter did not show the actual Northstar coding evaluation."
 	)
 	_expect(not presenter.is_compute_link_visible(), "The hybrid presenter showed the Compute link.")
+	var camera: Camera3D = Camera3D.new()
+	camera.name = "GameplayCamera"
+	camera.current = true
+	campus.add_child(camera)
+	presenter.set_campus_world_visible(false)
+	_expect(not campus.visible, "The presenter left the campus visible outside HQ.")
+	_expect(not camera.current, "The presenter left the campus camera current outside HQ.")
+	_expect(not presenter.is_competitor_presentation_visible(), "The presenter left the Competitor release visible outside HQ.")
+	presenter.set_campus_world_visible(true)
+	_expect(campus.visible, "The presenter hid the campus after HQ entry.")
+	_expect(camera.current, "The presenter left the campus camera inactive after HQ entry.")
 	holder.queue_free()
 
 

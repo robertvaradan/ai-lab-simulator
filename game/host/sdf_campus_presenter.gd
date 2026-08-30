@@ -1,6 +1,8 @@
 class_name SdfCampusPresenter
 extends Node
 
+# The SDF capture harness can use this presenter. The campaign HQ World must not.
+
 var _renderer: SdfRenderer
 var _world_texture: TextureRect
 var _last_state_name: StringName = &""

@@ -180,7 +180,7 @@ func present_state(
 		cash_musd,
 		state.company.project_team_count,
 	]
-	_lab_label.text = "Laboratory capacity level %d.\n%s.\nThe visible campus is the authored SDF campus." % [
+	_lab_label.text = "Laboratory capacity level %d.\n%s.\nThe visible campus is the authored campus blockout." % [
 		CampaignCatalog.laboratory_capacity_level(state),
 		CampaignCatalog.laboratory_stage_label(state),
 	]

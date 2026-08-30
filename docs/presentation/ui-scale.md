@@ -4,7 +4,7 @@
 
 This specification owns Window content scale for canvas UI.
 
-`docs/gameplay/production-bootstrap.md` owns the campaign SDF presenter size contract.
+`docs/gameplay/production-bootstrap.md` owns the production campaign shell.
 
 `docs/product/game-contract.md` owns the product presentation promise.
 
@@ -28,18 +28,14 @@ The design viewport size must come from the project Window viewport width and he
 
 A host must not set `CONTENT_SCALE_MODE_DISABLED` to present campaign UI.
 
-## SDF world presentation
+## Campaign world presentation
 
-The campaign SDF world texture must fill the canvas presentation area.
+The campaign HQ World uses the authored campus blockout.
 
-The campaign SDF output size must match the current content presentation size.
-
-The SDF output size must reduce to a multiple of the compute workgroup size.
-
-The SDF world must not require disabling Window content scale.
+The campus blockout must not require disabling Window content scale.
 
 ## Verification
 
 Automated tests must verify the readable content-scale factor for a Window smaller than the design viewport.
 
-Automated tests must verify the campaign presenter leaves Window content scale enabled.
+Automated tests must verify the campaign Window leaves content scale enabled.

@@ -36,25 +36,17 @@ The Start control must load `game/scenes/campaign.tscn`.
 
 The campaign host must load the Marketing Scenario before it presents the campaign HUD.
 
-The HQ World view must use `SdfRenderer` and `campus_sdf.glsl`.
+The HQ World view must instance `game/scenes/campus_blockout.tscn`.
 
-The campaign SDF output size must match the current content presentation size.
+The campaign host must use `CampusVisualPresenter` to select the laboratory stage.
 
-The output size must be the content presentation size reduced to a multiple of the compute workgroup size.
-
-The presenter must rebuild the SDF output when the Window size changes.
+The campaign host must not use `SdfRenderer` for the HQ World view.
 
 The campaign must keep Window content scale enabled for canvas UI.
 
 Window content scale must follow `docs/presentation/ui-scale.md`.
 
-The presenter must not set `CONTENT_SCALE_MODE_DISABLED`.
-
-The campaign host must not instance `campus_blockout.tscn`.
-
-The campaign host must not use the 640 by 360 harness resolution.
-
-Missing Forward+ compute support must fail. The host must not substitute a mesh or canvas world view.
+The host must not set `CONTENT_SCALE_MODE_DISABLED`.
 
 `game/scenes/sdf_render_harness.tscn` must remain the SDF capture harness.
 
@@ -84,22 +76,19 @@ The HUD must show the project-team count as laboratory capacity.
 
 Laboratory capacity level must equal the project-team count.
 
-The visible HQ World must be the authored compute SDF campus.
+The visible HQ World must be the authored campus blockout.
 
 Month 1 must present HQ as an empty plot.
 
-The SDF states must be `empty`, `growth`, `overload`, and `scrutiny`.
+The host must hide the campus blockout when the active World is not HQ.
 
-The host must select one state in this order:
-
-1. `empty` when `plot.campus.research` is `site_plot_state.empty_plot`
-2. `scrutiny` when the Northstar flagship Model is released
-3. `overload` when the burst compute contract is active
-4. `growth` in every other campaign state with a laboratory
+The host must disable the campus camera when the campus blockout is hidden.
 
 The HUD must show empty-plot, compact, or developed laboratory text from `CampusVisualMapping`.
 
-`project.campus.build_laboratory` completion must upgrade the visible laboratory from empty plot to compact laboratory.
+`project.campus.build_laboratory` completion must show laboratory stage 1.
+
+Frontier-model Research completion must show laboratory stage 2.
 
 The Research Project must reserve one project team while it is active.
 
@@ -196,6 +185,12 @@ The catalog must not add a Project to the Marketing Scenario.
 ## Verification
 
 Automated tests must load the init, Main Menu, and campaign scenes.
+
+Automated tests must verify the campaign instances the campus blockout.
+
+Automated tests must verify Month 1 hides the laboratory stage.
+
+Automated tests must verify Build Laboratory completion shows laboratory stage 1.
 
 Automated tests must stage a Plan and Advance to the first Attention Boundary.
 

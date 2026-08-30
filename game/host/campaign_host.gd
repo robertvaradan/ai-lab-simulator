@@ -8,7 +8,7 @@ var _core: SimulationCore
 var _game_state_service: GameStateService
 var _advance_action: SimulationAdvanceAction
 var _hud: CampaignHud
-var _presenter: SdfCampusPresenter
+var _presenter: CampusVisualPresenter
 var _session: CampaignSessionState
 var _last_result: SimulationOperationResult
 
@@ -61,7 +61,7 @@ func _ready() -> void:
 		_hud = get_node_or_null("Overlay") as CampaignHud
 	if _hud != null:
 		_hud.bind_host(self)
-	_presenter = get_node_or_null("SdfCampusPresenter") as SdfCampusPresenter
+	_presenter = get_node_or_null("CampusVisualPresenter") as CampusVisualPresenter
 	refresh_presentation()
 
 
@@ -85,7 +85,7 @@ func get_hud() -> CampaignHud:
 	return _hud
 
 
-func get_presenter() -> SdfCampusPresenter:
+func get_presenter() -> CampusVisualPresenter:
 	return _presenter
 
 
@@ -243,9 +243,7 @@ func refresh_presentation() -> void:
 	if _presenter == null:
 		return
 	var in_hq: bool = _session != null and _session.active_world_id == CampaignCatalog.WORLD_HQ
-	var world_texture: TextureRect = _presenter.get_world_texture()
-	if world_texture != null:
-		world_texture.visible = in_hq
+	_presenter.set_campus_world_visible(in_hq)
 	if in_hq:
 		_presenter.present_state(state)
 

@@ -2,6 +2,7 @@ class_name CampusVisualPresenter
 extends Node
 
 const CAMPUS_NODE_NAME: String = "CampusBlockout"
+const GAMEPLAY_CAMERA_NAME: String = "GameplayCamera"
 const LAB_STAGE_1_NAME: String = "LabStage1"
 const LAB_STAGE_2_NAME: String = "LabStage2"
 const COMPUTE_LINK_NAME: String = "ThirdPartyComputeLink"
@@ -47,6 +48,22 @@ func get_competitor_presentation_text() -> String:
 	if _competitor_label == null:
 		return ""
 	return _competitor_label.text
+
+
+func set_campus_world_visible(visible: bool) -> void:
+	var campus: Node3D = _campus_node() as Node3D
+	if campus != null:
+		campus.visible = visible
+	var camera: Camera3D = null
+	if campus != null:
+		camera = campus.get_node_or_null(GAMEPLAY_CAMERA_NAME) as Camera3D
+	if camera != null:
+		camera.current = visible
+		var isometric_camera: IsometricCamera = camera as IsometricCamera
+		if isometric_camera != null:
+			isometric_camera.input_enabled = visible
+	if _competitor_root != null and not visible:
+		_competitor_root.visible = false
 
 
 func get_visible_laboratory_node_name() -> String:

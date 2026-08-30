@@ -15,7 +15,7 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 - Use the standard, non-.NET Godot 4.7.2 build from the repository-root `AGENTS.md` contract and keep `project.godot` directly in this folder.
 - `scenes/init.tscn` is the default editor Run scene. It must load the Main Menu.
 - `scenes/main_menu.tscn` is the production Main Menu. Start must load the campaign scene.
-- `scenes/campaign.tscn` is the production campaign shell. It loads the Marketing Scenario and presents the campaign HUD. Follow `../docs/presentation/world-map.md` for HQ, Data Center, and Government Worlds. The HQ world view must be `SdfRenderer` at the current Window size. Do not instance `campus_blockout.tscn` in the campaign scene. Do not force Path Select.
+- `scenes/campaign.tscn` is the production campaign shell. It loads the Marketing Scenario and presents the campaign HUD. Follow `../docs/presentation/world-map.md` for HQ, Data Center, and Government Worlds. The HQ world view must instance `campus_blockout.tscn`. Use `CampusVisualPresenter` to select the laboratory stage. Do not use `SdfRenderer` for the campaign HQ World view. Do not force Path Select.
 - HQ hosts Research and Application work. HQ must not present an Application building. Scale presentation belongs to the Data Center World.
 - Follow `../docs/gameplay/production-bootstrap.md` for the production entry flow.
 - Follow `../docs/presentation/ui-scale.md` for Window content scale. Keep `CONTENT_SCALE_MODE_CANVAS_ITEMS` enabled. Do not disable content scale to present the SDF campus.
@@ -83,7 +83,7 @@ Developer simulation tools must follow their local `AGENTS.md` files.
 
 - Frame at exactly 1920×1080 (16:9).
 - The SDF capture harness renders internally at 640×360 and scales once through a `Texture2DRD`. Changing that harness resolution requires updating the shader contract, harness, capture scripts, documentation, and inspected evidence together.
-- The production campaign presenter must set `SdfRenderer.output_size` from the current Window size. The size must be a multiple of the compute workgroup. Do not use the harness resolution for the campaign world view.
+- The SDF capture harness presenter must set `SdfRenderer.output_size` from the harness contract. Do not use the harness resolution for the campaign HQ World view.
 - Keep an orthographic isometric gameplay camera. The camera must not rotate. The player can pan and zoom. Follow `../docs/presentation/isometric-camera.md`.
 - Keep camera implementation under `camera`. Automated campus capture must disable camera input and snap to the authored pose.
 - Keep the SDF proof camera fixed. A pose, material, shader, dispatch, texture, or presentation change requires regenerating and inspecting all evidence images.

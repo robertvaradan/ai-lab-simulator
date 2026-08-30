@@ -1,14 +1,17 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://host/campaign_host.gd" id="1_host"]
-[ext_resource type="Script" path="res://host/sdf_campus_presenter.gd" id="2_presenter"]
-[ext_resource type="Script" path="res://host/campaign_hud.gd" id="3_hud"]
+[ext_resource type="PackedScene" uid="uid://crs26831ytqku" path="res://scenes/campus_blockout.tscn" id="2_campus"]
+[ext_resource type="Script" path="res://host/campus_visual_presenter.gd" id="3_presenter"]
+[ext_resource type="Script" path="res://host/campaign_hud.gd" id="4_hud"]
 
 [node name="CampaignHost" type="Node"]
 script = ExtResource("1_host")
 
-[node name="SdfCampusPresenter" type="Node" parent="."]
-script = ExtResource("2_presenter")
+[node name="CampusBlockout" parent="." instance=ExtResource("2_campus")]
+
+[node name="CampusVisualPresenter" type="Node" parent="."]
+script = ExtResource("3_presenter")
 
 [node name="HudLayer" type="CanvasLayer" parent="."]
 layer = 100
@@ -21,4 +24,4 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("3_hud")
+script = ExtResource("4_hud")

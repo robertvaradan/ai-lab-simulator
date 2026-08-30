@@ -58,6 +58,8 @@ Stage 1 must omit the research wing and the right wing.
 
 `game/scenes/campus_blockout.tscn` owns the HQ Site.
 
+The production campaign must instance the campus blockout for the HQ World view.
+
 The campus blockout must contain the site ground, roads, parking, paths, walls, landscape, lights, environment, and camera.
 
 Repeated round-crown trees must instance `game/scenes/round_tree.tscn`.
