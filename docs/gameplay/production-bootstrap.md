@@ -20,7 +20,7 @@ The host must not require an opening-path select gate.
 
 The player must inspect Company State, stage a Plan, and Advance Month Steps.
 
-The shell must present reserved surfaces for the skill tree, the tech tree, Data Center World entry, and campaign failure.
+The shell must present reserved surfaces for the skill tree, Data Center World entry, and campaign failure.
 
 World navigation must follow `docs/presentation/world-map.md`.
 
@@ -106,41 +106,15 @@ Advance must commit the staged Plan.
 
 Advance must stop at the first Attention Boundary.
 
-The HUD must present Month Step, Quarter, Cash, project teams, and laboratory capacity.
+The HUD must present Month Step, Quarter, Cash, research points, project teams, and laboratory capacity.
 
 The HUD must acknowledge open Attention Events in the next Plan.
 
 ## Skill tree
 
-The skill tree is a bootstrap presentation catalog.
+The campaign skill tree must follow `docs/gameplay/skill-tree.md`.
 
-The player can unlock one skill during Planning in each Month Step.
-
-A skill unlock must require its Cash cost and its prerequisite skills.
-
-A domain skill unlock must stage the matching domain Project when that Project is not already present.
-
-A non-domain skill unlock must not write Game State.
-
-A non-domain skill unlock must not change Cash.
-
-The skill tree must disable a control when its requirements fail.
-
-## Tech tree
-
-The tech tree is a bootstrap presentation catalog of proof items.
-
-The player can unlock a tech item during Planning when Cash meets the item cost.
-
-A tech unlock must require its prerequisite tech items.
-
-A tech unlock must not write Game State.
-
-A tech unlock must not change Cash.
-
-The tech tree must disable a control when Cash is below the item cost.
-
-The complete production technology tree remains an open decision.
+The campaign must not present a separate tech tree.
 
 ## Data Center World entry
 
@@ -194,9 +168,7 @@ Automated tests must verify Build Laboratory completion shows laboratory stage 1
 
 Automated tests must stage a Plan and Advance to the first Attention Boundary.
 
-Automated tests must verify skill-tree Month Step gating.
-
-Automated tests must verify tech-tree Cash gating.
+Automated tests must verify skill-tree research-point gating.
 
 Automated tests must verify the Data Center contract list.
 

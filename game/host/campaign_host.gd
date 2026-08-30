@@ -113,7 +113,7 @@ func set_active_view(view_id: StringName) -> void:
 	if _session == null or _session.failed:
 		return
 	_session.active_view_id = view_id
-	if view_id == CampaignCatalog.VIEW_SKILL_TREE or view_id == CampaignCatalog.VIEW_TECH_TREE:
+	if view_id == CampaignCatalog.VIEW_SKILL_TREE:
 		_session.active_world_id = CampaignCatalog.WORLD_HQ
 	refresh_presentation()
 
@@ -151,27 +151,10 @@ func unlock_skill(skill_id: StringName) -> bool:
 	if skill == null:
 		ServiceContract.fail("unknown_skill", "The skill %s is unknown." % String(skill_id))
 		return false
-	if not _can_unlock(skill, true):
+	if not _can_unlock(skill):
 		return false
-	var state: GameState = get_current_state()
 	_session.unlocked_skill_ids[skill_id] = true
-	_session.skill_unlock_month_by_id[skill_id] = state.calendar.current_month_step_index
-	if skill.staged_project_id != &"":
-		_session.staged_project_ids[skill.staged_project_id] = true
-	refresh_presentation()
-	return true
-
-
-func unlock_tech(tech_id: StringName) -> bool:
-	if _session == null or _session.failed:
-		return false
-	var tech: BootstrapUnlockDefinition = CampaignCatalog.tech_for_id(tech_id)
-	if tech == null:
-		ServiceContract.fail("unknown_tech", "The tech item %s is unknown." % String(tech_id))
-		return false
-	if not _can_unlock(tech, false):
-		return false
-	_session.unlocked_tech_ids[tech_id] = true
+	_session.research_points -= skill.cost_research_points
 	refresh_presentation()
 	return true
 
@@ -180,14 +163,7 @@ func can_unlock_skill(skill_id: StringName) -> bool:
 	var skill: BootstrapUnlockDefinition = CampaignCatalog.skill_for_id(skill_id)
 	if skill == null:
 		return false
-	return _can_unlock(skill, true)
-
-
-func can_unlock_tech(tech_id: StringName) -> bool:
-	var tech: BootstrapUnlockDefinition = CampaignCatalog.tech_for_id(tech_id)
-	if tech == null:
-		return false
-	return _can_unlock(tech, false)
+	return _can_unlock(skill)
 
 
 func request_abandon() -> void:
@@ -228,15 +204,17 @@ func advance_with_plan(plan: Plan) -> SimulationOperationResult:
 			_last_result.outcome == SimulationOperationOutcome.Type.COMPLETED
 			or _last_result.outcome == SimulationOperationOutcome.Type.DECISION_REQUIRED
 		)
-		and CampaignCatalog.cash_balance_musd(get_current_state()) <= 0
 	):
-		_fail_campaign(CampaignCatalog.FAIL_CASH_EXHAUSTED)
-		return _last_result
+		_award_research_points()
+		if CampaignCatalog.cash_balance_musd(get_current_state()) <= 0:
+			_fail_campaign(CampaignCatalog.FAIL_CASH_EXHAUSTED)
+			return _last_result
 	refresh_presentation()
 	return _last_result
 
 
 func refresh_presentation() -> void:
+	_award_research_points()
 	var state: GameState = get_current_state()
 	if _hud != null:
 		_hud.present_state(state, _last_result, _definition, _session)
@@ -248,26 +226,29 @@ func refresh_presentation() -> void:
 		_presenter.present_state(state)
 
 
-func _can_unlock(item: BootstrapUnlockDefinition, is_skill: bool) -> bool:
+func _award_research_points() -> void:
+	if _session == null:
+		return
+	var completed_ids: Array[StringName] = CampaignCatalog.completed_research_project_ids(
+		get_current_state(),
+		_definition
+	)
+	for project_id: StringName in completed_ids:
+		if _session.awarded_research_project_ids.has(project_id) and _session.awarded_research_project_ids[project_id]:
+			continue
+		_session.awarded_research_project_ids[project_id] = true
+		_session.research_points += CampaignCatalog.RESEARCH_POINTS_PER_RESEARCH_PROJECT
+
+
+func _can_unlock(item: BootstrapUnlockDefinition) -> bool:
 	if _session == null or _session.failed:
 		return false
-	var state: GameState = get_current_state()
-	if state == null or state.calendar == null:
+	if _session.has_skill(item.stable_id):
 		return false
-	if is_skill and _session.has_skill(item.stable_id):
-		return false
-	if not is_skill and _session.has_tech(item.stable_id):
-		return false
-	if CampaignCatalog.cash_balance_musd(state) < item.cost_musd:
-		return false
-	if state.calendar.current_month_step_index < item.required_month_step_index:
-		return false
-	if is_skill and _session.unlocked_skill_in_month(state.calendar.current_month_step_index):
+	if _session.research_points < item.cost_research_points:
 		return false
 	for prerequisite_id: StringName in item.prerequisite_ids:
-		if is_skill and not _session.has_skill(prerequisite_id):
-			return false
-		if not is_skill and not _session.has_tech(prerequisite_id):
+		if not _session.has_skill(prerequisite_id):
 			return false
 	return true
 

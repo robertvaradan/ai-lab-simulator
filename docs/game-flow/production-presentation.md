@@ -24,8 +24,7 @@
 | bootstrap-entry | Production entry flow | LEAF | COMPLETE | - | NO | docs/gameplay/production-bootstrap.md | game/scenes/init.tscn; game/scenes/main_menu.tscn; game/app/bootstrap_init.gd; game/app/main_menu.gd; game/app/scene_router.gd | game/tests/host/production_bootstrap_test.gd | Init loads the Main Menu. Start loads the campaign host. |
 | opening-path | Opening path select | LEAF | REMOVED | - | NO | docs/gameplay/production-bootstrap.md; docs/gameplay/playthrough-backlog.md | - | game/tests/host/production_bootstrap_test.gd | The opening-path gate is removed. The campaign HUD stages Projects directly. |
 | campaign-shell | Campaign HUD and month loop | LEAF | COMPLETE | - | NO | docs/gameplay/production-bootstrap.md; docs/gameplay/core-loop.md | game/host/campaign_host.gd; game/host/campaign_hud.gd; game/host/campus_visual_presenter.gd; game/scenes/campaign.tscn | game/tests/host/production_bootstrap_test.gd | The campaign HUD stages Projects, advances Month Steps, and presents the authored campus blockout. |
-| skill-tree-stub | Bootstrap skill tree | LEAF | COMPLETE | - | NO | docs/gameplay/production-bootstrap.md | game/host/skill_tree_view.gd; game/host/campaign_catalog.gd | game/tests/host/production_bootstrap_test.gd | The skill tree is a proof catalog with one unlock for each Month Step. |
-| tech-tree-stub | Bootstrap tech tree | LEAF | COMPLETE | - | NO | docs/gameplay/production-bootstrap.md | game/host/tech_tree_view.gd; game/host/campaign_catalog.gd | game/tests/host/production_bootstrap_test.gd | The tech tree is a proof catalog with Cash-gated items. |
+| skill-tree | Research-point skill tree | LEAF | COMPLETE | - | NO | docs/gameplay/skill-tree.md; docs/gameplay/production-bootstrap.md | game/host/skill_tree_view.gd; game/host/campaign_catalog.gd | game/tests/host/skill_tree_test.gd; game/tests/host/production_bootstrap_test.gd | The player spends research points on one Research, Scale, and Application tree. |
 | data-center-slot | Data Center World entry | LEAF | COMPLETE | - | NO | docs/gameplay/production-bootstrap.md; docs/presentation/world-map.md; docs/gameplay/domain-model.md | game/host/data_center_view.gd; game/host/world_map_view.gd | game/tests/host/production_bootstrap_test.gd | The Data Center World entry lists compute contracts from Game State. |
 | fail-state | Campaign fail-state view | LEAF | COMPLETE | - | NO | docs/gameplay/production-bootstrap.md; docs/gameplay/difficulty-and-loss.md | game/host/fail_state_view.gd | game/tests/host/production_bootstrap_test.gd | The fail-state view covers abandonment and the bootstrap Cash fail condition. |
 
@@ -47,7 +46,6 @@
 | simulation-connection | management-interface | enables |
 | management-interface | visible-state | controls |
 | visible-state | end-to-end-play | completes |
-| campaign-shell | skill-tree-stub | presents |
-| campaign-shell | tech-tree-stub | presents |
+| campaign-shell | skill-tree | presents |
 | campaign-shell | data-center-slot | reserves |
 | campaign-shell | fail-state | can end with |

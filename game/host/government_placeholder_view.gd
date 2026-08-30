@@ -23,11 +23,6 @@ func _ready() -> void:
 	_body = Label.new()
 	_body.name = "GovernmentBody"
 	CampaignChrome.apply_body(_body)
-	_body.text = "\n".join(PackedStringArray([
-		"This view is the reserved regulation slot.",
-		"Government hosts government and regulation presentation when that content exists.",
-		"Government is not an HQ Site Plot.",
-	]))
 	layout.add_child(_body)
 
 
@@ -35,3 +30,18 @@ func get_body_text() -> String:
 	if _body == null:
 		return ""
 	return _body.text
+
+
+func present_state(state: GameState) -> void:
+	if _body == null:
+		return
+	var lines: PackedStringArray = PackedStringArray()
+	lines.append("This view is the reserved regulation slot.")
+	if TrustThreshold.is_government_active(state):
+		lines.append("Government is active.")
+		lines.append("Government hosts government and regulation presentation when that content exists.")
+		lines.append("Government is not an HQ Site Plot.")
+	else:
+		lines.append("Government is inactive.")
+		lines.append("Government starts after a released player Model reaches 90 evaluation points.")
+	_body.text = "\n".join(lines)

@@ -10,23 +10,27 @@ const STARTING_MODEL_ID: StringName = &"model.player.starting"
 const VIEW_CAMPUS: StringName = &"view.campus"
 const VIEW_DATA_CENTER: StringName = &"view.data_center"
 const VIEW_SKILL_TREE: StringName = &"view.skill_tree"
-const VIEW_TECH_TREE: StringName = &"view.tech_tree"
 
 const WORLD_MAP: StringName = &"world.map"
 const WORLD_HQ: StringName = &"world.hq"
 const WORLD_DATA_CENTER: StringName = &"world.data_center"
 const WORLD_GOVERNMENT: StringName = &"world.government"
 
-const SKILL_RESEARCH_FOCUS: StringName = &"skill.research.focus"
-const SKILL_SCALE_FOCUS: StringName = &"skill.scale.focus"
-const SKILL_APPLICATION_FOCUS: StringName = &"skill.application.focus"
-const SKILL_OPS_REVIEW: StringName = &"skill.ops.review"
-const SKILL_SAFETY_REVIEW: StringName = &"skill.safety.review"
+const BRANCH_RESEARCH: StringName = &"research"
+const BRANCH_SCALE: StringName = &"scale"
+const BRANCH_APPLICATION: StringName = &"application"
 
-const TECH_EVAL_HARNESS: StringName = &"tech.eval_harness"
-const TECH_DATASET_CLEAN: StringName = &"tech.dataset_clean"
-const TECH_SERVING_QUEUE: StringName = &"tech.serving_queue"
-const TECH_TEAM_CAPACITY: StringName = &"tech.team_capacity"
+const RESEARCH_POINTS_PER_RESEARCH_PROJECT: int = 4
+
+const SKILL_RESEARCH_METHODS: StringName = &"skill.research.methods"
+const SKILL_RESEARCH_EVAL_LOOP: StringName = &"skill.research.eval_loop"
+const SKILL_RESEARCH_FRONTIER_PUSH: StringName = &"skill.research.frontier_push"
+const SKILL_SCALE_BURST_BUY: StringName = &"skill.scale.burst_buy"
+const SKILL_SCALE_REGION_PLAN: StringName = &"skill.scale.region_plan"
+const SKILL_SCALE_OWNED_SITES: StringName = &"skill.scale.owned_sites"
+const SKILL_APPLICATION_AGENT_PACK: StringName = &"skill.application.agent_pack"
+const SKILL_APPLICATION_PRODUCT_LINE: StringName = &"skill.application.product_line"
+const SKILL_APPLICATION_ROBOTS: StringName = &"skill.application.robots"
 
 const FAIL_ABANDONED: StringName = &"fail.abandoned"
 const FAIL_CASH_EXHAUSTED: StringName = &"fail.cash_exhausted"
@@ -36,109 +40,95 @@ static func skill_definitions() -> Array[BootstrapUnlockDefinition]:
 	var skills: Array[BootstrapUnlockDefinition] = []
 	skills.append(
 		_unlock(
-			SKILL_RESEARCH_FOCUS,
-			"Research Focus",
-			"Stage the Research Project.",
-			0,
-			0,
-			[],
-			RESEARCH_PROJECT_ID
-		)
-	)
-	skills.append(
-		_unlock(
-			SKILL_SCALE_FOCUS,
-			"Scale Focus",
-			"Stage the Scale Project.",
-			0,
-			0,
-			[],
-			SCALE_PROJECT_ID
-		)
-	)
-	skills.append(
-		_unlock(
-			SKILL_APPLICATION_FOCUS,
-			"Application Focus",
-			"Stage the Coding Agent Project.",
-			0,
-			0,
-			[],
-			CODING_AGENT_PROJECT_ID
-		)
-	)
-	skills.append(
-		_unlock(
-			SKILL_OPS_REVIEW,
-			"Operations Review",
-			"Proof skill. The unlock does not change Cash.",
-			10,
+			SKILL_RESEARCH_METHODS,
+			"Prototype Methods",
+			"This skill belongs to the Research branch.",
+			BRANCH_RESEARCH,
 			1,
-			[],
-			&""
+			[]
 		)
 	)
 	skills.append(
 		_unlock(
-			SKILL_SAFETY_REVIEW,
-			"Safety Review",
-			"Proof skill. This skill requires Operations Review.",
-			10,
+			SKILL_RESEARCH_EVAL_LOOP,
+			"Eval Loop",
+			"This skill belongs to the Research branch. It requires Prototype Methods.",
+			BRANCH_RESEARCH,
 			1,
-			[SKILL_OPS_REVIEW],
-			&""
+			[SKILL_RESEARCH_METHODS]
+		)
+	)
+	skills.append(
+		_unlock(
+			SKILL_RESEARCH_FRONTIER_PUSH,
+			"Frontier Push",
+			"This skill belongs to the Research branch. It requires Eval Loop.",
+			BRANCH_RESEARCH,
+			2,
+			[SKILL_RESEARCH_EVAL_LOOP]
+		)
+	)
+	skills.append(
+		_unlock(
+			SKILL_SCALE_BURST_BUY,
+			"Burst Contracts",
+			"This skill belongs to the Scale branch.",
+			BRANCH_SCALE,
+			1,
+			[]
+		)
+	)
+	skills.append(
+		_unlock(
+			SKILL_SCALE_REGION_PLAN,
+			"Region Plan",
+			"This skill belongs to the Scale branch. It requires Burst Contracts.",
+			BRANCH_SCALE,
+			1,
+			[SKILL_SCALE_BURST_BUY]
+		)
+	)
+	skills.append(
+		_unlock(
+			SKILL_SCALE_OWNED_SITES,
+			"Owned Sites",
+			"This skill belongs to the Scale branch. It requires Region Plan.",
+			BRANCH_SCALE,
+			2,
+			[SKILL_SCALE_REGION_PLAN]
+		)
+	)
+	skills.append(
+		_unlock(
+			SKILL_APPLICATION_AGENT_PACK,
+			"Agent Pack",
+			"This skill belongs to the Application branch.",
+			BRANCH_APPLICATION,
+			1,
+			[]
+		)
+	)
+	skills.append(
+		_unlock(
+			SKILL_APPLICATION_PRODUCT_LINE,
+			"Product Line",
+			"This skill belongs to the Application branch. It requires Agent Pack.",
+			BRANCH_APPLICATION,
+			1,
+			[SKILL_APPLICATION_AGENT_PACK]
+		)
+	)
+	skills.append(
+		_unlock(
+			SKILL_APPLICATION_ROBOTS,
+			"Robot Assistants",
+			"This skill belongs to the Application branch. It requires Product Line.",
+			BRANCH_APPLICATION,
+			2,
+			[SKILL_APPLICATION_PRODUCT_LINE]
 		)
 	)
 	return skills
-
-
-static func tech_definitions() -> Array[BootstrapUnlockDefinition]:
-	var techs: Array[BootstrapUnlockDefinition] = []
-	techs.append(
-		_unlock(
-			TECH_EVAL_HARNESS,
-			"Evaluation Harness",
-			"Proof item. Cash must meet the cost. The unlock does not spend Cash.",
-			15,
-			0,
-			[],
-			&""
-		)
-	)
-	techs.append(
-		_unlock(
-			TECH_DATASET_CLEAN,
-			"Dataset Clean-up",
-			"Proof item. Cash must meet the cost. The unlock does not spend Cash.",
-			20,
-			0,
-			[],
-			&""
-		)
-	)
-	techs.append(
-		_unlock(
-			TECH_SERVING_QUEUE,
-			"Serving Queue",
-			"Proof item. This item requires the Evaluation Harness.",
-			25,
-			0,
-			[TECH_EVAL_HARNESS],
-			&""
-		)
-	)
-	techs.append(
-		_unlock(
-			TECH_TEAM_CAPACITY,
-			"Expand Team Capacity",
-			"Proof item for a later hire-team Command. Laboratory capacity still follows project teams.",
-			40,
-			0,
-			[],
-			&""
-		)
-	)
-	return techs
 
 
 static func skill_for_id(skill_id: StringName) -> BootstrapUnlockDefinition:
@@ -148,11 +138,28 @@ static func skill_for_id(skill_id: StringName) -> BootstrapUnlockDefinition:
 	return null
 
 
-static func tech_for_id(tech_id: StringName) -> BootstrapUnlockDefinition:
-	for tech: BootstrapUnlockDefinition in tech_definitions():
-		if tech.stable_id == tech_id:
-			return tech
-	return null
+static func completed_research_project_ids(
+		state: GameState,
+		definition: MarketingScenarioDefinition
+	) -> Array[StringName]:
+	var ids: Array[StringName] = []
+	if state == null or state.company == null:
+		return ids
+	var project_ids: Array[StringName] = state.company.projects.keys()
+	project_ids.sort()
+	for project_id: StringName in project_ids:
+		var project: ProjectState = state.company.projects[project_id]
+		if project == null:
+			continue
+		if project.status_id != ProjectState.STATUS_COMPLETED:
+			continue
+		var project_definition: ProjectDefinition = find_project(definition, project.content_definition_id)
+		if project_definition == null:
+			continue
+		if project_definition.completion_effect_id != ProjectDefinition.EFFECT_RESEARCH_MODEL:
+			continue
+		ids.append(project.stable_id)
+	return ids
 
 
 static func find_project(
@@ -236,17 +243,15 @@ static func _unlock(
 		stable_id: StringName,
 		display_name: String,
 		summary: String,
-		cost_musd: int,
-		required_month_step_index: int,
-		prerequisite_ids: Array[StringName],
-		staged_project_id: StringName
+		branch_id: StringName,
+		cost_research_points: int,
+		prerequisite_ids: Array[StringName]
 	) -> BootstrapUnlockDefinition:
 	var item: BootstrapUnlockDefinition = BootstrapUnlockDefinition.new()
 	item.stable_id = stable_id
 	item.display_name = display_name
 	item.summary = summary
-	item.cost_musd = cost_musd
-	item.required_month_step_index = required_month_step_index
+	item.branch_id = branch_id
+	item.cost_research_points = cost_research_points
 	item.prerequisite_ids = prerequisite_ids
-	item.staged_project_id = staged_project_id
 	return item

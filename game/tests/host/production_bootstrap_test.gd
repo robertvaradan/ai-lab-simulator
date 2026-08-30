@@ -17,7 +17,7 @@ func _run_test() -> void:
 	root.add_child(host)
 	_verify_host_ready(host)
 	_verify_project_stage_and_advance(host)
-	_verify_skill_and_tech(host)
+	_verify_skill_tree(host)
 	_verify_data_center(host)
 	_verify_world_map(host)
 	_verify_fail_state(host)
@@ -109,8 +109,12 @@ func _verify_host_ready(host: CampaignHost) -> void:
 	_expect(host.get_hud().get_lab_text().contains("Laboratory capacity level 2"), "The HUD does not show laboratory capacity.")
 	_expect(host.get_hud().get_lab_text().contains("authored campus blockout"), "The HUD does not name the authored campus blockout.")
 	_expect(not host.get_session().has_staged_project(CampaignCatalog.RESEARCH_PROJECT_ID), "The campaign host staged a Project before Plan controls.")
-	_expect(not host.get_session().has_skill(CampaignCatalog.SKILL_RESEARCH_FOCUS), "Research Focus was unlocked before a skill unlock.")
-	_expect(not host.can_unlock_skill(CampaignCatalog.SKILL_OPS_REVIEW), "Operations Review was available in Month Step 0.")
+	_expect(host.get_session().research_points == 0, "The campaign did not start with 0 research points.")
+	_expect(not host.get_session().has_skill(CampaignCatalog.SKILL_RESEARCH_METHODS), "Prototype Methods was unlocked before a skill unlock.")
+	_expect(not host.can_unlock_skill(CampaignCatalog.SKILL_RESEARCH_METHODS), "Prototype Methods was available with 0 research points.")
+	_expect(host.get_hud().get_state_text().contains("Research points 0"), "The HUD does not show the research-point balance.")
+	_expect(not host.get_hud().get_state_text().contains("Public Trust"), "The HUD presented Public Trust before the threshold.")
+	_expect(not host.get_hud().get_state_text().contains("Government Trust"), "The HUD presented Government Trust before the threshold.")
 	_expect(
 		host.get_current_state().calendar.current_month_step_index == 0,
 		"The campaign host did not load the starting Month Step."
@@ -140,8 +144,8 @@ func _verify_project_stage_and_advance(host: CampaignHost) -> void:
 		host.get_session().has_staged_project(CampaignCatalog.RESEARCH_PROJECT_ID),
 		"set_project_staged did not stage the Research Project."
 	)
-	_expect(not host.get_session().has_skill(CampaignCatalog.SKILL_RESEARCH_FOCUS), "Staging a Project unlocked Research Focus.")
-	_expect(host.can_unlock_skill(CampaignCatalog.SKILL_OPS_REVIEW), "Operations Review stayed locked after Month Step 1.")
+	_expect(not host.get_session().has_skill(CampaignCatalog.SKILL_RESEARCH_METHODS), "Staging a Project unlocked Prototype Methods.")
+	_expect(not host.can_unlock_skill(CampaignCatalog.SKILL_RESEARCH_METHODS), "Prototype Methods unlocked without research points.")
 	var result: SimulationOperationResult = host.advance_from_hud()
 	_expect(
 		result.outcome == SimulationOperationOutcome.Type.DECISION_REQUIRED,
@@ -156,22 +160,26 @@ func _verify_project_stage_and_advance(host: CampaignHost) -> void:
 	_expect(host.get_hud().get_status_text() == "Attention is required.", "The HUD status is incorrect after Advance.")
 
 
-func _verify_skill_and_tech(host: CampaignHost) -> void:
-	_expect(not host.get_session().has_skill(CampaignCatalog.SKILL_RESEARCH_FOCUS), "Research Focus was granted without a skill unlock.")
-	_expect(host.can_unlock_skill(CampaignCatalog.SKILL_OPS_REVIEW), "Operations Review stayed locked after a new Month Step.")
-	_expect(host.can_unlock_tech(CampaignCatalog.TECH_EVAL_HARNESS), "Evaluation Harness is locked while Cash is sufficient.")
-	_expect(not host.can_unlock_tech(CampaignCatalog.TECH_SERVING_QUEUE), "Serving Queue did not require the Evaluation Harness.")
-	_expect(host.unlock_tech(CampaignCatalog.TECH_EVAL_HARNESS), "Evaluation Harness did not unlock.")
-	_expect(host.get_session().has_tech(CampaignCatalog.TECH_EVAL_HARNESS), "The session did not record the Evaluation Harness.")
+func _verify_skill_tree(host: CampaignHost) -> void:
+	_expect(not host.get_session().has_skill(CampaignCatalog.SKILL_RESEARCH_METHODS), "Prototype Methods was granted without a skill unlock.")
+	_expect(not host.can_unlock_skill(CampaignCatalog.SKILL_RESEARCH_METHODS), "Prototype Methods unlocked without research points.")
+	var cash_before: int = CampaignCatalog.cash_balance_musd(host.get_current_state())
+	host.get_session().research_points = 1
+	_expect(host.can_unlock_skill(CampaignCatalog.SKILL_RESEARCH_METHODS), "Prototype Methods stayed locked after research points were granted.")
+	_expect(not host.can_unlock_skill(CampaignCatalog.SKILL_RESEARCH_EVAL_LOOP), "Eval Loop did not require Prototype Methods.")
+	_expect(host.unlock_skill(CampaignCatalog.SKILL_RESEARCH_METHODS), "Prototype Methods did not unlock.")
+	_expect(host.get_session().has_skill(CampaignCatalog.SKILL_RESEARCH_METHODS), "The session did not record Prototype Methods.")
+	_expect(host.get_session().research_points == 0, "The unlock did not spend the research-point cost.")
 	_expect(
-		CampaignCatalog.cash_balance_musd(host.get_current_state()) == 48,
-		"A tech unlock changed Cash."
+		CampaignCatalog.cash_balance_musd(host.get_current_state()) == cash_before,
+		"A skill unlock changed Cash."
 	)
-	_expect(host.can_unlock_tech(CampaignCatalog.TECH_SERVING_QUEUE), "Serving Queue stayed locked after its prerequisite.")
 	host.set_active_view(CampaignCatalog.VIEW_SKILL_TREE)
 	_expect(host.get_hud().get_skill_tree().visible, "The skill tree view did not open.")
-	host.set_active_view(CampaignCatalog.VIEW_TECH_TREE)
-	_expect(host.get_hud().get_tech_tree().visible, "The tech tree view did not open.")
+	_expect(
+		host.get_hud().get_skill_tree().get_unlock_button(CampaignCatalog.SKILL_RESEARCH_METHODS) != null,
+		"The skill tree has no Prototype Methods control."
+	)
 
 
 func _verify_data_center(host: CampaignHost) -> void:
@@ -223,13 +231,14 @@ func _verify_world_map(host: CampaignHost) -> void:
 		host.get_hud().get_government().get_body_text().contains("regulation"),
 		"The Government view does not name the reserved regulation slot."
 	)
+	_expect(
+		host.get_hud().get_government().get_body_text().contains("Government is inactive."),
+		"The Government view does not state that Government is inactive."
+	)
 	host.set_active_view(CampaignCatalog.VIEW_SKILL_TREE)
 	_expect(host.get_active_world_id() == CampaignCatalog.WORLD_HQ, "The skill tree did not force HQ.")
 	_expect(host.get_hud().get_skill_tree().visible, "The skill tree view did not open from Government.")
 	_expect(not host.get_hud().get_government().visible, "The Government view stayed open on the skill tree.")
-	host.set_active_view(CampaignCatalog.VIEW_TECH_TREE)
-	_expect(host.get_active_world_id() == CampaignCatalog.WORLD_HQ, "The tech tree did not force HQ.")
-	_expect(host.get_hud().get_tech_tree().visible, "The tech tree view did not open.")
 	host.set_active_world(CampaignCatalog.WORLD_MAP)
 	host.get_hud().get_world_map().get_data_center_button().pressed.emit()
 	_expect(host.get_active_world_id() == CampaignCatalog.WORLD_DATA_CENTER, "The Data Center map button did not enter Data Center.")

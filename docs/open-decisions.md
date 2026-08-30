@@ -12,7 +12,8 @@ An implementation must not invent an answer to an open decision.
 - Define the complete Research content graph.
 - Define the complete Scale content graph.
 - Define the complete Application content graph.
-- The production bootstrap skill tree and tech tree do not close these graphs.
+- The simple skill tree fake catalog does not close these graphs.
+- Close the Model roster exploration in `docs/gameplay/model-roster-exploration.md`. Decide whether the campaign starts with no player Model, how a first Research result becomes a sellable Model, and how the player retires or replaces an older Model.
 - Define Model capability dimensions outside the Marketing Scenario.
 - Define full Site Plot unlock requirements.
 - Define the Compute ownership threshold for the Hyperscaler archetype.
@@ -20,7 +21,7 @@ An implementation must not invent an answer to an open decision.
 
 ## Market and policy content
 
-- Define production Public Trust and Government Trust scales after validation of the Marketing Scenario scale.
+- Define production Public Trust and Government Trust scales after validation of the Marketing Scenario scale. The activation thresholds are closed in `docs/gameplay/progression.md`. The numeric effect scales remain open.
 - Define the complete production Release Strategy catalog.
 - Define the exact Open Weights trade-off.
 - Define the regulation system.

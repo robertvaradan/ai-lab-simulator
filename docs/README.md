@@ -20,7 +20,9 @@ This directory contains the canonical project specifications.
 - [Game contract](product/game-contract.md) owns the product promise and product limits.
 - [Core loop](gameplay/core-loop.md) owns the player loop and the time-control contract.
 - [Domain model](gameplay/domain-model.md) owns approved game terms and relationships.
-- [Progression](gameplay/progression.md) owns strategic domains, unlocks, and competitor pressure.
+- [Progression](gameplay/progression.md) owns strategic domains, unlocks, trust activation, and competitor pressure.
+- [Skill tree](gameplay/skill-tree.md) owns the simple research-point skill tree.
+- [Model roster exploration](gameplay/model-roster-exploration.md) records the open Model-as-unit roster question.
 - [Difficulty and loss](gameplay/difficulty-and-loss.md) owns difficulty profiles and campaign loss.
 - [Production bootstrap](gameplay/production-bootstrap.md) owns the production entry flow and the first playable campaign shell.
 - [Playthrough backlog](gameplay/playthrough-backlog.md) records defects found during production playthrough.

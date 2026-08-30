@@ -4,7 +4,6 @@ extends Control
 var _host: CampaignHost
 var _fail_state: FailStateView
 var _skill_tree: SkillTreeView
-var _tech_tree: TechTreeView
 var _data_center: DataCenterView
 var _world_map: WorldMapView
 var _government: GovernmentPlaceholderView
@@ -34,8 +33,6 @@ func bind_host(host: CampaignHost) -> void:
 		_fail_state.bind_host(host)
 	if _skill_tree != null:
 		_skill_tree.bind_host(host)
-	if _tech_tree != null:
-		_tech_tree.bind_host(host)
 	if _world_map != null:
 		_world_map.bind_host(host)
 
@@ -54,10 +51,6 @@ func get_fail_state() -> FailStateView:
 
 func get_skill_tree() -> SkillTreeView:
 	return _skill_tree
-
-
-func get_tech_tree() -> TechTreeView:
-	return _tech_tree
 
 
 func get_data_center() -> DataCenterView:
@@ -174,12 +167,18 @@ func present_state(
 		_state_label.text = "Game State is missing."
 		return
 	var cash_musd: int = CampaignCatalog.cash_balance_musd(state)
-	_state_label.text = "Month Step %d\nQuarter %d\nCash %d MUSD\nProject teams %d" % [
-		state.calendar.current_month_step_index,
-		state.calendar.current_quarter_index,
-		cash_musd,
-		state.company.project_team_count,
-	]
+	var state_lines: PackedStringArray = PackedStringArray([
+		"Month Step %d" % state.calendar.current_month_step_index,
+		"Quarter %d" % state.calendar.current_quarter_index,
+		"Cash %d MUSD" % cash_musd,
+		"Research points %d" % session.research_points,
+		"Project teams %d" % state.company.project_team_count,
+	])
+	if TrustThreshold.is_public_trust_active(state):
+		state_lines.append("Public Trust %d" % state.company.public_trust_points)
+	if TrustThreshold.is_government_active(state):
+		state_lines.append("Government Trust %d" % state.company.government_trust_points)
+	_state_label.text = "\n".join(state_lines)
 	_lab_label.text = "Laboratory capacity level %d.\n%s.\nThe visible campus is the authored campus blockout." % [
 		CampaignCatalog.laboratory_capacity_level(state),
 		CampaignCatalog.laboratory_stage_label(state),
@@ -204,8 +203,8 @@ func present_state(
 	if _advance_button != null:
 		_advance_button.disabled = session.failed
 	_skill_tree.present_state(state, session)
-	_tech_tree.present_state(state, session)
 	_data_center.present_state(state, definition)
+	_government.present_state(state)
 	_apply_world_and_view(session)
 
 
@@ -223,10 +222,6 @@ func _build() -> void:
 	_skill_tree.name = "SkillTreeView"
 	_skill_tree.visible = false
 	_play_root.add_child(_skill_tree)
-	_tech_tree = TechTreeView.new()
-	_tech_tree.name = "TechTreeView"
-	_tech_tree.visible = false
-	_play_root.add_child(_tech_tree)
 	_data_center = DataCenterView.new()
 	_data_center.name = "DataCenterView"
 	_data_center.visible = false
@@ -360,7 +355,6 @@ func _build_view_bar() -> void:
 	_add_world_button(bar, CampaignCatalog.WORLD_HQ, "HQ")
 	_add_world_button(bar, CampaignCatalog.WORLD_DATA_CENTER, "Data Center")
 	_add_view_button(bar, CampaignCatalog.VIEW_SKILL_TREE, "Skill Tree")
-	_add_view_button(bar, CampaignCatalog.VIEW_TECH_TREE, "Tech Tree")
 
 
 func _add_view_button(bar: HBoxContainer, view_id: StringName, label: String) -> void:
@@ -384,15 +378,11 @@ func _add_world_button(bar: HBoxContainer, world_id: StringName, label: String) 
 
 
 func _apply_world_and_view(session: CampaignSessionState) -> void:
-	var overlay: bool = (
-		session.active_view_id == CampaignCatalog.VIEW_SKILL_TREE
-		or session.active_view_id == CampaignCatalog.VIEW_TECH_TREE
-	)
+	var overlay: bool = session.active_view_id == CampaignCatalog.VIEW_SKILL_TREE
 	_world_map.visible = session.active_world_id == CampaignCatalog.WORLD_MAP and not overlay
 	_data_center.visible = session.active_world_id == CampaignCatalog.WORLD_DATA_CENTER and not overlay
 	_government.visible = session.active_world_id == CampaignCatalog.WORLD_GOVERNMENT and not overlay
 	_skill_tree.visible = session.active_view_id == CampaignCatalog.VIEW_SKILL_TREE
-	_tech_tree.visible = session.active_view_id == CampaignCatalog.VIEW_TECH_TREE
 
 
 func _sync_project_checks(session: CampaignSessionState) -> void:

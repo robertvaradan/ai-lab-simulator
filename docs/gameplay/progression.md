@@ -8,11 +8,45 @@ The game must not ask the player to select one permanent Strategic Domain.
 
 The player must be able to invest in Research, Scale, and Applications in one campaign.
 
-Limited Cash, staff, Compute Capacity, time, and trust must create trade-offs.
+Limited Cash, research points, staff, Compute Capacity, time, and trust must create trade-offs.
 
 Unlocks must follow explicit requirements.
 
 Elapsed time must not be the only unlock requirement.
+
+The campaign skill tree must follow `docs/gameplay/skill-tree.md`.
+
+The player spends research points on one skill tree.
+
+The tree must contain Research, Scale, and Application branches.
+
+## Trust activation
+
+Public Trust and Government Trust stay in Company State from campaign start.
+
+Public Trust must not affect play until the Public Trust threshold is met.
+
+Government Trust must not affect play until the Government threshold is met.
+
+The HUD must not present Public Trust until the Public Trust threshold is met.
+
+The HUD must not present Government Trust until the Government threshold is met.
+
+A Model peak evaluation is the highest of its coding, reasoning, and efficiency evaluation points.
+
+The Public Trust threshold is 80 evaluation points.
+
+The Government threshold is 90 evaluation points.
+
+The Public Trust threshold is met when any released player Model has a peak evaluation of 80 or more.
+
+The Government threshold is met when any released player Model has a peak evaluation of 90 or more.
+
+The Government World stays selectable before the Government threshold.
+
+The Government view must state that Government is inactive when the Government threshold is not met.
+
+Competitor pressure remains a first-class campaign beat. This threshold rule does not replace Competitor Stages.
 
 ## Cross-domain value
 

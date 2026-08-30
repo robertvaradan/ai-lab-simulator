@@ -56,6 +56,8 @@ A Model must record its training configuration.
 
 A Model must record its capability values.
 
+A Model peak evaluation is the highest of its coding, reasoning, and efficiency evaluation points.
+
 A Model must record its Compute cost.
 
 A released Model must record its Release Strategy.
@@ -167,6 +169,24 @@ Government Trust represents government confidence in the Company.
 Trust can affect contracts, regulation events, and project options.
 
 Trust must not replace explicit causal events.
+
+Public Trust becomes active when any released player Model peak evaluation is 80 or more.
+
+Government Trust becomes active when any released player Model peak evaluation is 90 or more.
+
+Inactive trust must not apply mechanical effects.
+
+## Research points
+
+Research points are the skill-tree spend resource.
+
+The campaign session stores the research-point balance for the simple skill tree.
+
+The campaign starts with 0 research points.
+
+A completed Research Project grants research points.
+
+The skill tree owns the spend rules in `docs/gameplay/skill-tree.md`.
 
 ## Cash, Revenue, and cost
 
