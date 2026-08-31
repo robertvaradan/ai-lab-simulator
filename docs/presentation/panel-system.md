@@ -380,9 +380,9 @@ The HQ primary action must open Plan.
 
 A major Competitor release must add a timeline item.
 
-A major Competitor release must add a selectable World marker.
+A major Competitor release must not add a selectable World marker.
 
-A major Competitor release must not open a Competitor card automatically.
+A major Competitor release must not open a World Context Card automatically.
 
 ## Data Center and Government Worlds
 
@@ -479,7 +479,7 @@ Automated tests must verify:
 - Attention Event acknowledgment on detail focus
 - required-first timeline ordering, read state, and Bell badge counts
 - Company Overview, Trust thresholds, Project cards, and Skill Tree gating
-- HQ, Data Center, Government, and Competitor Context Cards
+- HQ, Data Center, and Government Context Cards
 - orthographic cameras and selectable anchors on both new Worlds
 - Advance transition values from previous state, published state, and trace data
 - layout bounds at 1920×1080, 1280×720, and 2560×1080

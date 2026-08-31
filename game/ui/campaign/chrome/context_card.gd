@@ -69,8 +69,6 @@ func present_context(
 			_present_data_center(state, definition)
 		CampaignWorldSelectable.CONTEXT_GOVERNMENT:
 			_present_government(state)
-		CampaignWorldSelectable.CONTEXT_COMPETITOR:
-			_present_competitor(state)
 		_:
 			if _title_label != null:
 				_title_label.text = "Selection"
@@ -149,14 +147,6 @@ func _present_government(state: GameState) -> void:
 		lines.append("Government starts after a released player Model reaches 90 evaluation points.")
 	if _body_label != null:
 		_body_label.text = "\n".join(lines)
-
-
-func _present_competitor(state: GameState) -> void:
-	if _title_label != null:
-		_title_label.text = "COMPETITOR"
-	var mapping: CampusVisualMapping = CampusVisualMapping.from_state(state)
-	if _body_label != null:
-		_body_label.text = mapping.competitor_presentation_text
 
 
 func _add_row(label_text: String, value_text: String) -> void:

@@ -4,12 +4,10 @@ extends Area3D
 const CONTEXT_LABORATORY: StringName = &"context.laboratory"
 const CONTEXT_DATA_CENTER: StringName = &"context.data_center"
 const CONTEXT_GOVERNMENT: StringName = &"context.government"
-const CONTEXT_COMPETITOR: StringName = &"context.competitor"
 
 const ENTITY_HQ_LABORATORY: StringName = &"entity.hq.laboratory"
 const ENTITY_DATA_CENTER_MARKER: StringName = &"entity.data_center.marker"
 const ENTITY_GOVERNMENT_MARKER: StringName = &"entity.government.marker"
-const ENTITY_COMPETITOR_NORTHSTAR: StringName = &"entity.competitor.northstar"
 
 signal selected(selectable: CampaignWorldSelectable)
 

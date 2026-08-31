@@ -86,10 +86,10 @@ func _verify_campaign_campus() -> void:
 			campus.get_node_or_null("HqLaboratorySelectable") != null,
 			"The HQ campus has no laboratory selectable."
 		)
-		var competitor_marker: Node3D = campus.get_node_or_null("HqCompetitorSelectable") as Node3D
-		_expect(competitor_marker != null, "The HQ campus has no Competitor selectable.")
-		if competitor_marker != null:
-			_expect(not competitor_marker.visible, "The starting HQ campus showed the Competitor marker.")
+		_expect(
+			campus.get_node_or_null("HqCompetitorSelectable") == null,
+			"The HQ World represented a Competitor Model."
+		)
 	if presenter != null:
 		_expect(
 			presenter.get_visible_laboratory_node_name() == "",

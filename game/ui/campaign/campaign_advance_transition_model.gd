@@ -144,4 +144,4 @@ static func _fill_world_change_lines(
 	if not previous_mapping.compute_link_visible and published_mapping.compute_link_visible:
 		model.world_change_lines.append("The Third-Party Compute link appeared.")
 	if not previous_mapping.competitor_release_visible and published_mapping.competitor_release_visible:
-		model.world_change_lines.append("The Northstar Flagship release appeared.")
+		model.world_change_lines.append("The Northstar Flagship release resolved.")

@@ -35,7 +35,7 @@ func _verify_starting_mapping() -> void:
 	_expect(not mapping.uses_compact_laboratory(), "The starting campus shows the compact laboratory.")
 	_expect(not mapping.uses_developed_laboratory(), "The starting campus uses the developed laboratory.")
 	_expect(not mapping.compute_link_visible, "The starting campus shows the burst Compute link.")
-	_expect(not mapping.competitor_release_visible, "The starting campus shows the Northstar release.")
+	_expect(not mapping.competitor_release_visible, "The starting state has a released Competitor Model.")
 
 
 func _verify_build_lab_mapping() -> void:
@@ -71,7 +71,7 @@ func _verify_scale_mapping() -> void:
 	_expect(mapping.compute_link_visible, "The completed Scale Project does not show the burst Compute link.")
 	_expect(mapping.uses_compact_laboratory(), "The Scale-only run did not keep laboratory stage 1.")
 	_expect(not mapping.uses_developed_laboratory(), "The Scale-only run swapped the laboratory stage.")
-	_expect(not mapping.competitor_release_visible, "Month Step 2 showed the Northstar release.")
+	_expect(not mapping.competitor_release_visible, "Month Step 2 resolved the Northstar release too early.")
 	_expect(
 		not lab.get_state().company.sites[SITE_ID].site_plots.has(&"plot.campus.compute_link"),
 		"The presentation wrote a Compute-link Site Plot state."
@@ -87,7 +87,7 @@ func _verify_empty_quarter_mapping() -> void:
 	lab.commit_staged_plan()
 	lab.advance_until_attention_required()
 	var mapping: CampusVisualMapping = CampusVisualMapping.from_state(lab.get_state())
-	_expect(mapping.competitor_release_visible, "The Quarter Boundary does not show the Northstar release.")
+	_expect(mapping.competitor_release_visible, "The Quarter Boundary did not resolve the Northstar release.")
 	_expect(mapping.competitor_presentation_text.contains("Northstar Flagship"), "The Competitor presentation is missing the Model name.")
 	_expect(mapping.competitor_presentation_text.contains("Coding 82"), "The Competitor presentation is missing the actual coding evaluation.")
 	_expect(mapping.competitor_presentation_text.contains("Reasoning 78"), "The Competitor presentation is missing the actual reasoning evaluation.")
@@ -112,7 +112,7 @@ func _verify_hybrid_mapping_and_plots() -> void:
 	var mapping: CampusVisualMapping = CampusVisualMapping.from_state(state)
 	_expect(mapping.uses_compact_laboratory(), "The hybrid run did not keep laboratory stage 1.")
 	_expect(not mapping.uses_developed_laboratory(), "The hybrid run selected laboratory stage 2 before Research completed.")
-	_expect(mapping.competitor_release_visible, "The hybrid Quarter Boundary does not show the Northstar release.")
+	_expect(mapping.competitor_release_visible, "The hybrid Quarter Boundary did not resolve the Northstar release.")
 	_expect(not mapping.compute_link_visible, "The hybrid run showed the burst Compute link.")
 	_expect(
 		state.company.sites[SITE_ID].site_plots[RESEARCH_PLOT_ID].state_id
@@ -143,7 +143,10 @@ func _verify_presenter_applies_mapping() -> void:
 	_expect(presenter.get_visible_laboratory_node_name() == "", "The starting presenter showed a laboratory.")
 	_expect(not lab_stage_one.visible, "The starting presenter left laboratory stage 1 visible.")
 	_expect(not presenter.is_compute_link_visible(), "The starting presenter showed the Compute link.")
-	_expect(not presenter.is_competitor_presentation_visible(), "The starting presenter showed the Competitor release.")
+	_expect(
+		campus.get_node_or_null("HqCompetitorSelectable") == null,
+		"The starting presenter represented a Competitor Model on the HQ World."
+	)
 	var lab_created: SimulationLabSessionResult = SimulationLabSession.create_marketing_scenario()
 	_expect(lab_created.succeeded(), "The presenter Build Laboratory session did not start.")
 	if not lab_created.succeeded():
@@ -168,10 +171,9 @@ func _verify_presenter_applies_mapping() -> void:
 	presenter.present_state(hybrid.get_state())
 	_expect(presenter.get_visible_laboratory_node_name() == "LabStage1", "The hybrid presenter did not keep laboratory stage 1.")
 	_expect(lab_stage_one.visible, "The hybrid presenter hid laboratory stage 1.")
-	_expect(not presenter.is_competitor_presentation_visible(), "The hybrid presenter auto-opened the Competitor panel.")
 	_expect(
-		presenter.get_competitor_presentation_text().contains("Coding 82"),
-		"The hybrid presenter did not keep the Northstar coding evaluation text."
+		campus.get_node_or_null("HqCompetitorSelectable") == null,
+		"The hybrid presenter represented a Competitor Model on the HQ World."
 	)
 	_expect(not presenter.is_compute_link_visible(), "The hybrid presenter showed the Compute link.")
 	var camera: Camera3D = Camera3D.new()
@@ -181,7 +183,6 @@ func _verify_presenter_applies_mapping() -> void:
 	presenter.set_campus_world_visible(false)
 	_expect(not campus.visible, "The presenter left the campus visible outside HQ.")
 	_expect(not camera.current, "The presenter left the campus camera current outside HQ.")
-	_expect(not presenter.is_competitor_presentation_visible(), "The presenter left the Competitor release visible outside HQ.")
 	presenter.set_campus_world_visible(true)
 	_expect(campus.visible, "The presenter hid the campus after HQ entry.")
 	_expect(camera.current, "The presenter left the campus camera inactive after HQ entry.")
