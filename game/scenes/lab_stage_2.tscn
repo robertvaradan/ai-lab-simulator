@@ -263,6 +263,11 @@ size = Vector3(10.2, 0.8, 7.6)
 [sub_resource type="BoxMesh" id="BoxMesh_xj433"]
 size = Vector3(1.2, 3, 0.8)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6mv46"]
+emission_enabled = true
+emission = Color(1, 0.8862745, 0.7254902, 1)
+emission_energy_multiplier = 5.0
+
 [sub_resource type="BoxMesh" id="BoxMesh_pov7e"]
 size = Vector3(1, 2.2, 0.2)
 
@@ -728,20 +733,13 @@ mesh = SubResource("BoxMesh_xj433")
 
 [node name="EntryDoor" type="MeshInstance3D" parent="." unique_id=1316755429]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 1.5, 2.7)
-material_override = ExtResource("glass")
+material_override = SubResource("StandardMaterial3D_6mv46")
 mesh = SubResource("BoxMesh_pov7e")
 
 [node name="EntryCanopy" type="MeshInstance3D" parent="." unique_id=1806291720]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.19999999, 3.6, 2.5)
 material_override = ExtResource("metal_dark")
 mesh = SubResource("BoxMesh_gbqs4")
-
-[node name="EntryGlow" type="OmniLight3D" parent="." unique_id=199520999]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 1.8000001, 3.4)
-light_color = Color(0.93333334, 0.53333336, 0.27058825, 1)
-light_energy = 2.6
-light_size = 1.8
-omni_range = 7.0
 
 [node name="TowerCreamLeftPier" type="MeshInstance3D" parent="." unique_id=961157220]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.3, 6.7999997, 0.59999996)

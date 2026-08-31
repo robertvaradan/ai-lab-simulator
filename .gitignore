@@ -21,3 +21,6 @@ game/evidence/**/*.png.import
 Thumbs.db
 .vscode/
 .idea/
+
+# Local Cursor Deepseek credentials
+.cursor/deepseek.env
