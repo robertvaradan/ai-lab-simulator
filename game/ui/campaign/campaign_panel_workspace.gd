@@ -13,8 +13,9 @@ var _action_bar: CampaignActionBar
 var _bell_button: Button
 var _menu_button: Button
 var _bell_badge: Label
-var _selection_outline: Line2D
+var _selection_layer: Control
 var _selection_connector: Line2D
+var _selected_world_selectable: CampaignWorldSelectable
 var _context_card: CampaignContextCard
 var _context_host: Control
 var _workbench_host: Control
@@ -69,6 +70,11 @@ func _ready() -> void:
 	set_process_unhandled_input(true)
 
 
+func _process(_delta: float) -> void:
+	if _context_card != null and _context_card.visible:
+		_update_selection_graphics(true)
+
+
 func open_workbench(panel_id: StringName, tab_id: StringName = &"") -> void:
 	var definition: CampaignPanelDefinition = _registry.get_panel(panel_id)
 	if definition == null:
@@ -92,6 +98,7 @@ func show_context(
 		ui_session.set_world_selection(_host.get_active_world_id(), entity_id)
 		ui_session.input_context = CampaignInputContext.UI
 		ui_session.context_collapsed = false
+	_selected_world_selectable = _find_world_selectable(entity_id)
 	_context_card.present_context(entity_id, card_type, _host.get_current_state(), _host.get_definition())
 	_context_host.visible = true
 	_update_selection_graphics(true)
@@ -401,23 +408,17 @@ func _build_tree() -> void:
 	_action_bar.plan_pressed.connect(_on_plan_pressed)
 	_action_bar.advance_pressed.connect(_on_advance_pressed)
 	chrome.add_child(_action_bar)
-	var selection: Control = Control.new()
-	selection.name = "SelectionLayer"
-	selection.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	selection.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(selection)
-	_selection_outline = Line2D.new()
-	_selection_outline.name = "SelectionOutline"
-	_selection_outline.width = 2.0
-	_selection_outline.default_color = CYAN
-	_selection_outline.visible = false
-	selection.add_child(_selection_outline)
+	_selection_layer = Control.new()
+	_selection_layer.name = "SelectionLayer"
+	_selection_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_selection_layer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(_selection_layer)
 	_selection_connector = Line2D.new()
 	_selection_connector.name = "SelectionConnector"
 	_selection_connector.width = 2.0
 	_selection_connector.default_color = CYAN
 	_selection_connector.visible = false
-	selection.add_child(_selection_connector)
+	_selection_layer.add_child(_selection_connector)
 	_context_host = Control.new()
 	_context_host.name = "ContextCardHost"
 	_context_host.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -611,6 +612,7 @@ func _hide_context() -> void:
 	if _context_card != null:
 		_context_card.visible = false
 	_update_selection_graphics(false)
+	_selected_world_selectable = null
 	if _host != null:
 		_host.restore_framing()
 		var ui_session: CampaignUiSessionState = _host.get_ui_session()
@@ -648,22 +650,79 @@ func _sync_compat_context_visibility() -> void:
 
 
 func _update_selection_graphics(enabled: bool) -> void:
-	if _selection_outline == null or _selection_connector == null:
+	if _selection_connector == null:
 		return
-	_selection_outline.visible = enabled
-	_selection_connector.visible = enabled
-	if not enabled:
+	_selection_connector.visible = false
+	if not enabled or _selected_world_selectable == null:
 		return
-	var card_center: Vector2 = Vector2(size.x - 200.0, size.y * 0.5)
-	var world_point: Vector2 = Vector2(size.x * 0.55, size.y * 0.45)
-	_selection_connector.points = PackedVector2Array([world_point, card_center])
-	_selection_outline.points = PackedVector2Array([
-		world_point + Vector2(-80.0, -60.0),
-		world_point + Vector2(80.0, -60.0),
-		world_point + Vector2(80.0, 60.0),
-		world_point + Vector2(-80.0, 60.0),
-		world_point + Vector2(-80.0, -60.0),
+	var camera: Camera3D = get_viewport().get_camera_3d()
+	if camera == null:
+		return
+	var card_center: Vector2 = _context_card.get_global_rect().get_center()
+	var source_screen: Vector2 = _project_highlight_right_edge(camera)
+	if not source_screen.is_finite():
+		return
+	_selection_connector.points = PackedVector2Array([
+		_to_selection_layer_point(source_screen),
+		_to_selection_layer_point(card_center),
 	])
+	_selection_connector.visible = true
+
+
+func _find_world_selectable(entity_id: StringName) -> CampaignWorldSelectable:
+	if _host == null:
+		return null
+	var nodes: Array[Node] = _host.find_children("*", "Area3D", true, false)
+	for node: Node in nodes:
+		var selectable: CampaignWorldSelectable = node as CampaignWorldSelectable
+		if selectable == null:
+			continue
+		if selectable.entity_id == entity_id:
+			return selectable
+	return null
+
+
+func _project_highlight_right_edge(camera: Camera3D) -> Vector2:
+	var highlight: MeshInstance3D = _selected_world_selectable.get_node_or_null("Outline") as MeshInstance3D
+	if highlight == null or highlight.mesh == null:
+		return Vector2.INF
+	var bounds: AABB = highlight.get_aabb()
+	var minimum: Vector3 = bounds.position
+	var maximum: Vector3 = bounds.end
+	var corners: Array[Vector3] = [
+		Vector3(minimum.x, minimum.y, minimum.z),
+		Vector3(maximum.x, minimum.y, minimum.z),
+		Vector3(maximum.x, minimum.y, maximum.z),
+		Vector3(minimum.x, minimum.y, maximum.z),
+		Vector3(minimum.x, maximum.y, minimum.z),
+		Vector3(maximum.x, maximum.y, minimum.z),
+		Vector3(maximum.x, maximum.y, maximum.z),
+		Vector3(minimum.x, maximum.y, maximum.z),
+	]
+	var edge_sum: Vector2 = Vector2.ZERO
+	var edge_count: int = 0
+	var rightmost_x: float = -INF
+	for corner: Vector3 in corners:
+		var world_point: Vector3 = highlight.global_transform * corner
+		if camera.is_position_behind(world_point):
+			continue
+		var screen_point: Vector2 = camera.unproject_position(world_point)
+		if screen_point.x > rightmost_x + 0.1:
+			rightmost_x = screen_point.x
+			edge_sum = screen_point
+			edge_count = 1
+		elif absf(screen_point.x - rightmost_x) <= 0.1:
+			edge_sum += screen_point
+			edge_count += 1
+	if edge_count == 0:
+		return Vector2.INF
+	return edge_sum / float(edge_count)
+
+
+func _to_selection_layer_point(screen_point: Vector2) -> Vector2:
+	if _selection_layer == null:
+		return screen_point
+	return _selection_layer.get_global_transform().affine_inverse() * screen_point
 
 
 func _update_status_texts(

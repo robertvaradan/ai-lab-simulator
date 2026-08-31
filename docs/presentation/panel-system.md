@@ -271,6 +271,12 @@ World-object selection must reframe the camera over 300 ms.
 
 Context Card close must restore the prior camera framing.
 
+The authored selection outline must render on the selected 3D World object.
+
+The connector must start at the projected edge of the authored selection outline.
+
+The Campaign must not render a second 2D selection rectangle.
+
 The selection outline and connector must draw before the Context Card appears.
 
 The Context Card must open over 240 ms.

@@ -21,6 +21,7 @@ func _run_test() -> void:
 	_verify_draft_validation_and_advance_gate()
 	_verify_timeline_attention()
 	_verify_world_scenes()
+	_verify_selection_connector()
 	_verify_advance_transition_model()
 	_verify_layout_bounds()
 	_verify_session_reset()
@@ -208,6 +209,70 @@ func _verify_world_scenes() -> void:
 	host.queue_free()
 
 
+func _verify_selection_connector() -> void:
+	var host: CampaignHost = _make_host()
+	root.add_child(host)
+	var workspace: CampaignPanelWorkspace = host.get_workspace()
+	var selectable: CampaignWorldSelectable = host.find_child("HqLaboratorySelectable", true, false) as CampaignWorldSelectable
+	var camera: Camera3D = host.find_child("GameplayCamera", true, false) as Camera3D
+	_expect(workspace != null, "The selection connector test has no Panel Workspace.")
+	_expect(selectable != null, "The selection connector test has no HQ laboratory selectable.")
+	_expect(camera != null, "The selection connector test has no gameplay camera.")
+	if workspace == null or selectable == null or camera == null:
+		host.queue_free()
+		return
+	workspace.show_context(
+		selectable.entity_id,
+		selectable.context_card_type,
+		selectable.framing_target,
+		selectable.framing_size
+	)
+	var selection_layer: Control = workspace.get_node_or_null("SelectionLayer") as Control
+	var connector: Line2D = workspace.get_node_or_null("SelectionLayer/SelectionConnector") as Line2D
+	var highlight: MeshInstance3D = selectable.get_node_or_null("Outline") as MeshInstance3D
+	_expect(selection_layer != null, "The selection layer is missing.")
+	_expect(
+		selection_layer == null or selection_layer.get_node_or_null("SelectionOutline") == null,
+		"The workspace still contains a 2D selection outline."
+	)
+	_expect(connector != null, "The selection connector is missing.")
+	_expect(highlight != null, "The selected laboratory has no 3D highlight.")
+	if selection_layer != null and connector != null and highlight != null:
+		_expect(connector.visible, "The selection connector is hidden for a selected 3D highlight.")
+		_expect(connector.points.size() == 2, "The selection connector does not have two endpoints.")
+		if connector.points.size() == 2:
+			var source: Vector2 = selection_layer.get_global_transform() * connector.points[0]
+			var expected_right_edge: float = _projected_right_edge_x(highlight, camera)
+			_expect(
+				absf(source.x - expected_right_edge) < 1.0,
+				"The selection connector does not start at the projected 3D highlight edge."
+			)
+	host.queue_free()
+
+
+func _projected_right_edge_x(highlight: MeshInstance3D, camera: Camera3D) -> float:
+	var bounds: AABB = highlight.get_aabb()
+	var minimum: Vector3 = bounds.position
+	var maximum: Vector3 = bounds.end
+	var corners: Array[Vector3] = [
+		Vector3(minimum.x, minimum.y, minimum.z),
+		Vector3(maximum.x, minimum.y, minimum.z),
+		Vector3(maximum.x, minimum.y, maximum.z),
+		Vector3(minimum.x, minimum.y, maximum.z),
+		Vector3(minimum.x, maximum.y, minimum.z),
+		Vector3(maximum.x, maximum.y, minimum.z),
+		Vector3(maximum.x, maximum.y, maximum.z),
+		Vector3(minimum.x, maximum.y, maximum.z),
+	]
+	var rightmost_x: float = -INF
+	for corner: Vector3 in corners:
+		var world_point: Vector3 = highlight.global_transform * corner
+		if camera.is_position_behind(world_point):
+			continue
+		rightmost_x = maxf(rightmost_x, camera.unproject_position(world_point).x)
+	return rightmost_x
+
+
 func _verify_advance_transition_model() -> void:
 	var host: CampaignHost = _make_host()
 	root.add_child(host)
@@ -312,7 +377,7 @@ func _finish() -> void:
 		printerr("PANEL_SYSTEM_TEST_FAILURE count=%d" % _failure_count)
 		quit(1)
 		return
-	print("%s cases=12" % TEST_SUCCESS)
+	print("%s cases=13" % TEST_SUCCESS)
 	quit(0)
 
 
